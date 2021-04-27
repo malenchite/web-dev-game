@@ -17,6 +17,7 @@ function findUserIndex (userID) {
 /* Removes a user at a specified index */
 function removeUser (idx) {
   if (idx >= 0 && idx < activeUsers.length) {
+    console.log(`User ${activeUsers[idx].id} removed on socket ${activeUsers[idx].socket.id}`);
     activeUsers.splice(idx, 1);
   }
 }
@@ -33,7 +34,7 @@ function activateUser (userID, socket) {
     removeUser(oldIdx);
   }
 
-  console.log(`Activating user ${userID}`);
+  console.log(`Activating user ${userID} on socket ${socket.id}`);
   activeUsers.push(newUser);
 }
 

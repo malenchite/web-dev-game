@@ -6,7 +6,7 @@ class User {
   }
 
   disconnect () {
-    console.log(`User ${this.id} disconnected`);
+    console.log(`User ${this.id} disconnected on socket ${this.socket.id}`);
     this.socket.disconnect();
   }
 }
