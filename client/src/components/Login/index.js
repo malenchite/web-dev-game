@@ -47,7 +47,7 @@ function Login() {
               <form action="#" method="POST">
                 <section className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                   {/* block sets input label to display:block so it displays above the input box */}
-                  <label className="block mb-2 text-indigo-500" for="email">
+                  <label className="block mb-2 text-indigo-500" htmlFor="email">
                     Email
                   </label>
                   {/* p-2 sets padding at 0.5rem */}
@@ -60,7 +60,7 @@ function Login() {
                   />
                 </section>
                 <section className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                  <label className="block mb-2 text-indigo-500" for="password">
+                  <label className="block mb-2 text-indigo-500" htmlFor="password">
                     Password
                   </label>
                   <input
