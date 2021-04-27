@@ -38,6 +38,7 @@
     "prettier": "^2.1.2"
   },
   "dependencies": {
+    "express": "^4.17.1",
     "if-env": "^1.0.4"
   }
 }
