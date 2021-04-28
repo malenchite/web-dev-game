@@ -1,4 +1,7 @@
 const socketIo = require('socket.io');
+const activeUsers = require('./activeUsers');
+
+const USER_INFO_EVENT = 'user info';
 
 const socket = server => {
   /* Apply CORS for localhost if app is not deployed */
@@ -10,22 +13,18 @@ const socket = server => {
       }
     });
 
-  const connectedClients = [];
-
   io.on('connection', socket => {
     console.log('New client connected');
 
-    connectedClients.push(socket.id);
-
-    console.log(connectedClients);
+    /* Activate user when info is received */
+    socket.on(USER_INFO_EVENT, userInfo => {
+      activeUsers.activateUser(userInfo.userId, socket);
+    });
 
     /* On disconnect, remove ID from list of connected clients */
     socket.on('disconnect', () => {
       console.log('Client disconnected');
-      const index = connectedClients.indexOf(socket.id);
-      if (index > -1) {
-        connectedClients.splice(index, 1);
-      }
+      activeUsers.deactivateUser(socket.id);
     });
   });
 };
