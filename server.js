@@ -3,6 +3,7 @@ const http = require('http');
 const socket = require('./services/socket');
 const reactRoutes = require('./routes/reactRoutes');
 const apiRoutes = require('./routes/apiRoutes');
+const authRoutes = require('./routes/authRoutes');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const dbConnection = require('./db');
@@ -28,7 +29,8 @@ if (process.env.NODE_ENV === 'production') {
   app.use(reactRoutes);
 }
 
-app.use(apiRoutes);
+app.use('/auth', authRoutes);
+app.use('/api', apiRoutes);
 
 const server = http.createServer(app);
 
