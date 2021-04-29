@@ -44,6 +44,7 @@ module.exports = {
   },
   // logs the user out
   logout: (req, res) => {
+    console.log(req.user);
     if (req.user) {
       req.session.destroy();
       res.clearCookie('connect.sid');
