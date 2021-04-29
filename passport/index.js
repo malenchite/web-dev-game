@@ -1,6 +1,6 @@
 const passport = require('passport');
 const LocalStrategy = require('./localStrategy');
-const db = require('../models'); // change name once file established
+const db = require('../models');
 
 passport.serializeUser((user, done) => {
 // console.log ('Serialize called');
