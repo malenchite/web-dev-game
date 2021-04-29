@@ -10,6 +10,7 @@ function SignupForm() {
         firstName: '',
         lastName: '',
         username: '',
+        email: '',
         password: '',
         confirmPassword: '',
         redirectTo: null
@@ -30,6 +31,7 @@ function SignupForm() {
             firstName: userObject.firstName,
             lastName: userObject.lastName,
             username: userObject.username,
+            email: userObject.email,
             password: userObject.password
         }).then(response => {
             // console.log(response);
