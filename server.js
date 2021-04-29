@@ -8,13 +8,17 @@ const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const dbConnection = require('./db');
 const passport = require('./passport');
+const cors = require('cors');
 
 const PORT = process.env.PORT || 3001;
+
+const corsConfig = process.env.REACT_APP_DEPLOYED ? {} : { origin: '*' };
 
 /* Create server objects */
 const app = express();
 
 /* Middleware */
+app.use(cors(corsConfig));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(session({

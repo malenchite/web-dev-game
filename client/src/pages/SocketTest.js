@@ -1,22 +1,59 @@
 import { useState, useEffect } from "react";
 import io from "socket.io-client";
+import AUTH from "../utils/AUTH";
+import { Card } from '../components/Card';
+import { Input, FormBtn } from '../components/Form';
 
 const ENDPOINT = "http://localhost:3001";
 const USER_INFO_EVENT = "user info";
 
 function SocketTest () {
   const [socket, setSocket] = useState(null);
-  const [user, setUser] = useState("");
+  const [userInfo, setUserInfo] = useState(null);
   const [reason, setReason] = useState(undefined);
+  const [userObject, setUserObject] = useState({
+    username: '',
+    password: ''
+  });
 
-  const updateUser = e => {
-    setUser(e.target.value);
-  }
+  const login = (username, password) => {
+    AUTH.login(username, password).then(response => {
+      console.log(response.data);
+      if (response.status === 200) {
+        setUserInfo(response.data.user);
+      }
+    });
+  };
 
-  const connectUser = e => {
-    e.preventDefault();
+  const logout = () => {
+    AUTH.logout().then(response => {
+      console.log(response.data);
+      if (response.status === 200) {
+        setUserInfo(null);
+      }
+    });
+  };
 
-    if (user.length === 0) {
+  const handleChange = (event) => {
+    setUserObject({
+      ...userObject,
+      [event.target.name]: event.target.value
+    });
+  };
+
+  const handleLogin = (event) => {
+    event.preventDefault();
+    login(userObject.username, userObject.password);
+  };
+
+  const handleLogout = (event) => {
+    event.preventDefault();
+    logout();
+  };
+
+  const connectUser = () => {
+    if (!userInfo) {
+      console.log('No user to connect!');
       return;
     }
 
@@ -24,10 +61,10 @@ function SocketTest () {
 
     newSocket.on('connect', () => {
       newSocket.emit(USER_INFO_EVENT, {
-        userId: user
+        userId: userInfo._id
       });
 
-      console.log(`Connecting on socket ${newSocket.id}`);
+      console.log(`Connecting on socket ${newSocket.id} as user ${userInfo._id}`);
 
       /* Store socket in state */
       setSocket(newSocket);
@@ -41,9 +78,7 @@ function SocketTest () {
     });
   }
 
-  const disconnectUser = e => {
-    e.preventDefault();
-
+  const disconnectUser = () => {
     if (socket) {
       console.log(`Disconnecting socket ${socket.id}`);
       socket.disconnect();
@@ -61,27 +96,42 @@ function SocketTest () {
     }
   }, [socket]);
 
+  useEffect(() => {
+    if (userInfo) {
+      connectUser();
+    } else {
+      disconnectUser();
+    }
+  }, [userInfo]);
+
+
   return (
     <div>
       {socket && socket.connected ? <h1>Socket opened as {socket.id}</h1> : <h1>Socket not connected</h1>}
+      {userInfo ? <h2>User logged in as {userInfo._id}</h2> : <h2>No user logged in</h2>}
       {reason ? <h2>Last disconnect due to {reason}</h2> : ""}
-      <form onSubmit={connectUser}>
-        Input User ID:
-        <input type="text" placeholder="User ID" onChange={updateUser} value={user} className="form-input ml-2 mb-2 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white bg-white rounded text-sm border border-blueGray-300 outline-none focus:outline-none focus:ring" />
-        <button
-          type="submit"
-          className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm"
-        >
-          Connect
-        </button>
-        <button
-          type="button"
-          onClick={disconnectUser}
-          className="ml-2 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm"
-        >
-          Disconnect
-        </button>
-      </form>
+      <Card title="Socket Login Test">
+        <form style={{ marginTop: 10 }}>
+          <label htmlFor="username">Username: </label>
+          <Input
+            type="text"
+            name="username"
+            value={userObject.username}
+            onChange={handleChange}
+          />
+          <label htmlFor="password">Password: </label>
+          <Input
+            type="password"
+            name="password"
+            value={userObject.password}
+            onChange={handleChange}
+          />
+          <FormBtn onClick={handleLogin}>Login</FormBtn>
+          <br />
+          <FormBtn onClick={handleLogout}>Disconnect</FormBtn>
+          <br />
+        </form>
+      </Card>
     </div>
   );
 }
