@@ -7,6 +7,7 @@ const authRoutes = require('./routes/authRoutes');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const dbConnection = require('./db');
+const passport = require('./passport');
 
 const PORT = process.env.PORT || 3001;
 
@@ -22,6 +23,10 @@ app.use(session({
   resave: false,
   saveUninitialized: false
 }));
+
+/* Passport initialization */
+app.use(passport.initialize());
+app.use(passport.session()); // will call the deserializeUser
 
 /* Production assets and routes */
 if (process.env.NODE_ENV === 'production') {
