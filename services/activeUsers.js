@@ -1,4 +1,5 @@
 const User = require('./classes/User');
+const userController = require('../controllers/userController');
 
 const activeUsers = [];
 
@@ -26,16 +27,25 @@ function removeUser (idx) {
 
 /* Adds a user to the active users list, removing the old one if that user is already present */
 function activateUser (userID, socket) {
-  const newUser = new User(userID, socket);
-  const oldIdx = findUserIndex(userID);
+  /* Check that this user ID is valid before allowing socket to be activated */
+  userController.localCheck(userID)
+    .then(found => {
+      if (found) {
+        const newUser = new User(userID, socket);
+        const oldIdx = findUserIndex(userID);
 
-  if (oldIdx > -1) {
-    activeUsers[oldIdx].disconnect();
-    removeUser(oldIdx);
-  }
+        if (oldIdx > -1) {
+          activeUsers[oldIdx].disconnect();
+          removeUser(oldIdx);
+        }
 
-  console.log(`Activating user ${userID} on socket ${socket.id}`);
-  activeUsers.push(newUser);
+        console.log(`Activating user ${userID} on socket ${socket.id}`);
+        activeUsers.push(newUser);
+      } else {
+        console.log(`Invalid user ${userID} on socket ${socket.id}`);
+        socket.disconnect();
+      }
+    });
 }
 
 /* Removes a user based on the ID of its associated socket */
