@@ -1,20 +1,24 @@
 import axios from "axios";
 
-export default {
+const SERVER = process.env.REACT_APP_DEPLOYED ? "" : "http://localhost:3001";
+
+const AUTH = {
   // Gets user info
-  getUser: function() {
-    return axios.get('/auth/user');
+  getUser: function () {
+    return axios.get(`${SERVER}/auth/user`);
   },
   // Logs the user out
-  logout: function() {
-    return axios.post('/auth/logout');
+  logout: function () {
+    return axios.post(`${SERVER}/auth/logout`);
   },
   // Log the user in
-  login: function(username, password) {
-    return axios.post('/auth/login', { username, password });
+  login: function (username, password) {
+    return axios.post(`${SERVER}/auth/login`, { username, password });
   },
   // New user registration
-  signup: function(userData) {
-    return axios.post('/auth/signup', userData);
+  signup: function (userData) {
+    return axios.post(`${SERVER}/auth/signup`, userData);
   }
 };
+
+export default AUTH;
