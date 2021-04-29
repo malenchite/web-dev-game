@@ -5,6 +5,7 @@ import { Card } from '../components/Card';
 import { Input, FormBtn } from '../components/Form';
 
 const ENDPOINT = "http://localhost:3001";
+const CHAT_MESSAGE_EVENT = 'chat message';
 const LOBBY_INFO_EVENT = 'lobby info';
 const USER_INFO_EVENT = "user info";
 
@@ -13,6 +14,8 @@ function SocketTest () {
   const [userInfo, setUserInfo] = useState(null);
   const [reason, setReason] = useState(undefined);
   const [lobbyUsers, setLobbyUsers] = useState([]);
+  const [message, setMessage] = useState("");
+  const [chat, setChat] = useState([]);
   const [userObject, setUserObject] = useState({
     username: '',
     password: ''
@@ -37,6 +40,18 @@ function SocketTest () {
       }
     });
   };
+
+  const handleMessageChange = (event) => {
+    setMessage(event.target.value);
+  };
+
+  const handleSendMessage = (event) => {
+    event.preventDefault();
+    if (message.length > 0 && socket) {
+      console.log(`Sending message: ${message}`);
+      socket.emit(CHAT_MESSAGE_EVENT, { message });
+    }
+  }
 
   const handleChange = (event) => {
     setUserObject({
@@ -78,6 +93,12 @@ function SocketTest () {
         console.log("Updating lobby info");
         setLobbyUsers(lobbyInfo.users);
       });
+
+      /* Update chat messages */
+      newSocket.on(CHAT_MESSAGE_EVENT, msg => {
+        setChat(prevChat => [...prevChat, msg]);
+      });
+
 
       newSocket.on('disconnect', reason => {
         setReason(reason);
@@ -137,6 +158,23 @@ function SocketTest () {
       Users in lobby:
       <ul>
         {lobbyUsers.map(user => <li key={user}>{user}</li>)}
+      </ul>
+      <Card>
+        <form>
+          <label htmlFor="message">Send Message: </label>
+          <Input
+            type="text"
+            name="message"
+            value={message}
+            onChange={handleMessageChange}
+          />
+          <FormBtn onClick={handleSendMessage}>Send</FormBtn>
+          <br />
+        </form>
+      </Card>
+      Messages:
+      <ul>
+        {chat.map(msg => <li key={msg.id}>{msg.username}: {msg.message}</li>)}
       </ul>
     </div>
   );

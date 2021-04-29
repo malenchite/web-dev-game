@@ -33,7 +33,6 @@ function sendLobbyInfo () {
   const lobbyInfo = {
     users: activeUsers.filter(user => user.room === 'lobby').map(user => user.username)
   };
-  console.log(lobbyInfo);
   console.log('Updating lobby');
   io.to('lobby').emit(LOBBY_INFO_EVENT, lobbyInfo);
 }
@@ -66,7 +65,7 @@ function activateUser (userID, socket) {
   userController.localAccess(userID)
     .then(match => {
       if (match) {
-        const newUser = new User(userID, socket, match.username);
+        const newUser = new User(userID, socket, match.username, io);
         const oldIdx = findUserIndex(userID);
 
         if (oldIdx > -1) {
