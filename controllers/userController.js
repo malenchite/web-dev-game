@@ -35,7 +35,9 @@ module.exports = {
 
         newUser.save((err, savedUser) => {
           if (err) return res.json(err);
-          return res.json(savedUser);
+          const user = JSON.parse(JSON.stringify(savedUser));
+          delete user.password;
+          return res.json(user);
         });
       });
     });
