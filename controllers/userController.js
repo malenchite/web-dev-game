@@ -13,7 +13,8 @@ module.exports = {
   // controller for registering the user
   register: (req, res) => {
     const { firstName, lastName, username, password } = req.body;
-    db.User.findOne({ 'username': username }, (err, userMatch) => {
+    // Linter didnt like that the err wasnt prefixed by a "_"
+    db.User.findOne({ 'username': username }, (_err, userMatch) => {
       if (userMatch) {
         return res.json({
           error: `Please select a different username, we already have a user with that name: ${username}`
