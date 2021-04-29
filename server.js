@@ -1,18 +1,23 @@
 const express = require('express');
 const http = require('http');
 const socket = require('./services/socket');
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
+const dbConnection = require('./db');
+const passport = require('./passport');
 const reactRoutes = require('./routes/reactRoutes');
 const apiRoutes = require('./routes/apiRoutes');
 const authRoutes = require('./routes/authRoutes');
-const session = require('express-session');
-const MongoDBStore = require('connect-mongodb-session')(session);
-const dbConnection = require('./db');
-const passport = require('./passport');
 const cors = require('cors');
 
 const PORT = process.env.PORT || 3001;
 
-const corsConfig = process.env.REACT_APP_DEPLOYED ? {} : { origin: '*' };
+const corsConfig = process.env.REACT_APP_DEPLOYED
+  ? {}
+  : {
+    origin: 'http://localhost:3000',
+    credentials: true
+  };
 
 /* Create server objects */
 const app = express();
@@ -23,14 +28,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(session({
   secret: process.env.APP_SECRET || 'this is the default passphrase',
-  store: new MongoDBStore({ mongooseConnection: dbConnection }),
+  store: new MongoStore({ mongooseConnection: dbConnection }),
   resave: false,
   saveUninitialized: false
 }));
 
 /* Passport initialization */
 app.use(passport.initialize());
-app.use(passport.session()); // will call the deserializeUser
+app.use(passport.session());
 
 /* Production assets and routes */
 if (process.env.NODE_ENV === 'production') {

@@ -20,6 +20,7 @@ function SocketTest () {
     AUTH.login(username, password).then(response => {
       console.log(response.data);
       if (response.status === 200) {
+        connectUser(response.data.user);
         setUserInfo(response.data.user);
       }
     });
@@ -29,6 +30,7 @@ function SocketTest () {
     AUTH.logout().then(response => {
       console.log(response.data);
       if (response.status === 200) {
+        disconnectUser();
         setUserInfo(null);
       }
     });
@@ -51,8 +53,8 @@ function SocketTest () {
     logout();
   };
 
-  const connectUser = () => {
-    if (!userInfo) {
+  const connectUser = (info) => {
+    if (!info) {
       console.log('No user to connect!');
       return;
     }
@@ -61,10 +63,10 @@ function SocketTest () {
 
     newSocket.on('connect', () => {
       newSocket.emit(USER_INFO_EVENT, {
-        userId: userInfo._id
+        userId: info._id
       });
 
-      console.log(`Connecting on socket ${newSocket.id} as user ${userInfo._id}`);
+      console.log(`Connecting on socket ${newSocket.id} as user ${info._id}`);
 
       /* Store socket in state */
       setSocket(newSocket);
@@ -72,6 +74,7 @@ function SocketTest () {
       newSocket.on('disconnect', reason => {
         setReason(reason);
         if (reason === 'io server disconnect') {
+          logout();
           setSocket(null);
         }
       });
@@ -95,15 +98,6 @@ function SocketTest () {
       }
     }
   }, [socket]);
-
-  useEffect(() => {
-    if (userInfo) {
-      connectUser();
-    } else {
-      disconnectUser();
-    }
-  }, [userInfo]);
-
 
   return (
     <div>

@@ -2,6 +2,10 @@ import axios from "axios";
 
 const SERVER = process.env.REACT_APP_DEPLOYED ? "" : "http://localhost:3001";
 
+if (!process.env.REACT_APP_DEPLOYED) {
+  axios.defaults.withCredentials = true;
+}
+
 const AUTH = {
   // Gets user info
   getUser: function () {
