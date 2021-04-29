@@ -1,8 +1,8 @@
-const db = require("../models");
+const db = require('../models');
 
 // The different methods that are utilized by user controller
 module.exports = {
-    //gets the user fata
+  // gets the user data
   getUser: (req, res, next) => {
     if (req.user) {
       return res.json({ user: req.user });
@@ -10,7 +10,7 @@ module.exports = {
       return res.json({ user: null });
     }
   },
-    //controller for registering the user
+  // controller for registering the user
   register: (req, res) => {
     const { firstName, lastName, username, password } = req.body;
     db.User.findOne({ 'username': username }, (err, userMatch) => {
@@ -31,25 +31,25 @@ module.exports = {
       });
     });
   },
-    //logs the user out
+  // logs the user out
   logout: (req, res) => {
     if (req.user) {
       req.session.destroy();
-      res.clearCookie('connect.sid'); 
+      res.clearCookie('connect.sid');
       return res.json({ msg: 'logging you out' });
     } else {
       return res.json({ msg: 'no user to log out!' });
     }
   },
-  auth: function(req, res, next) {
-		next();
+  auth: function (req, res, next) {
+    next();
   },
   authenticate: (req, res) => {
-		const user = JSON.parse(JSON.stringify(req.user)); 
-		const cleanUser = Object.assign({}, user);
-		if (cleanUser) {
-			delete cleanUser.password;
-		}
-		res.json({ user: cleanUser });
-	}
+    const user = JSON.parse(JSON.stringify(req.user));
+    const cleanUser = Object.assign({}, user);
+    if (cleanUser) {
+      delete cleanUser.password;
+    }
+    res.json({ user: cleanUser });
+  }
 };
