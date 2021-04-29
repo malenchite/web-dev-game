@@ -5,12 +5,14 @@ import { Card } from '../components/Card';
 import { Input, FormBtn } from '../components/Form';
 
 const ENDPOINT = "http://localhost:3001";
+const LOBBY_INFO_EVENT = 'lobby info';
 const USER_INFO_EVENT = "user info";
 
 function SocketTest () {
   const [socket, setSocket] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
   const [reason, setReason] = useState(undefined);
+  const [lobbyUsers, setLobbyUsers] = useState([]);
   const [userObject, setUserObject] = useState({
     username: '',
     password: ''
@@ -71,6 +73,12 @@ function SocketTest () {
       /* Store socket in state */
       setSocket(newSocket);
 
+      /* Update lobby user list */
+      newSocket.on(LOBBY_INFO_EVENT, lobbyInfo => {
+        console.log("Updating lobby info");
+        setLobbyUsers(lobbyInfo.users);
+      });
+
       newSocket.on('disconnect', reason => {
         setReason(reason);
         if (reason === 'io server disconnect') {
@@ -126,6 +134,10 @@ function SocketTest () {
           <br />
         </form>
       </Card>
+      Users in lobby:
+      <ul>
+        {lobbyUsers.map(user => <li key={user}>{user}</li>)}
+      </ul>
     </div>
   );
 }

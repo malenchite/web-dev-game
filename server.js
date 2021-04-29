@@ -10,6 +10,8 @@ const apiRoutes = require('./routes/apiRoutes');
 const authRoutes = require('./routes/authRoutes');
 const cors = require('cors');
 
+const userService = require('./services/userService');
+
 const PORT = process.env.PORT || 3001;
 
 const corsConfig = process.env.REACT_APP_DEPLOYED
@@ -48,7 +50,10 @@ app.use('/api', apiRoutes);
 
 const server = http.createServer(app);
 
-/* Socket behavior */
-socket(server);
+/* Start up socket.io */
+const io = socket(server);
+
+/* Initialize services */
+userService(io);
 
 server.listen(PORT, () => console.log(`Listening on port ${PORT}`));

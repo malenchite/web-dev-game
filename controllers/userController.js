@@ -64,13 +64,10 @@ module.exports = {
     }
     res.json({ user: cleanUser });
   },
-  /* Used by server-side services to verify if a User ID is valid */
-  localCheck: id => {
+  /* Used by server-side services to get user info directly from the database */
+  localAccess: id => {
     return db.User.findOne({ _id: id }, (_err, match) => {
-      if (match) {
-        return true;
-      }
-      return false;
+      return match;
     })
       .catch(err => console.log(err));
   }
