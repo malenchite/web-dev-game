@@ -63,5 +63,15 @@ module.exports = {
       delete cleanUser.password;
     }
     res.json({ user: cleanUser });
+  },
+  /* Used by server-side services to verify if a User ID is valid */
+  localCheck: id => {
+    return db.User.findOne({ _id: id }, (_err, match) => {
+      if (match) {
+        return true;
+      }
+      return false;
+    })
+      .catch(err => console.log(err));
   }
 };
