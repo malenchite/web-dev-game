@@ -2,7 +2,7 @@ import axios from "axios";
 
 const SERVER = process.env.REACT_APP_DEPLOYED ? "" : "http://localhost:3001";
 
-if (process.env.REACT_APP_DEPLOYED) {
+if (!process.env.REACT_APP_DEPLOYED) {
   axios.defaults.withCredentials = true;
 }
 
