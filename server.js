@@ -56,6 +56,6 @@ const io = socket(server);
 
 /* Initialize services */
 userService(io);
-gameService(io);
+gameService.initialize(io);
 
 server.listen(PORT, () => console.log(`Listening on port ${PORT}`));
