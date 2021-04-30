@@ -9,7 +9,7 @@ import { Input, FormBtn } from "../components/Form";
 function LoginForm({ login }) {
   const [open, setOpen] = useState(true);
 
-  const cancelButtonRef = useRef();
+  const loginButtonRef = useRef();
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -17,7 +17,7 @@ function LoginForm({ login }) {
         as="div"
         static
         className="fixed z-10 inset-0 overflow-y-auto"
-        initialFocus={cancelButtonRef}
+        initialFocus={loginButtonRef}
         open={open}
         onClose={setOpen}
       >
@@ -63,7 +63,7 @@ function LoginForm({ login }) {
                     as="h3"
                     className="text-lg leading-6 font-medium text-gray-900"
                   >
-                    Register or Sign Into the Web Dev Game
+                    Login or Register for the Web Dev Game
                   </Dialog.Title>
                 </div>
               </div>
@@ -79,9 +79,9 @@ function LoginForm({ login }) {
                   type="button"
                   className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm"
                   onClick={() => setOpen(false)}
-                  ref={cancelButtonRef}
+                  ref={loginButtonRef}
                 >
-                  Sign In
+                  Log In
                 </button>
               </div>
             </div>
