@@ -1,6 +1,9 @@
+const uuid = require('uuid');
+
 const User = require('./classes/User');
 const userController = require('../controllers/userController');
-
+const CHALLENGE_EVENT = 'challenge';
+const CHALLENGE_RSP_EVENT = 'challenge response';
 const USER_INFO_EVENT = 'user info';
 const LOBBY_INFO_EVENT = 'lobby info';
 
@@ -19,14 +22,34 @@ function findUserIndex (userID) {
   return activeUsers.findIndex(user => user.id === userID);
 }
 
+/* Finds a user's index by the username */
+function findUsernameIndex (username) {
+  return activeUsers.findIndex(user => user.username === username);
+}
+
 /* Removes a user at a specified index */
 function removeUser (idx) {
   if (idx >= 0 && idx < activeUsers.length) {
-    console.log(`User ${activeUsers[idx].id} removed on socket ${activeUsers[idx].socket.id}`);
+    const user = activeUsers[idx];
+    console.log(`User ${user.id} removed on socket ${user.socket.id}`);
+
+    /* Send challenge response message to pending opponent, if any */
+    if (user.gameInfo.opponent) {
+      const opponentIdx = findUserIndex(user.gameInfo.opponent);
+      if (opponentIdx > -1) {
+        if (user.gameInfo.pending) {
+          sendChallengeRsp(activeUsers[opponentIdx].socket, false, 'Your opponent has disconnected');
+        }
+        activeUsers[opponentIdx].clearGame();
+      }
+    }
+
     activeUsers.splice(idx, 1);
     sendLobbyInfo();
   }
 }
+
+/* Communication functions */
 
 /* Sends lobby info on the given socket */
 function sendLobbyInfo () {
@@ -37,27 +60,20 @@ function sendLobbyInfo () {
   io.to('lobby').emit(LOBBY_INFO_EVENT, lobbyInfo);
 }
 
-/* Exported functions */
+/* Sends a challenge response on the provided socket */
+function sendChallengeRsp (socket, accepted, message) {
+  const response = {
+    accepted
+  };
 
-/* Sets the socket IO that will be used here and sets up connection config */
-function start (newIO) {
-  io = newIO;
+  if (message) {
+    response.message = message;
+  }
 
-  io.on('connection', socket => {
-    console.log('New user connected');
-
-    /* Activate user when info is received */
-    socket.on(USER_INFO_EVENT, userInfo => {
-      activateUser(userInfo.userId, socket);
-    });
-
-    /* On disconnect, remove ID from list of connected users */
-    socket.on('disconnect', () => {
-      console.log('User disconnected');
-      deactivateUser(socket.id);
-    });
-  });
+  socket.emit(CHALLENGE_RSP_EVENT, response);
 }
+
+/* User processing functions */
 
 /* Adds a user to the active users list, removing the old one if that user is already present */
 function activateUser (userID, socket) {
@@ -89,6 +105,118 @@ function deactivateUser (socketID) {
   const idx = findSocketIndex(socketID);
 
   removeUser(idx);
+}
+
+/* Finds if the target of the challenge is valid and forwards the challenge */
+function processChallenge (socket, username) {
+  const challengerIdx = findSocketIndex(socket.id);
+  const targetIdx = findUsernameIndex(username);
+
+  /* If challenger already has an active challenge, reject */
+  if (challengerIdx === -1 || activeUsers[challengerIdx].gameInfo.opponent) {
+    sendChallengeRsp(socket, false, 'You already have an opponent');
+    return;
+  }
+
+  /* If target not found, reject */
+  if (targetIdx === -1) {
+    sendChallengeRsp(socket, false, 'Invalid target for challenge');
+    return;
+  }
+
+  /* If target is yourself, reject */
+  if (targetIdx === challengerIdx) {
+    sendChallengeRsp(socket, false, 'You cannot challenge yourself');
+    return;
+  }
+
+  /* If target already has an opponent, reject */
+  if (activeUsers[targetIdx].gameInfo.opponent) {
+    sendChallengeRsp(socket, false, 'Target is not available to challenge');
+    return;
+  }
+
+  /* Target found and available, set pending game info and forward challenge to that client */
+  const room = uuid.v4();
+  const challenger = activeUsers[challengerIdx];
+  const target = activeUsers[targetIdx];
+
+  console.log(`${challenger.username} has challenged ${target.username}`);
+  target.challenge(challenger.id, room);
+  challenger.challenge(target.id, room);
+
+  target.socket.emit(CHALLENGE_EVENT, { username: challenger.username });
+}
+
+/* Processes response from a challenge's target */
+function processChallengeRsp (socket, accepted) {
+  const targetIdx = findSocketIndex(socket.id);
+
+  if (targetIdx === -1) {
+    console.log('Error: received challenge response from invalid user');
+    return;
+  }
+
+  const challengerIdx = findUserIndex(activeUsers[targetIdx].gameInfo.opponent);
+  if (challengerIdx === -1) {
+    console.log('Error: received challenge response for invalid opponent');
+    activeUsers[targetIdx].clearGame();
+    return;
+  }
+
+  const challenger = activeUsers[challengerIdx];
+  const target = activeUsers[targetIdx];
+
+  if (challenger.gameInfo.opponent !== target.id) {
+    console.log('Error: received challenge response from incorrect target');
+    target.clearGame();
+    return;
+  }
+
+  console.log(`${target.username} has ${accepted ? 'accepted' : 'rejected'} the challenge from ${challenger.username}`);
+  /* If challenge was rejected, clear game info for target and challenger. Otherwise, confirm the challenge. */
+  if (!accepted) {
+    challenger.clearGame();
+    target.clearGame();
+  } else {
+    challenger.confirmChallenge();
+    target.confirmChallenge();
+  }
+
+  /* Forward challenge response to initial challenger */
+  sendChallengeRsp(challenger.socket, true);
+}
+
+/* Exported functions */
+
+/* Sets the socket IO that will be used here and sets up connection config */
+function start (newIO) {
+  io = newIO;
+
+  io.on('connection', socket => {
+    console.log('New user connected');
+
+    /* Activate user when info is received */
+    socket.on(USER_INFO_EVENT, userInfo => {
+      activateUser(userInfo.userId, socket);
+    });
+
+    /* Process challenge event from client */
+    socket.on(CHALLENGE_EVENT, chalInfo => {
+      processChallenge(socket, chalInfo.username);
+    });
+
+    /* Process challenge response event from client */
+    socket.on(CHALLENGE_RSP_EVENT, rspInfo => {
+      processChallengeRsp(socket, rspInfo.accepted === 'true');
+    });
+
+    /* On disconnect, remove ID from list of connected users */
+    socket.on('disconnect', () => {
+      console.log('User disconnected');
+      deactivateUser(socket.id);
+    });
+  });
 }
 
 module.exports = start;

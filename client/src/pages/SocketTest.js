@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import io from "socket.io-client";
 import AUTH from "../utils/AUTH";
 import { Card } from '../components/Card';
-import { Input, FormBtn } from '../components/Form';
+import { Input } from '../components/Form';
 
 const ENDPOINT = "http://localhost:3001";
+const CHALLENGE_EVENT = 'challenge';
+const CHALLENGE_RSP_EVENT = 'challenge response';
 const CHAT_MESSAGE_EVENT = 'chat message';
 const LOBBY_INFO_EVENT = 'lobby info';
 const USER_INFO_EVENT = "user info";
@@ -15,6 +17,8 @@ function SocketTest () {
   const [reason, setReason] = useState(undefined);
   const [lobbyUsers, setLobbyUsers] = useState([]);
   const [message, setMessage] = useState("");
+  const [challenger, setChallenger] = useState(null);
+  const [challengeRsp, setChallengeRsp] = useState(null);
   const [chat, setChat] = useState([]);
   const [userObject, setUserObject] = useState({
     username: '',
@@ -37,6 +41,10 @@ function SocketTest () {
       if (response.status === 200) {
         disconnectUser();
         setUserInfo(null);
+        setChallenger(null);
+        setChallengeRsp(null);
+        setLobbyUsers([]);
+        setChat([]);
       }
     });
   };
@@ -70,6 +78,24 @@ function SocketTest () {
     logout();
   };
 
+  const handleChallenge = (event) => {
+    event.preventDefault();
+
+    setChallengeRsp(null);
+    if (socket) {
+      socket.emit(CHALLENGE_EVENT, { username: event.target.value });
+    }
+  }
+
+  const handleChallengeResponse = (event) => {
+    event.preventDefault();
+
+    setChallenger(null);
+    if (socket) {
+      socket.emit(CHALLENGE_RSP_EVENT, { accepted: event.target.value });
+    }
+  }
+
   const connectUser = (info) => {
     if (!info) {
       console.log('No user to connect!');
@@ -99,6 +125,18 @@ function SocketTest () {
         setChat(prevChat => [...prevChat, msg]);
       });
 
+
+      /* Receive challenge message */
+      newSocket.on(CHALLENGE_EVENT, msg => {
+        console.log("Challenge received", msg);
+        setChallenger(msg.username);
+      });
+
+      /* Receive challenge response */
+      newSocket.on(CHALLENGE_RSP_EVENT, rsp => {
+        console.log("Challenge response received", rsp);
+        setChallengeRsp(rsp);
+      });
 
       newSocket.on('disconnect', reason => {
         setReason(reason);
@@ -131,7 +169,7 @@ function SocketTest () {
   return (
     <div>
       {socket && socket.connected ? <h1>Socket opened as {socket.id}</h1> : <h1>Socket not connected</h1>}
-      {userInfo ? <h2>User logged in as {userInfo._id}</h2> : <h2>No user logged in</h2>}
+      {userInfo ? <h2>User logged in as {userInfo.username} ({userInfo._id})</h2> : <h2>No user logged in</h2>}
       {reason ? <h2>Last disconnect due to {reason}</h2> : ""}
       <Card title="Socket Login Test">
         <form style={{ marginTop: 10 }}>
@@ -149,16 +187,18 @@ function SocketTest () {
             value={userObject.password}
             onChange={handleChange}
           />
-          <FormBtn onClick={handleLogin}>Login</FormBtn>
+          <button onClick={handleLogin}>Login</button>
           <br />
-          <FormBtn onClick={handleLogout}>Disconnect</FormBtn>
+          <button onClick={handleLogout}>Disconnect</button>
           <br />
         </form>
       </Card>
-      Users in lobby:
-      <ul>
-        {lobbyUsers.map(user => <li key={user}>{user}</li>)}
-      </ul>
+      <Card>
+        <h3>Users in lobby:</h3>
+        <ul>
+          {lobbyUsers.map(user => <li key={user}>{user} <button value={user} onClick={handleChallenge}>Challenge</button></li>)}
+        </ul>
+      </Card>
       <Card>
         <form>
           <label htmlFor="message">Send Message: </label>
@@ -168,15 +208,36 @@ function SocketTest () {
             value={message}
             onChange={handleMessageChange}
           />
-          <FormBtn onClick={handleSendMessage}>Send</FormBtn>
-          <br />
+          <button onClick={handleSendMessage}>Send</button>
         </form>
       </Card>
-      Messages:
+      <Card>
+        {
+          challenger && (
+            <form>
+              <label htmlFor="challenge">You have been challenged by {challenger} </label>
+              <br />
+              <button value={true} onClick={handleChallengeResponse}>Accept</button>
+              <br />
+              <button value={false} onClick={handleChallengeResponse}>Reject</button>
+            </form>
+          )
+        }
+        {
+          challengeRsp && (
+            <div>
+              <span>Your recent challenge has been {challengeRsp.accepted === "true" ? "accepted" : "rejected"}.</span>
+              <br />
+              {challengeRsp.message && <span>The rejection message said: "{challengeRsp.message}"</span>}
+            </div>
+          )
+        }
+      </Card>
+      <h3>Messages:</h3>
       <ul>
         {chat.map(msg => <li key={msg.id}>{msg.username}: {msg.message}</li>)}
       </ul>
-    </div>
+    </div >
   );
 }
 
