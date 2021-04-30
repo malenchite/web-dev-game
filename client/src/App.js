@@ -1,11 +1,12 @@
 import './App.css';
-// import { HashRouter, Switch, Route } from "react-router-dom";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
 import SocketTest from './pages/SocketTest';
 import LoginForm from "./pages/login"
 import SignupForm from "./pages/register"
+import AUTH from "./utils/AUTH";
+import { useState, useEffect } from "react";
 
-function App() {
+function App () {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
 

@@ -9,9 +9,10 @@ class User {
     this.id = userID;
     this.socket = socket;
     this.room = 'lobby';
-    this.challenge = {
-      id: null, // Unique identifer of this player's current outgoing challenge
-      opponent: '' // User ID of opponent challenged
+    this.gameInfo = {
+      pending: false, // whether or not the game is a pending challenge
+      room: null, // Room ID
+      opponent: null // User ID of opponent
     };
 
     socket.join('lobby');
@@ -32,6 +33,22 @@ class User {
         username: this.username,
         id: uuid.v4()
       });
+  }
+
+  challenge (opponent, room) {
+    this.gameInfo.pending = true;
+    this.gameInfo.room = room;
+    this.gameInfo.opponent = opponent;
+  }
+
+  confirmChallenge () {
+    this.gameInfo.pending = false;
+  }
+
+  clearGame () {
+    this.pending = false;
+    this.gameInfo.room = null;
+    this.gameInfo.opponent = null;
   }
 
   disconnect () {
