@@ -111,7 +111,7 @@ function App() {
           </div>
 
         )}
-        {!loggedIn && (
+        {/* {!loggedIn && (
           <div className="auth-wrapper">
             <Router>
               <Route exact path="/" component={() => <LoginForm login={login} />} />
@@ -135,7 +135,7 @@ function App() {
               )}
             </Router>
           </div>
-        )}
+        )} */}
         <Router>
           <Switch>
             <Route path="/login">
