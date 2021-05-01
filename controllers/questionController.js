@@ -28,7 +28,7 @@ module.exports = {
 
   /* Get a list of all questions with category and subcategory */
   localList: (category) => {
-    return db.Question.find({category}, 'id category subcategory', (_err, list) => {
+    return db.Question.find({ category }, 'id category subcategory', (_err, list) => {
       return list;
     })
       .catch(err => console.log(err));
