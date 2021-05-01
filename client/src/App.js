@@ -10,6 +10,7 @@ import Lobby from "./pages/lobby";
 import Profile from "./pages/profile";
 import GamePage from "./pages/gamePage";
 
+
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
@@ -38,6 +39,12 @@ function App() {
     AUTH.logout().then((response) => {
       // console.log(response.data);
       if (response.status === 200) {
+        // disconnectUser();
+        // setUserInfo(null);
+        // setChallenger(null);
+        // setChallengeRsp(null)
+        // setLobbyUsers([]);
+        // setChat([])
         setLoggedIn(false);
         return setUser(null);
       }
@@ -50,6 +57,7 @@ function App() {
       if (response.status === 200) {
         // update the state
         setLoggedIn(true);
+        // connectUser(response.data.user)
         return setUser(response.data.user);
       }
     });
@@ -101,12 +109,40 @@ function App() {
               <Route path="/socket" component={SocketTest} />
             )}
           </div>
+
         )}
-        <Switch>
-          <Route path="/login">
-            <LoginForm />
-          </Route>
-        </Switch>
+        {/* {!loggedIn && (
+          <div className="auth-wrapper">
+            <Router>
+              <Route exact path="/" component={() => <LoginForm login={login} />} />
+              <Route
+                exact
+                path="/game"
+                component={() => <LoginForm login={login} />}
+              />
+              <Route
+                exact
+                path="/profile"
+                component={() => <LoginForm login={login} />}
+              />
+              <Route path="/signup">
+                <SignupForm />
+              </Route>
+              {process.env.REACT_APP_DEPLOYED ? (
+                ""
+              ) : (
+                <Route path="/socket" component={SocketTest} />
+              )}
+            </Router>
+          </div>
+        )} */}
+        <Router>
+          <Switch>
+            <Route path="/login">
+              <LoginForm />
+            </Route>
+          </Switch>
+        </Router>
       </Router>
     </div>
   );
