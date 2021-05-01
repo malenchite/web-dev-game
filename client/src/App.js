@@ -19,10 +19,10 @@ function App() {
       // console.log(response.data);
       if (!!response.data.user) {
         setLoggedIn(true);
-        setUser(response.data.user);
+        return setUser(response.data.user);
       } else {
         setLoggedIn(false);
-        setUser(null);
+        return setUser(null);
       }
     });
 
@@ -39,7 +39,7 @@ function App() {
       // console.log(response.data);
       if (response.status === 200) {
         setLoggedIn(false);
-        setUser(null);
+        return setUser(null);
       }
     });
   };
@@ -50,18 +50,18 @@ function App() {
       if (response.status === 200) {
         // update the state
         setLoggedIn(true);
-        setUser(response.data.user);
+        return setUser(response.data.user);
       }
     });
   };
 
   return (
     <div className="App">
-      {loggedIn && (
-        <div>
-          <Nav user={user} logout={logout} />
-          <div className="main">
-            <Router>
+      <Router>
+        {loggedIn && (
+          <div>
+            <Nav user={user} logout={logout} />
+            <div className="main">
               <Route exact path="/">
                 <Lobby />
               </Route>
@@ -76,42 +76,38 @@ function App() {
               ) : (
                 <Route path="/socket" component={SocketTest} />
               )}
-            </Router>
+            </div>
           </div>
-        </div>
-      )}
-      {!loggedIn && (
-        <div className="auth-wrapper">
-          <Router>
-          <Route exact path="/" component={() => <LoginForm login={login} />} />
-          <Route
-            exact
-            path="/game"
-            component={() => <LoginForm login={login} />}
-          />
-          <Route
-            exact
-            path="/profile"
-            component={() => <LoginForm login={login} />}
-          />
-          <Route path="/signup">
-            <SignupForm />
+        )}
+        {!loggedIn && (
+          <div className="auth-wrapper">
+            <Route exact path="/" component={() => <LoginForm login={login} />} />
+            <Route
+              exact
+              path="/game"
+              component={() => <LoginForm login={login} />}
+            />
+            <Route
+              exact
+              path="/profile"
+              component={() => <LoginForm login={login} />}
+            />
+            <Route path="/signup">
+              <SignupForm />
+            </Route>
+            {process.env.REACT_APP_DEPLOYED ? (
+              ""
+            ) : (
+              <Route path="/socket" component={SocketTest} />
+            )}
+          </div>
+        )}
+        <Switch>
+          <Route path="/login">
+            <LoginForm />
           </Route>
-          {process.env.REACT_APP_DEPLOYED ? (
-            ""
-          ) : (
-            <Route path="/socket" component={SocketTest} />
-          )}
-          </Router>
-        </div>
-      )}
-      <Router>
-            <Switch>
-              <Route path="/login">
-                <LoginForm />
-              </Route>
-            </Switch>
-          </Router>
+        </Switch>
+      </Router>
     </div>
   );
 }
