@@ -3,10 +3,14 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
 import SocketTest from './pages/SocketTest';
 import LoginForm from "./pages/login"
 import SignupForm from "./pages/register"
+import Nav from "./components/Nav";
 import AUTH from "./utils/AUTH";
 import { useState, useEffect } from "react";
+import Lobby from "./pages/lobby"
+import Profile from "./pages/profile"
+import GamePage from "./pages/gamePage"
 
-function App () {
+function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
 
@@ -52,17 +56,43 @@ function App () {
   };
 
   return (
-    <Router>
-      <Switch>
-        <Route path="/login">
-          <LoginForm />
-        </Route>
-        <Route path="/signup">
-          <SignupForm />
-        </Route>
-        {process.env.REACT_APP_DEPLOYED ? "" : <Route path="/socket" component={SocketTest} />}
-      </Switch>
-    </Router>
+    <div className="App">
+      {loggedIn && (
+        <div>
+          <Nav user={user} logout={logout} />
+          <div className="main">
+            <Route exact path="/">
+              <Lobby />
+            </Route>
+            <Route path="/game">
+              <GamePage />
+            </Route>
+            <Route path="/profile">
+              <Profile />
+            </Route>
+            {process.env.REACT_APP_DEPLOYED ? "" : <Route path="/socket" component={SocketTest} />}
+          </div>
+        </div>
+      )}
+      { !loggedIn && (
+        <div className="auth-wrapper">
+          <Route exact path="/" component={() => <LoginForm login={login} />} />
+          <Route exact path="/game" component={() => <LoginForm login={login} />} />
+          <Route exact path="/profile" component={() => <LoginForm login={login} />} />
+          <Route path="/signup">
+            <SignupForm />
+          </Route>
+          {process.env.REACT_APP_DEPLOYED ? "" : <Route path="/socket" component={SocketTest} />}
+        </div>
+      )}
+      {/* <Router>
+            <Switch>
+              <Route path="/login">
+                <LoginForm />
+              </Route>
+            </Switch>
+          </Router> */}
+    </div>
   );
 }
 
