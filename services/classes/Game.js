@@ -1,3 +1,5 @@
+const cardController = require('../../controllers/cardController');
+
 const ENTER_GAME_EVENT = 'enter game';
 const GAME_OVER_EVENT = 'game over';
 const OPPONENT_LEFT_EVENT = 'opponent left';
@@ -15,17 +17,24 @@ class Game {
     this.id = id;
     this.players = players;
     this.endCB = endCB;
+    this.cards = [];
     this.gameState = {
       ready: Array.from({ length: players.length }, false),
       currentPlayer: null,
-      gameOver: false
-    }; // TODO: Initialize game state
+      gameOver: false,
+      playerStats: Array.from({ length: players.length }, {})
+    };
   }
 
   start () {
     this.players.forEach(player => player.changeRoom(this.id));
 
+    /* Let players know it's time to enter the game */
     this.io.to(this.id).emit(ENTER_GAME_EVENT);
+
+    /* Initialize card deck */
+    cardController.localList()
+      .then(list => { this.cards = list; });
 
     /* Randomly determine starting player */
     this.currentPlayer = rng(0, this.players.length);
