@@ -3,12 +3,13 @@ const uuid = require('uuid');
 const CHAT_MESSAGE_EVENT = 'chat message';
 
 class User {
-  constructor (userID, socket, username, io) {
+  constructor (userID, socket, username, io, roomCB) {
     this.io = io;
     this.username = username;
     this.id = userID;
     this.socket = socket;
     this.room = 'lobby';
+    this.roomCB = null;
     this.gameInfo = {
       pending: false, // whether or not the game is a pending challenge
       room: null, // Room ID
@@ -24,6 +25,9 @@ class User {
   changeRoom (room) {
     this.room = room;
     this.socket.join(room);
+    if (this.roomCB) {
+      this.roomCB();
+    }
   }
 
   broadcastChat (message) {
