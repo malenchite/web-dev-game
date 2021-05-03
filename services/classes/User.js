@@ -9,7 +9,7 @@ class User {
     this.id = userID;
     this.socket = socket;
     this.room = null;
-    this.roomCB = null;
+    this.roomCB = roomCB;
     this.gameInfo = {
       pending: false, // whether or not the game is a pending challenge
       room: null, // Room ID
