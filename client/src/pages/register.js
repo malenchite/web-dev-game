@@ -5,10 +5,8 @@ import { Card } from '../components/Card';
 import { Input, FormBtn } from '../components/Form';
 import AUTH from '../utils/AUTH';
 
-function SignupForm () {
+function SignupForm() {
     const [userObject, setUserObject] = useState({
-        firstName: '',
-        lastName: '',
         username: '',
         email: '',
         password: '',
@@ -28,8 +26,6 @@ function SignupForm () {
         event.preventDefault();
         // TODO - validate!
         AUTH.signup({
-            firstName: userObject.firstName,
-            lastName: userObject.lastName,
             username: userObject.username,
             email: userObject.email,
             password: userObject.password
@@ -54,25 +50,18 @@ function SignupForm () {
                 <Col size="md-6">
                     <Card title="Register for The Web Dev Game">
                         <form style={{ marginTop: 10 }}>
-                            <label htmlFor="username">First name: </label>
-                            <Input
-                                type="text"
-                                name="firstName"
-                                value={userObject.firstName}
-                                onChange={handleChange}
-                            />
-                            <label htmlFor="username">Last name: </label>
-                            <Input
-                                type="text"
-                                name="lastName"
-                                value={userObject.lastName}
-                                onChange={handleChange}
-                            />
                             <label htmlFor="username">Username: </label>
                             <Input
                                 type="text"
                                 name="username"
                                 value={userObject.username}
+                                onChange={handleChange}
+                            />
+                            <label htmlFor="email">Email: </label>
+                            <Input
+                                type="text"
+                                name="email"
+                                value={userObject.email}
                                 onChange={handleChange}
                             />
                             <label htmlFor="password">Password: </label>
