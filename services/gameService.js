@@ -32,7 +32,18 @@ function startGame (player1, player2) {
   activeGames.push(newGame);
 }
 
+function removePlayer (player) {
+  for (let i = 0; i < activeGames.length; i++) {
+    if (activeGames[i].players.includes(player)) {
+      /* TODO: implement Game object player disconnect response */
+      // activeGames[i].playerDisconnect(player);
+      break;
+    }
+  }
+}
+
 module.exports = {
   initialize,
-  startGame
+  startGame,
+  removePlayer
 };

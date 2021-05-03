@@ -1,3 +1,5 @@
 module.exports = {
-  User: require('./user')
+  Card: require('./card'),
+  User: require('./user'),
+  Question: require('./question')
 };
