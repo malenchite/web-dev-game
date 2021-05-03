@@ -13,6 +13,7 @@ const effectSchema = new Schema({
 const cardSchema = new Schema({
   category: { type: String, unique: false, required: true },
   subcategory: { type: String, unique: false, required: false },
+  title: { type: String, unique: false, required: true },
   text: { type: String, unique: false, required: true },
   success: effectSchema,
   failure: effectSchema
