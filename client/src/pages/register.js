@@ -57,6 +57,13 @@ function SignupForm() {
                                 value={userObject.username}
                                 onChange={handleChange}
                             />
+                            <label htmlFor="email">Email: </label>
+                            <Input
+                                type="text"
+                                name="email"
+                                value={userObject.email}
+                                onChange={handleChange}
+                            />
                             <label htmlFor="password">Password: </label>
                             <Input
                                 type="password"
