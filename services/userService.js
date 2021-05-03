@@ -2,6 +2,8 @@ const uuid = require('uuid');
 
 const User = require('./classes/User');
 const userController = require('../controllers/userController');
+const gameService = require('./gameService');
+
 const CHALLENGE_EVENT = 'challenge';
 const CHALLENGE_RSP_EVENT = 'challenge response';
 const USER_INFO_EVENT = 'user info';
@@ -25,28 +27,6 @@ function findUserIndex (userID) {
 /* Finds a user's index by the username */
 function findUsernameIndex (username) {
   return activeUsers.findIndex(user => user.username === username);
-}
-
-/* Removes a user at a specified index */
-function removeUser (idx) {
-  if (idx >= 0 && idx < activeUsers.length) {
-    const user = activeUsers[idx];
-    console.log(`User ${user.id} removed on socket ${user.socket.id}`);
-
-    /* Send challenge response message to pending opponent, if any */
-    if (user.gameInfo.opponent) {
-      const opponentIdx = findUserIndex(user.gameInfo.opponent);
-      if (opponentIdx > -1) {
-        if (user.gameInfo.pending) {
-          sendChallengeRsp(activeUsers[opponentIdx].socket, false, 'Your opponent has disconnected');
-        }
-        activeUsers[opponentIdx].clearGame();
-      }
-    }
-
-    activeUsers.splice(idx, 1);
-    sendLobbyInfo();
-  }
 }
 
 /* Communication functions */
@@ -81,7 +61,7 @@ function activateUser (userID, socket) {
   userController.localAccess(userID)
     .then(match => {
       if (match) {
-        const newUser = new User(userID, socket, match.username, io);
+        const newUser = new User(userID, socket, match.username, io, sendLobbyInfo);
         const oldIdx = findUserIndex(userID);
 
         if (oldIdx > -1) {
@@ -92,7 +72,7 @@ function activateUser (userID, socket) {
         console.log(`Activating user ${match.username} on socket ${socket.id}`);
         activeUsers.push(newUser);
 
-        sendLobbyInfo();
+        newUser.changeRoom('lobby');
       } else {
         console.log(`Invalid user ${userID} on socket ${socket.id}`);
         socket.disconnect();
@@ -105,6 +85,30 @@ function deactivateUser (socketID) {
   const idx = findSocketIndex(socketID);
 
   removeUser(idx);
+}
+
+/* Removes a user at a specified index */
+function removeUser (idx) {
+  if (idx >= 0 && idx < activeUsers.length) {
+    const user = activeUsers[idx];
+    console.log(`User ${user.id} removed on socket ${user.socket.id}`);
+
+    /* Send challenge response message to pending opponent, if any */
+    if (user.gameInfo.opponent) {
+      const opponentIdx = findUserIndex(user.gameInfo.opponent);
+      if (opponentIdx > -1) {
+        if (user.gameInfo.pending) {
+          sendChallengeRsp(activeUsers[opponentIdx].socket, false, 'Your opponent has disconnected');
+        }
+        activeUsers[opponentIdx].clearGame();
+      }
+    }
+    gameService.removePlayer(user);
+
+    user.changeRoom();
+
+    activeUsers.splice(idx, 1);
+  }
 }
 
 /* Finds if the target of the challenge is valid and forwards the challenge */
@@ -181,6 +185,7 @@ function processChallengeRsp (socket, accepted) {
   } else {
     challenger.confirmChallenge();
     target.confirmChallenge();
+    gameService.startGame(challenger, target);
   }
 
   /* Forward challenge response to initial challenger */
