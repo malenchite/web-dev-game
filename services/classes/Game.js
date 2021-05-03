@@ -32,6 +32,7 @@ class Game {
     this.ready = Array.from({ length: players.length }, false);
     this.currentPlayer = null;
     this.gameState = {
+      turn: 0,
       gameOver: false,
       winner: null,
       playerStates: Array.from({ length: players.length }, {
@@ -119,6 +120,7 @@ class Game {
 
   /* Game flow methods */
   startNextTurn () {
+    this.gameState.turn++;
     /* Update all players and set/remove listeners */
     this.players.forEach((player, idx) => {
       if (player) {
