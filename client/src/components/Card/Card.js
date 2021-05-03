@@ -12,3 +12,7 @@ export const Card = (props) => {
     </div>
   )
 }
+<div class="max-w-sm rounded overflow-hidden shadow-lg">
+  <div class="font-bold text-xl mb-2">Question</div>
+  <p class="text-gray-700 text-base"> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.</p>
+  <hr></hr>
