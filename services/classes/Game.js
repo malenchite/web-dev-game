@@ -7,6 +7,7 @@ const GAME_OVER_EVENT = 'game over';
 const OPPONENT_LEFT_EVENT = 'opponent left';
 const NEXT_TURN_EVENT = 'next turn';
 const CARD_INFO_EVENT = 'card info';
+const TURN_RESULT_EVENT = 'turn result';
 
 /* Events received from players (also possibly related to other players) */
 const LEAVE_GAME_EVENT = 'leave game';
@@ -172,16 +173,29 @@ class Game {
         this.processCardOption();
         break;
       case 'fund':
+        this.processFund();
         break;
       case 'frontend':
+        this.processFrontend();
         break;
       case 'backend':
+        this.processBackend();
         break;
       case 'bugfix':
+        this.processBugfix();
         break;
       default:
         console.log(`Incorrect turn option received: ${turnInfo.option}`);
     }
+  }
+
+  sendTurnResult (result) {
+    this.io.to(this.id).emit(TURN_RESULT_EVENT, {
+      username: this.players[this.currentPlayer].username,
+      result
+    });
+
+    this.startNextTurn();
   }
 
   /* Card handling methods */
@@ -208,9 +222,9 @@ class Game {
 
     /* Apply card effect and move to next turn */
     this.applyCard(this.currentCard, rsp.correct === 'true')
-      .then(() => {
+      .then(result => {
         this.currentCard = null;
-        this.startNextTurn();
+        this.sendTurnResult(result);
       });
   }
 
@@ -235,6 +249,8 @@ class Game {
         playerState.fep += effect.fep;
         playerState.bep += effect.bep;
         playerState.bugs += effect.bugs;
+
+        return effect;
       });
   }
 
@@ -245,6 +261,50 @@ class Game {
 
     /* Remove question from list and return its ID */
     return list.splice(idx, 1)[0]._id;
+  }
+
+  /* Other turn option handlers */
+  processFund () {
+    const newFunding = rng(0, 3);
+
+    this.gameState.playerStates[this.currentPlayer].funding += newFunding;
+
+    this.sendTurnResult({
+      funding: newFunding
+    });
+  }
+
+  processFrontend () {
+    const newFEP = rng(1, 3);
+
+    this.gameState.playerStates[this.currentPlayer].funding -= 1;
+
+    this.sendTurnResult({
+      funding: -1,
+      fep: newFEP
+    });
+  }
+
+  processBackend () {
+    const newBEP = rng(1, 3);
+
+    this.gameState.playerStates[this.currentPlayer].funding -= 1;
+
+    this.sendTurnResult({
+      funding: -1,
+      bep: newBEP
+    });
+  }
+
+  processBugfix () {
+    const newBugs = rng(-3, -1);
+
+    this.gameState.playerStates[this.currentPlayer].funding -= 1;
+
+    this.sendTurnResult({
+      funding: -1,
+      bugs: newBugs
+    });
   }
 }
 
