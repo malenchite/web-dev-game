@@ -23,6 +23,8 @@ const UNSUBSCRIBE_EVENTS = [
   CARD_RSP_EVENT
 ];
 
+const GAME_OVER_TURN = 12;
+
 /* Generic RNG */
 function rng (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
@@ -46,6 +48,7 @@ class Game {
       winner: null,
       playerStates: Array.from({ length: players.length }, {
         username: null,
+        score: null,
         funding: 2,
         fep: 0,
         bep: 0,
@@ -90,6 +93,26 @@ class Game {
   }
 
   gameOver () {
+    this.gameState.gameOver = true;
+    let topScore = -Infinity;
+    let winningIdx = -1;
+
+    this.gameState.playerStates.forEach((state, idx) => {
+      let score = Math.min(state.fep, state.bep) - state.bugs;
+
+      if (state.funding < 0) {
+        score += state.funding;
+      }
+
+      if (score > topScore) {
+        winningIdx = idx;
+        topScore = score;
+      }
+      state.score = score;
+    });
+
+    this.gameState.winner = this.players[winningIdx].username;
+
     this.io.to(this.id).emit(GAME_OVER_EVENT, { gameState: this.gameState });
   }
 
@@ -136,6 +159,11 @@ class Game {
   /* Game flow methods */
   startNextTurn () {
     this.gameState.turn++;
+
+    if (this.gameState.turn > GAME_OVER_TURN) {
+      this.gameOver();
+    }
+
     /* Update all players and set/remove listeners */
     this.players.forEach((player, idx) => {
       if (player) {
@@ -186,10 +214,19 @@ class Game {
         break;
       default:
         console.log(`Incorrect turn option received: ${turnInfo.option}`);
+        this.processTurnResult({});
     }
   }
 
-  sendTurnResult (result) {
+  processTurnResult (result) {
+    const playerState = this.gameState.playerStates[this.currentPlayer];
+
+    playerState.funding += result.funding ? result.funding : 0;
+    playerState.fep += result.fep ? result.fep : 0;
+    playerState.bep += result.bep ? result.bep : 0;
+    playerState.bugs += result.bugs ? result.bugs : 0;
+
+    /* Send turn result to all players */
     this.io.to(this.id).emit(TURN_RESULT_EVENT, {
       username: this.players[this.currentPlayer].username,
       result
@@ -221,10 +258,10 @@ class Game {
     this.players[this.currentPlayer].emit(CARD_RSP_EVENT, rsp);
 
     /* Apply card effect and move to next turn */
-    this.applyCard(this.currentCard, rsp.correct === 'true')
-      .then(result => {
+    this.getCardEffect(rsp.correct === 'true')
+      .then(effect => {
         this.currentCard = null;
-        this.sendTurnResult(result);
+        this.processTurnResult(effect);
       });
   }
 
@@ -239,16 +276,10 @@ class Game {
     return this.pickQuestion(card.category);
   }
 
-  applyCard (idx, success) {
-    const playerState = this.gameState.playerStates[idx];
+  getCardEffect (success) {
     return cardController.localCard(this.currentCard._id)
       .then(card => {
         const effect = success ? card.success : card.failure;
-
-        playerState.funding += effect.funding;
-        playerState.fep += effect.fep;
-        playerState.bep += effect.bep;
-        playerState.bugs += effect.bugs;
 
         return effect;
       });
@@ -267,43 +298,39 @@ class Game {
   processFund () {
     const newFunding = rng(0, 3);
 
-    this.gameState.playerStates[this.currentPlayer].funding += newFunding;
-
-    this.sendTurnResult({
+    this.processTurnResult({
       funding: newFunding
     });
   }
 
   processFrontend () {
     const newFEP = rng(1, 3);
+    const newBugs = rng(0, newFEP);
 
-    this.gameState.playerStates[this.currentPlayer].funding -= 1;
-
-    this.sendTurnResult({
+    this.processTurnResult({
       funding: -1,
-      fep: newFEP
+      fep: newFEP,
+      bugs: newBugs
     });
   }
 
   processBackend () {
     const newBEP = rng(1, 3);
+    const newBugs = rng(0, newBEP);
 
-    this.gameState.playerStates[this.currentPlayer].funding -= 1;
-
-    this.sendTurnResult({
+    this.processTurnResult({
       funding: -1,
-      bep: newBEP
+      bep: newBEP,
+      bugs: newBugs
     });
   }
 
   processBugfix () {
-    const newBugs = rng(-3, -1);
+    const newBugs = rng(1, 3);
 
-    this.gameState.playerStates[this.currentPlayer].funding -= 1;
-
-    this.sendTurnResult({
+    this.processTurnResult({
       funding: -1,
-      bugs: newBugs
+      bugs: -1 * newBugs
     });
   }
 }
