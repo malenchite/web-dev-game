@@ -1,21 +1,25 @@
 const cardController = require('../../controllers/cardController');
+const questionController = require('../../controllers/questionController');
 
 /* Events emitted from game */
 const ENTER_GAME_EVENT = 'enter game';
 const GAME_OVER_EVENT = 'game over';
 const OPPONENT_LEFT_EVENT = 'opponent left';
 const NEXT_TURN_EVENT = 'next turn';
+const CARD_INFO_EVENT = 'card info';
 
 /* Events received from players (also possibly related to other players) */
 const LEAVE_GAME_EVENT = 'leave game';
 const PLAYER_JOINED_EVENT = 'player joined';
 const PLAYER_TURN_EVENT = 'player turn';
+const CARD_RSP_EVENT = 'card response';
 
 /* Events to stop listening for when a player leaves */
 const UNSUBSCRIBE_EVENTS = [
   LEAVE_GAME_EVENT,
   PLAYER_JOINED_EVENT,
-  PLAYER_TURN_EVENT
+  PLAYER_TURN_EVENT,
+  CARD_RSP_EVENT
 ];
 
 /* Generic RNG */
@@ -30,7 +34,11 @@ class Game {
     this.players = players;
     this.endCB = endCB;
     this.ready = Array.from({ length: players.length }, false);
+    this.cards = [];
+    this.frontEndQs = [];
+    this.backEndQs = [];
     this.currentPlayer = null;
+    this.currentCard = null;
     this.gameState = {
       turn: 0,
       gameOver: false,
@@ -55,6 +63,12 @@ class Game {
     /* Initialize card deck */
     cardController.localList()
       .then(list => { this.cards = list; });
+
+    /* Initialize questions */
+    questionController.localList('frontend')
+      .then(list => { this.frontEndQs = list; });
+    questionController.localList('backend')
+      .then(list => { this.backEndQs = list; });
 
     /* Randomly determine starting player */
     this.currentPlayer = rng(0, this.players.length);
@@ -155,6 +169,7 @@ class Game {
 
     switch (turnInfo.option) {
       case 'card':
+        this.processCardOption();
         break;
       case 'fund':
         break;
@@ -167,6 +182,69 @@ class Game {
       default:
         console.log(`Incorrect turn option received: ${turnInfo.option}`);
     }
+  }
+
+  /* Card handling methods */
+  processCardOption () {
+    this.currentCard = this.drawCard();
+    const cardInfo = {
+      cardId: this.currentCard._id,
+      questionId: this.cardQuestion(this.currentCard)
+    };
+
+    this.io.to(this.id).emit(CARD_INFO_EVENT, cardInfo);
+
+    /* Wait for opponent's response */
+    this.players.forEach((player, idx) => {
+      if (this.currentPlayer !== idx) {
+        player.socket.once(CARD_RSP_EVENT, rsp => this.processCardResponse(rsp));
+      }
+    });
+  }
+
+  processCardResponse (rsp) {
+    /* Forward response to current player's client */
+    this.players[this.currentPlayer].emit(CARD_RSP_EVENT, rsp);
+
+    /* Apply card effect and move to next turn */
+    this.applyCard(this.currentCard, rsp.correct === 'true')
+      .then(() => {
+        this.currentCard = null;
+        this.startNextTurn();
+      });
+  }
+
+  drawCard () {
+    const idx = rng(0, this.cards.length);
+
+    /* Remove card from list and return it */
+    return this.cards.splice(idx, 1)[0];
+  }
+
+  cardQuestion (card) {
+    return this.pickQuestion(card.category);
+  }
+
+  applyCard (idx, success) {
+    const playerState = this.gameState.playerStates[idx];
+    return cardController.localCard(this.currentCard._id)
+      .then(card => {
+        const effect = success ? card.success : card.failure;
+
+        playerState.funding += effect.funding;
+        playerState.fep += effect.fep;
+        playerState.bep += effect.bep;
+        playerState.bugs += effect.bugs;
+      });
+  }
+
+  /* Question handling methods */
+  pickQuestion (category) {
+    const list = category === 'frontend' ? this.frontEndQs : this.backEndQs;
+    const idx = rng(0, list.length);
+
+    /* Remove question from list and return its ID */
+    return list.splice(idx, 1)[0]._id;
   }
 }
 
