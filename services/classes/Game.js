@@ -109,6 +109,14 @@ class Game {
     }
   }
 
+  playerDisconnect (player) {
+    const idx = this.players.indexOf(player);
+
+    if (idx !== -1) {
+      this.playerLeft(idx);
+    }
+  }
+
   /* Game flow methods */
   startNextTurn () {
     /* Update all players and set/remove listeners */
