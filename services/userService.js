@@ -72,7 +72,7 @@ function activateUser (userID, socket) {
         console.log(`Activating user ${match.username} on socket ${socket.id}`);
         activeUsers.push(newUser);
 
-        sendLobbyInfo();
+        newUser.changeRoom('lobby');
       } else {
         console.log(`Invalid user ${userID} on socket ${socket.id}`);
         socket.disconnect();
@@ -105,8 +105,9 @@ function removeUser (idx) {
     }
     gameService.removePlayer(user);
 
+    user.changeRoom();
+
     activeUsers.splice(idx, 1);
-    sendLobbyInfo();
   }
 }
 
