@@ -25,7 +25,7 @@ function initialize (newIO) {
 }
 
 function startGame (player1, player2) {
-  const newGame = Game(io, player1.gameInfo.room, [player1, player2], endCB);
+  const newGame = new Game(io, player1.gameInfo.room, [player1, player2], endCB);
 
   newGame.start();
 
