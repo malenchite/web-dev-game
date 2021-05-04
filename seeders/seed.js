@@ -148,288 +148,265 @@ const cardSeed = [
     subcategory: '',
     title: 'Demo Day',
     text: 'Time to show off your work to some potential investors. Answer the question to score some bonus funding. No effect if your demo doesn’t go well.',
-    success: [
-      {
-        funding: 3,
-        fep: 0,
-        bep: 0,
-        bugs: 0,
-        special: 0
-      }
-    ],
-    failure: [
-      {
-        funding: 0,
-        fep: 0,
-        bep: 0,
-        bugs: 0,
-        special: 0
-      }
-    ]
+    success:
+    {
+      funding: 3,
+      fep: 0,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    }
+
   },
   {
     category: 'frontend',
     subcategory: '',
     title: 'In the Flow',
     text: 'You’re really feeling it today. Answer the question to score bonus back-end points. If you’re wrong, you went down a bad path and just broke things.',
-    success: [
-      {
-        funding: 0,
-        fep: 3,
-        bep: 0,
-        bugs: 0,
-        special: 0
-      }
-    ],
-    failure: [
-      {
-        funding: 0,
-        fep: -1,
-        bep: 0,
-        bugs: 1,
-        special: 0
-      }
-    ]
+    success:
+    {
+      funding: 0,
+      fep: 3,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: -1,
+      bep: 0,
+      bugs: 1,
+      special: 0
+    }
   },
   {
     category: 'frontend',
     subcategory: '',
     title: 'Design Consult',
     text: 'A designer friend of yours offers to work with you on some important layout issues. Answer the question to get bonus front-end points. If you’re wrong, you still get some work done but they end up charging for all the extra time it took.',
-    success: [
-      {
-        funding: 0,
-        fep: 3,
-        bep: 0,
-        bugs: 0,
-        special: 0
-      }
-    ],
-    failure: [
-      {
-        funding: -1,
-        fep: 1,
-        bep: 0,
-        bugs: 0,
-        special: 0
-      }
-    ]
+    success:
+    {
+      funding: 0,
+      fep: 3,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    },
+    failure:
+    {
+      funding: -1,
+      fep: 1,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    }
   },
   {
     category: 'frontend',
     subcategory: '',
     title: 'New Framework',
     text: 'You’ve never used it before, but it sounds like it could be a lot better than what you’ve been using. Answer the question to score bonus front-end points. If you’re wrong, then you have to roll back and break some things in the process.',
-    success: [
-      {
-        funding: 0,
-        fep: 5,
-        bep: 0,
-        bugs: 0,
-        special: 0
-      }
-    ],
-    failure: [
-      {
-        funding: 0,
-        fep: 0,
-        bep: 0,
-        bugs: 3,
-        special: 0
-      }
-    ]
+    success:
+    {
+      funding: 0,
+      fep: 5,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 0,
+      bugs: 3,
+      special: 0
+    }
   },
   {
     category: 'frontend',
     subcategory: '',
     title: 'Refresher Course',
     text: 'You decide to brush up on your skills. Answer the question and it more than pays for itself: score some bonus front-end points. If you’re wrong, that’s money down the drain.',
-    success: [
-      {
-        funding: 0,
-        fep: 2,
-        bep: 0,
-        bugs: 0,
-        special: 0
-      }
-    ],
-    failure: [
-      {
-        funding: -2,
-        fep: 0,
-        bep: 0,
-        bugs: 0,
-        special: 0
-      }
-    ]
+    success:
+    {
+      funding: 0,
+      fep: 2,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    },
+    failure:
+    {
+      funding: -2,
+      fep: 0,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    }
   },
   {
     category: 'frontend',
     subcategory: '',
     title: 'Midnight Inspiration',
     text: 'You wake up realizing exactly why that thing has been doing that thing. Answer the question to squash a major bug. If you’re wrong, it was all just a dream...',
-    success: [
-      {
-        funding: 0,
-        fep: 0,
-        bep: 0,
-        bugs: -3,
-        special: 0
-      }
-    ],
-    failure: [
-      {
-        funding: 0,
-        fep: 0,
-        bep: 0,
-        bugs: 0,
-        special: 0
-      }
-    ]
+    success:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 0,
+      bugs: -3,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    }
   },
   {
     category: 'backend',
     subcategory: '',
     title: 'Crunch Time',
     text: 'Time to buckle down and hammer out some server code. Answer the question to score bonus back-end points. If you’re wrong, you just created more bugs.',
-    success: [
-      {
-        funding: 0,
-        fep: 0,
-        bep: 3,
-        bugs: 0,
-        special: 0
-      }
-    ],
-    failure: [
-      {
-        funding: 0,
-        fep: 0,
-        bep: 0,
-        bugs: 3,
-        special: 0
-      }
-    ]
+    success:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 3,
+      bugs: 0,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 0,
+      bugs: 3,
+      special: 0
+    }
   },
   {
     category: 'backend',
     subcategory: '',
     title: 'Bug Hunt',
     text: 'You got your team together for a sprint towards solving some of those lingering issues. Answer the question to take a big chunk out of your bug backlog. No effect if you’re wrong.',
-    success: [
-      {
-        funding: 0,
-        fep: 0,
-        bep: 0,
-        bugs: -5,
-        special: 0
-      }
-    ],
-    failure: [
-      {
-        funding: 0,
-        fep: 0,
-        bep: 0,
-        bugs: 0,
-        special: 0
-      }
-    ]
+    success:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 0,
+      bugs: -5,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    }
   },
   {
     category: 'backend',
     subcategory: '',
     title: 'New Library Version',
     text: 'This could really help out with your database efficiency, if you can get it working. Answer the question for bonus back-end and bug reduction. If you’re wrong, you just break things.',
-    success: [
-      {
-        funding: 0,
-        fep: 0,
-        bep: 2,
-        bugs: -2,
-        special: 0
-      }
-    ],
-    failure: [
-      {
-        funding: 0,
-        fep: 0,
-        bep: -1,
-        bugs: 1,
-        special: 0
-      }
-    ]
+    success:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 2,
+      bugs: -2,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: 0,
+      bep: -1,
+      bugs: 1,
+      special: 0
+    }
   },
   {
     category: 'backend',
     subcategory: '',
     title: 'Database Refactor',
     text: 'It’s time to reorganize things to better suit your most recent needs. Answer the question to score some bonus back-end points. If you’re wrong, you still made some progress but you broke your front-end API integration along the way.',
-    success: [
-      {
-        funding: 0,
-        fep: 0,
-        bep: 3,
-        bugs: 0,
-        special: 0
-      }
-    ],
-    failure: [
-      {
-        funding: 0,
-        fep: -1,
-        bep: 1,
-        bugs: 0,
-        special: 0
-      }
-    ]
+    success:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 3,
+      bugs: 0,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: -1,
+      bep: 1,
+      bugs: 0,
+      special: 0
+    }
   },
   {
     category: 'backend',
     subcategory: '',
     title: 'Temporary Contract',
     text: 'A major company needs some extra hands for an upcoming release. Answer the question to score bonus funding. No effect if you mess up.',
-    success: [
-      {
-        funding: 3,
-        fep: 0,
-        bep: 0,
-        bugs: 0,
-        special: 0
-      }
-    ],
-    failure: [
-      {
-        funding: 0,
-        fep: 0,
-        bep: 0,
-        bugs: 0,
-        special: 0
-      }
-    ]
+    success:
+    {
+      funding: 3,
+      fep: 0,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    }
   },
   {
     category: 'backend',
     subcategory: '',
     title: 'Team Retreat',
     text: 'You decide to take the team on a weekend trip for some rope courses and escape rooms. Answer the question and score some big back-end points. No bonus if you’re wrong, but it’ll cost you either way.',
-    success: [
-      {
-        funding: -1,
-        fep: 0,
-        bep: 5,
-        bugs: 0,
-        special: 0
-      }
-    ],
-    failure: [
-      {
-        funding: -1,
-        fep: 0,
-        bep: 0,
-        bugs: 0,
-        special: 0
-      }
-    ]
+    success:
+    {
+      funding: -1,
+      fep: 0,
+      bep: 5,
+      bugs: 0,
+      special: 0
+    },
+    failure:
+    {
+      funding: -1,
+      fep: 0,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    }
   }
 ];
 
