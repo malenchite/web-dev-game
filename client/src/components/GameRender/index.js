@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Card } from '../Card';
 
-const GameRender = ({ yourTurn, user, gameState, opponentTurn, processTurnChoice, lastTurnResult, handleReturnToLobby }) => {
+const GameRender = ({ yourTurn, user, gameState, card, question, answer, processTurnChoice, lastTurnResult, handleReturnToLobby }) => {
 
   const [yourPlayerState, setYourPlayerState] = useState(null);
   const [choiceMade, setChoiceMade] = useState(false);
@@ -20,7 +20,6 @@ const GameRender = ({ yourTurn, user, gameState, opponentTurn, processTurnChoice
 
     setChoiceMade(true);
     processTurnChoice(choice);
-
   }
 
   /* Rendering functions */
@@ -108,26 +107,65 @@ const GameRender = ({ yourTurn, user, gameState, opponentTurn, processTurnChoice
     )
   }
 
+  const renderCard = () => {
+    return (<Card>
+      The card reads: <br />
+      <b>{card.title}</b><br />
+      <p>{card.text}</p>
+    </Card>
+    )
+  }
+
+  const renderQuestion = () => {
+    return (<>
+      <h3>A {card.category} question has been posed:</h3>
+      <p>{question}</p>
+    </>);
+  }
+
+  const renderAnswer = () => {
+    return (<>
+      <h3>The answer is:</h3>
+      <p>{answer}</p>
+    </>);
+  }
+
   return (
-    <div>
-      {console.log(gameState)}
-      {(gameState && !gameState.gameOver) && (<Card>
-        <h3>It's now turn {gameState.turn}</h3>
-        {!yourTurn
-          ? <h2>Waiting on opponent</h2>
-          : (<>
-            <h2>It's your turn!</h2>
-            {renderChoiceSelection()}
-          </>)
-        }
-        {lastTurnResult && <>{renderLastTurnResult()}</>}
-        {renderPlayerStates()}
-      </Card>)}
+    <Card>
+      {(gameState && !gameState.gameOver) &&
+        (<>
+          <h3>It's now turn {gameState.turn}</h3>
+          {!yourTurn
+            ? (<>
+              {card
+                ? (<>
+                  <h2>Your opponent has drawn a card!</h2>
+                  {renderCard()}
+                  <Card>
+                    {question && renderQuestion()}
+                    {answer && renderAnswer()}
+                  </Card>
+                </>)
+                : <h2>Waiting on opponent</h2>
+              }</>)
+            : (<>
+              <h2>It's your turn!</h2>
+              {renderChoiceSelection()}
+              {card && renderCard()}
+              <Card>
+                {question && renderQuestion()}
+                {answer && renderAnswer()}
+              </Card>
+            </>)
+          }
+          {lastTurnResult && <>{renderLastTurnResult()}</>}
+          {renderPlayerStates()}
+        </>)}
       {(gameState && gameState.gameOver) && (<>
         <h3>The game has ended!</h3>
-        {renderGameOver()}
+        {renderGameOver(Card)}
       </>)}
-    </div >
+    </Card>
   )
 }
 

@@ -3,6 +3,7 @@ import { Redirect, useHistory } from 'react-router-dom';
 import { Card } from '../components/Card';
 import { Input } from '../components/Form';
 import GameRender from '../components/GameRender';
+import API from '../utils/API';
 
 /* Events emitted from server */
 const GAME_OVER_EVENT = 'game over';
@@ -38,6 +39,9 @@ function GamePage ({ socket, user, game, updateGame }) {
   const [opponentLeft, setOpponentLeft] = useState(false);
   const [opponentTurn, setOpponentTurn] = useState(null);
   const [lastTurnResult, setLastTurnResult] = useState(null);
+  const [card, setCard] = useState(null);
+  const [question, setQuestion] = useState(null);
+  const [answer, setAnswer] = useState(null);
   const history = useHistory();
 
   useEffect(() => {
@@ -59,6 +63,8 @@ function GamePage ({ socket, user, game, updateGame }) {
       socket.on(TURN_RESULT_EVENT, turnResult => processTurnResult(turnResult));
 
       socket.on(GAME_OVER_EVENT, turnResult => processGameOver(turnResult));
+
+      socket.on(CARD_INFO_EVENT, cardInfo => processCardInfo(cardInfo));
 
       return () => {
         if (socket) {
@@ -117,6 +123,34 @@ function GamePage ({ socket, user, game, updateGame }) {
     setGameState(gameOver.gameState);
   }
 
+  const processCardInfo = cardInfo => {
+    API.getCard(cardInfo.cardId)
+      .then(res => setCard(res.data))
+      .catch(err => console.log(err));
+
+    /* Need to use the set function to get updated state of yourTurn */
+    setYourTurn(yT => {
+      if (yT) {
+        console.log("getting question text");
+        API.getQuestion(cardInfo.questionId)
+          .then(res => {
+            setQuestion(res.data);
+            setAnswer(null);
+          })
+          .catch(err => console.log(err));
+      } else {
+        console.log("getting complete question");
+        API.getQuestionComplete(cardInfo.questionId)
+          .then(res => {
+            setQuestion(res.data.text);
+            setAnswer(res.data.answer);
+          })
+          .catch(err => console.log(err));
+      }
+      return yT
+    });
+  }
+
   /* Render engine process callbacks */
   const processTurnChoice = (choice) => {
     if (socket) {
@@ -155,8 +189,9 @@ function GamePage ({ socket, user, game, updateGame }) {
                   <button onClick={handleReturnToLobby}>Return to Lobby</button>
                 </>
               )
-              : (<GameRender yourTurn={yourTurn} user={user} gameState={gameState} opponentTurn={opponentTurn}
-                processTurnChoice={processTurnChoice} lastTurnResult={lastTurnResult} handleReturnToLobby={handleReturnToLobby} />)
+              : (<GameRender yourTurn={yourTurn} user={user} gameState={gameState} card={card} question={question} answer={answer}
+                processTurnChoice={processTurnChoice} lastTurnResult={lastTurnResult} handleReturnToLobby={handleReturnToLobby}
+              />)
           }
         </>
       )
