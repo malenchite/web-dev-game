@@ -12,7 +12,8 @@
     "build": "cd client && npm run build",
     "heroku-postbuild": "npm run build",
     "lint": "eslint . --ext .js --quiet",
-    "fix": "eslint --fix ."
+    "fix": "eslint --fix .",
+    "seed": "node seeders/seed.js"
   },
   "repository": {
     "type": "git",
