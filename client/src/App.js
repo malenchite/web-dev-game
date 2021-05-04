@@ -111,7 +111,7 @@ function App() {
                 <GamePage />
               </Route>
               <Route path="/profile">
-                <Profile />
+                <Profile user={user} />
               </Route>
 
               {process.env.REACT_APP_DEPLOYED ? (
