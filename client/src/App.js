@@ -9,12 +9,15 @@ import { useState, useEffect } from "react";
 import Lobby from "./pages/lobby";
 import Profile from "./pages/profile";
 import GamePage from "./pages/gamePage";
+import io from "socket.io-client";
 
+const ENDPOINT = "http://localhost:3001";
+const USER_INFO_EVENT = "user info";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
-
+  const [socket, setSocket] = useState(null);
   useEffect(() => {
     AUTH.getUser().then((response) => {
       // console.log(response.data);
@@ -39,12 +42,7 @@ function App() {
     AUTH.logout().then((response) => {
       // console.log(response.data);
       if (response.status === 200) {
-        // disconnectUser();
-        // setUserInfo(null);
-        // setChallenger(null);
-        // setChallengeRsp(null)
-        // setLobbyUsers([]);
-        // setChat([])
+        disconnectUser();
         setLoggedIn(false);
         return setUser(null);
       }
@@ -57,11 +55,47 @@ function App() {
       if (response.status === 200) {
         // update the state
         setLoggedIn(true);
-        // connectUser(response.data.user)
+        connectUser(response.data.user)
         return setUser(response.data.user);
       }
     });
   };
+
+  const connectUser = (info) => {
+    if (!info) {
+      console.log('No user to connect!');
+      return;
+    }
+
+    const newSocket = process.env.REACT_APP_DEPLOYED ? io() : io(ENDPOINT);
+
+    newSocket.on('connect', () => {
+      newSocket.emit(USER_INFO_EVENT, {
+        userId: info._id
+      });
+
+      console.log(`Connecting on socket ${newSocket.id} as user ${info._id}`);
+
+      /* Store socket in state */
+      setSocket(newSocket);
+
+
+      newSocket.on('disconnect', reason => {
+        if (reason === 'io server disconnect') {
+          logout();
+          setSocket(null);
+        }
+      });
+    });
+  }
+
+  const disconnectUser = () => {
+    if (socket) {
+      console.log(`Disconnecting socket ${socket.id}`);
+      socket.disconnect();
+      setSocket(null);
+    }
+  }
 
   return (
     <div className="App">
@@ -71,7 +105,7 @@ function App() {
             <Nav user={user} logout={logout} />
             <div className="main">
               <Route exact path="/">
-                <Lobby />
+                <Lobby socket={socket} user={user} />
               </Route>
               <Route path="/game">
                 <GamePage />
@@ -79,6 +113,7 @@ function App() {
               <Route path="/profile">
                 <Profile />
               </Route>
+
               {process.env.REACT_APP_DEPLOYED ? (
                 ""
               ) : (
