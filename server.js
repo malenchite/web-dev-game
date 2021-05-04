@@ -40,14 +40,14 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use('/auth', authRoutes);
+app.use('/api', apiRoutes);
+
 /* Production assets and routes */
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));
   app.use(reactRoutes);
 }
-
-app.use('/auth', authRoutes);
-app.use('/api', apiRoutes);
 
 const server = http.createServer(app);
 
