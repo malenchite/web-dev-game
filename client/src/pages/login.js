@@ -62,6 +62,7 @@ function LoginForm({ login }) {
           <Col size="md-3"></Col>
         </Row>
       </Container>
+
     );
   }
 
