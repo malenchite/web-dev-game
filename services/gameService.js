@@ -25,7 +25,7 @@ function initialize (newIO) {
 }
 
 function startGame (player1, player2) {
-  const newGame = Game(io, player1.gameInfo.room, [player1, player2], endCB);
+  const newGame = new Game(io, player1.gameInfo.room, [player1, player2], endCB);
 
   newGame.start();
 
@@ -35,8 +35,7 @@ function startGame (player1, player2) {
 function removePlayer (player) {
   for (let i = 0; i < activeGames.length; i++) {
     if (activeGames[i].players.includes(player)) {
-      /* TODO: implement Game object player disconnect response */
-      // activeGames[i].playerDisconnect(player);
+      activeGames[i].playerDisconnect(player);
       break;
     }
   }
