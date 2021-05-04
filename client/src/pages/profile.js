@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
-import { Redirect, Link } from 'react-router-dom';
-
-function Profile() {
 
 
+function Profile(user) {
 
+    return (
+        <div>
+            <h1>Welcome {user.username}</h1>
+            <h2>Your Email: {user.email}</h2>
+        </div>
+
+
+    )
 }
 
 export default Profile
