@@ -36,6 +36,8 @@ function GamePage ({ socket, user, game, updateGame }) {
   const [yourTurn, setYourTurn] = useState(false);
   const [gameState, setGameState] = useState(null);
   const [opponentLeft, setOpponentLeft] = useState(false);
+  const [opponentTurn, setOpponentTurn] = useState(null);
+  const [lastTurnResult, setLastTurnResult] = useState(null);
   const history = useHistory();
 
   useEffect(() => {
@@ -43,7 +45,6 @@ function GamePage ({ socket, user, game, updateGame }) {
       socket.removeAllListeners(CHAT_MESSAGE_EVENT);
 
       socket.on(CHAT_MESSAGE_EVENT, msg => {
-        console.log("Chat message event");
         setChat(prevChat => [...prevChat, msg]);
       });
 
@@ -52,6 +53,12 @@ function GamePage ({ socket, user, game, updateGame }) {
       socket.on(OPPONENT_LEFT_EVENT, processOpponentLeft);
 
       socket.on(NEXT_TURN_EVENT, gameState => processNextTurn(gameState));
+
+      socket.on(PLAYER_TURN_EVENT, playerTurn => processPlayerTurn(playerTurn));
+
+      socket.on(TURN_RESULT_EVENT, turnResult => processTurnResult(turnResult));
+
+      socket.on(GAME_OVER_EVENT, turnResult => processGameOver(turnResult));
 
       return () => {
         if (socket) {
@@ -80,9 +87,11 @@ function GamePage ({ socket, user, game, updateGame }) {
       socket.emit(CHAT_MESSAGE_EVENT, { message });
     }
   }
+
   const handleReturnToLobby = (event) => {
     event.preventDefault();
     socket.emit(LEAVE_GAME_EVENT);
+    updateGame(null);
     history.goBack();
   }
 
@@ -94,6 +103,26 @@ function GamePage ({ socket, user, game, updateGame }) {
   const processNextTurn = turnInfo => {
     setGameState(turnInfo.gameState);
     setYourTurn(turnInfo.yourTurn);
+  }
+
+  const processPlayerTurn = playerTurn => {
+    setOpponentTurn(playerTurn);
+  }
+
+  const processTurnResult = turnResult => {
+    setLastTurnResult(turnResult);
+  }
+
+  const processGameOver = gameOver => {
+    setGameState(gameOver.gameState);
+  }
+
+  /* Render engine process callbacks */
+  const processTurnChoice = (choice) => {
+    if (socket) {
+      const contents = { choice };
+      socket.emit(PLAYER_TURN_EVENT, contents);
+    }
   }
 
   return (
@@ -126,7 +155,8 @@ function GamePage ({ socket, user, game, updateGame }) {
                   <button onClick={handleReturnToLobby}>Return to Lobby</button>
                 </>
               )
-              : (<GameRender yourTurn={yourTurn} opponentLeft={opponentLeft} gameState={gameState} updateGame={updateGame} />)
+              : (<GameRender yourTurn={yourTurn} user={user} gameState={gameState} opponentTurn={opponentTurn}
+                processTurnChoice={processTurnChoice} lastTurnResult={lastTurnResult} handleReturnToLobby={handleReturnToLobby} />)
           }
         </>
       )

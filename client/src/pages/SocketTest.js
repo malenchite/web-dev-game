@@ -149,7 +149,6 @@ function SocketTest () {
 
       /* Receive enter game */
       newSocket.on(ENTER_GAME_EVENT, gameInfo => {
-        console.log("Enter Game event received", gameInfo);
         handleEnterGame(gameInfo);
       });
 

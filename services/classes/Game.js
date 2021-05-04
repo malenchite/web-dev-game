@@ -23,7 +23,7 @@ const UNSUBSCRIBE_EVENTS = [
   CARD_RSP_EVENT
 ];
 
-const GAME_OVER_TURN = 12;
+const GAME_OVER_TURN = 6;
 
 /* Generic RNG */
 function rng (min, max) {
@@ -116,6 +116,12 @@ class Game {
       state.score = score;
     });
 
+    /* Stop listening for game process events */
+    this.players.forEach((player, idx) => {
+      player.socket.removeAllListeners(PLAYER_TURN_EVENT);
+      player.socket.removeAllListeners(CARD_RSP_EVENT);
+    });
+
     this.gameState.winner = this.players[winningIdx].username;
 
     this.io.to(this.id).emit(GAME_OVER_EVENT, { gameState: this.gameState });
@@ -166,6 +172,9 @@ class Game {
   startNextTurn () {
     this.gameState.turn++;
 
+    /* Pass turn to next player */
+    this.currentPlayer = (this.currentPlayer + 1) % (this.players.length);
+
     if (this.gameState.turn > GAME_OVER_TURN) {
       this.gameOver();
     }
@@ -200,9 +209,7 @@ class Game {
       }
     });
 
-    console.log(`${this.players[this.currentPlayer].username} chose: ${turnInfo.option}`);
-
-    switch (turnInfo.option) {
+    switch (turnInfo.choice) {
       case 'card':
         this.processCardOption();
         break;
@@ -219,24 +226,37 @@ class Game {
         this.processBugfix();
         break;
       default:
-        console.log(`Incorrect turn option received: ${turnInfo.option}`);
+        console.log(`Incorrect turn option received: ${turnInfo.choice}`);
         this.processTurnResult({});
     }
   }
 
-  processTurnResult (result) {
+  processTurnResult (result, choice, success) {
     const playerState = this.gameState.playerStates[this.currentPlayer];
 
+    /* Apply results to player state */
     playerState.funding += result.funding ? result.funding : 0;
     playerState.fep += result.fep ? result.fep : 0;
     playerState.bep += result.bep ? result.bep : 0;
     playerState.bugs += result.bugs ? result.bugs : 0;
 
-    /* Send turn result to all players */
-    this.io.to(this.id).emit(TURN_RESULT_EVENT, {
+    /* Check boundaries */
+    playerState.fep = Math.max(playerState.fep, 0);
+    playerState.bep = Math.max(playerState.bep, 0);
+    playerState.bugs = Math.max(playerState.bugs, 0);
+
+    const turnResult = {
       username: this.players[this.currentPlayer].username,
+      choice,
       result
-    });
+    };
+
+    if (success !== undefined) {
+      turnResult.success = success;
+    }
+
+    /* Send turn result to all players */
+    this.io.to(this.id).emit(TURN_RESULT_EVENT, turnResult);
 
     this.startNextTurn();
   }
@@ -264,10 +284,10 @@ class Game {
     this.players[this.currentPlayer].emit(CARD_RSP_EVENT, rsp);
 
     /* Apply card effect and move to next turn */
-    this.getCardEffect(rsp.correct === 'true')
+    this.getCardEffect(rsp.correct)
       .then(effect => {
         this.currentCard = null;
-        this.processTurnResult(effect);
+        this.processTurnResult(effect, 'card', rsp.correct);
       });
   }
 
@@ -306,7 +326,7 @@ class Game {
 
     this.processTurnResult({
       funding: newFunding
-    });
+    }, 'fund');
   }
 
   processFrontend () {
@@ -317,7 +337,7 @@ class Game {
       funding: -1,
       fep: newFEP,
       bugs: newBugs
-    });
+    }, 'frontend');
   }
 
   processBackend () {
@@ -328,7 +348,7 @@ class Game {
       funding: -1,
       bep: newBEP,
       bugs: newBugs
-    });
+    }, 'backend');
   }
 
   processBugfix () {
@@ -337,7 +357,7 @@ class Game {
     this.processTurnResult({
       funding: -1,
       bugs: -1 * newBugs
-    });
+    }, 'bugfix');
   }
 }
 
