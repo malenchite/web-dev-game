@@ -14,6 +14,7 @@ const LEAVE_GAME_EVENT = 'leave game';
 const PLAYER_JOINED_EVENT = 'player joined';
 const PLAYER_TURN_EVENT = 'player turn';
 const CARD_RSP_EVENT = 'card response';
+const CARD_ACK_EVENT = 'card acknowledge';
 
 /* Events to stop listening for when a player leaves */
 const UNSUBSCRIBE_EVENTS = [
@@ -281,8 +282,13 @@ class Game {
 
   processCardResponse (rsp) {
     /* Forward response to current player's client */
-    this.players[this.currentPlayer].emit(CARD_RSP_EVENT, rsp);
+    this.players[this.currentPlayer].socket.emit(CARD_RSP_EVENT, rsp);
 
+    /* Wait for current player to acknowledge */
+    this.players[this.currentPlayer].socket.once(CARD_ACK_EVENT, () => this.processCardAck(rsp));
+  }
+
+  processCardAck (rsp) {
     /* Apply card effect and move to next turn */
     this.getCardEffect(rsp.correct)
       .then(effect => {

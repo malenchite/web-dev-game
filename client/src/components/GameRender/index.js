@@ -1,26 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Card } from '../Card';
 
-const GameRender = ({ yourTurn, user, gameState, card, question, answer, processTurnChoice, lastTurnResult, handleReturnToLobby }) => {
+const GameRender = ({ yourTurn, user, gameState, choiceMade, card, question, answer, correct, handleTurnChoice, lastTurnResult, handleReturnToLobby, handleJudgement, handleCardAck }) => {
 
   const [yourPlayerState, setYourPlayerState] = useState(null);
-  const [choiceMade, setChoiceMade] = useState(false);
 
   useEffect(() => {
     if (gameState) {
       setYourPlayerState(gameState.playerStates.find(player => player.username === user.username));
-      setChoiceMade(false);
     }
   }, [gameState])
-
-  /* UI interaction handlers */
-  const handleTurnChoice = (event) => {
-    event.preventDefault();
-    const choice = event.target.value;
-
-    setChoiceMade(true);
-    processTurnChoice(choice);
-  }
 
   /* Rendering functions */
   const renderPlayerStates = () => {
@@ -126,7 +115,15 @@ const GameRender = ({ yourTurn, user, gameState, card, question, answer, process
   const renderAnswer = () => {
     return (<>
       <h3>The answer is:</h3>
-      <p>{answer}</p>
+      <p style={{ backgroundColor: "lightgray" }}>{answer}</p>
+    </>);
+  }
+
+  const renderJudgementButtons = () => {
+    return (<>
+      Wait for the opponent to respond in chat, then judge their answer:<br />
+      <button className="mr-5" value={true} onClick={handleJudgement}>Correct</button>
+      <button value={false} onClick={handleJudgement}>Incorrect</button>
     </>);
   }
 
@@ -142,8 +139,9 @@ const GameRender = ({ yourTurn, user, gameState, card, question, answer, process
                   <h2>Your opponent has drawn a card!</h2>
                   {renderCard()}
                   <Card>
-                    {question && renderQuestion()}
+                    {(card && question) && renderQuestion()}
                     {answer && renderAnswer()}
+                    {question && renderJudgementButtons()}
                   </Card>
                 </>)
                 : <h2>Waiting on opponent</h2>
@@ -153,8 +151,10 @@ const GameRender = ({ yourTurn, user, gameState, card, question, answer, process
               {renderChoiceSelection()}
               {card && renderCard()}
               <Card>
-                {question && renderQuestion()}
+                {(card && question) && renderQuestion()}
+                {correct !== null && <p>Your answer was judged {correct ? "correct" : "incorrect"}</p>}
                 {answer && renderAnswer()}
+                {answer && <button onClick={handleCardAck}>Done Reading</button>}
               </Card>
             </>)
           }

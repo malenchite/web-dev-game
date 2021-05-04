@@ -18,6 +18,7 @@ const LEAVE_GAME_EVENT = 'leave game';
 const PLAYER_JOINED_EVENT = 'player joined';
 const PLAYER_TURN_EVENT = 'player turn';
 const CARD_RSP_EVENT = 'card response';
+const CARD_ACK_EVENT = 'card acknowledge';
 
 /* Events to unsubscribe from when leaving */
 const UNSUBSCRIBE_EVENTS = [
@@ -40,8 +41,11 @@ function GamePage ({ socket, user, game, updateGame }) {
   const [opponentTurn, setOpponentTurn] = useState(null);
   const [lastTurnResult, setLastTurnResult] = useState(null);
   const [card, setCard] = useState(null);
-  const [question, setQuestion] = useState(null);
+  const [questionId, setQuestionId] = useState(null);
+  const [questionText, setQuestionText] = useState(null);
   const [answer, setAnswer] = useState(null);
+  const [correct, setCorrect] = useState(null);
+  const [choiceMade, setChoiceMade] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -65,6 +69,8 @@ function GamePage ({ socket, user, game, updateGame }) {
       socket.on(GAME_OVER_EVENT, turnResult => processGameOver(turnResult));
 
       socket.on(CARD_INFO_EVENT, cardInfo => processCardInfo(cardInfo));
+
+      socket.on(CARD_RSP_EVENT, cardRsp => processCardResponse(cardRsp));
 
       return () => {
         if (socket) {
@@ -101,6 +107,25 @@ function GamePage ({ socket, user, game, updateGame }) {
     history.goBack();
   }
 
+  const handleTurnChoice = (event) => {
+    event.preventDefault();
+    setChoiceMade(true);
+    if (socket) {
+      const contents = { choice: event.target.value };
+      socket.emit(PLAYER_TURN_EVENT, contents);
+    }
+  }
+
+  const handleJudgement = (event) => {
+    event.preventDefault();
+    socket.emit(CARD_RSP_EVENT, { correct: event.target.value });
+  }
+
+  const handleCardAck = (event) => {
+    event.preventDefault();
+    socket.emit(CARD_ACK_EVENT);
+  }
+
   /* Game flow processing  */
   const processOpponentLeft = () => {
     setOpponentLeft(true);
@@ -108,6 +133,10 @@ function GamePage ({ socket, user, game, updateGame }) {
 
   const processNextTurn = turnInfo => {
     setGameState(turnInfo.gameState);
+    setChoiceMade(false);
+    setCard(null);
+    setQuestionText(null);
+    setAnswer(null);
     setYourTurn(turnInfo.yourTurn);
   }
 
@@ -124,25 +153,27 @@ function GamePage ({ socket, user, game, updateGame }) {
   }
 
   const processCardInfo = cardInfo => {
+    setQuestionId(cardInfo.questionId);
+
+    /* Pull card information from database */
     API.getCard(cardInfo.cardId)
       .then(res => setCard(res.data))
       .catch(err => console.log(err));
 
-    /* Need to use the set function to get updated state of yourTurn */
+    /* Need to use the setYourTurn function to get updated state of yourTurn */
     setYourTurn(yT => {
       if (yT) {
-        console.log("getting question text");
         API.getQuestion(cardInfo.questionId)
           .then(res => {
-            setQuestion(res.data);
+            setCorrect(null);
+            setQuestionText(res.data);
             setAnswer(null);
           })
           .catch(err => console.log(err));
       } else {
-        console.log("getting complete question");
         API.getQuestionComplete(cardInfo.questionId)
           .then(res => {
-            setQuestion(res.data.text);
+            setQuestionText(res.data.text);
             setAnswer(res.data.answer);
           })
           .catch(err => console.log(err));
@@ -151,12 +182,16 @@ function GamePage ({ socket, user, game, updateGame }) {
     });
   }
 
-  /* Render engine process callbacks */
-  const processTurnChoice = (choice) => {
-    if (socket) {
-      const contents = { choice };
-      socket.emit(PLAYER_TURN_EVENT, contents);
-    }
+  const processCardResponse = (cardRsp) => {
+    setCorrect(cardRsp.correct);
+    setQuestionId(id => {
+      API.getQuestionComplete(id)
+        .then(res => {
+          setAnswer(res.data.answer);
+        })
+        .catch(err => console.log(err));
+      return null;
+    });
   }
 
   return (
@@ -189,8 +224,9 @@ function GamePage ({ socket, user, game, updateGame }) {
                   <button onClick={handleReturnToLobby}>Return to Lobby</button>
                 </>
               )
-              : (<GameRender yourTurn={yourTurn} user={user} gameState={gameState} card={card} question={question} answer={answer}
-                processTurnChoice={processTurnChoice} lastTurnResult={lastTurnResult} handleReturnToLobby={handleReturnToLobby}
+              : (<GameRender yourTurn={yourTurn} user={user} gameState={gameState} choiceMade={choiceMade} card={card} question={questionText} answer={answer} correct={correct}
+                handleTurnChoice={handleTurnChoice} lastTurnResult={lastTurnResult} handleReturnToLobby={handleReturnToLobby} handleJudgement={handleJudgement}
+                handleCardAck={handleCardAck}
               />)
           }
         </>
