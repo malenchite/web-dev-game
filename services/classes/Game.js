@@ -14,6 +14,7 @@ const LEAVE_GAME_EVENT = 'leave game';
 const PLAYER_JOINED_EVENT = 'player joined';
 const PLAYER_TURN_EVENT = 'player turn';
 const CARD_RSP_EVENT = 'card response';
+const CARD_ACK_EVENT = 'card acknowledge';
 
 /* Events to stop listening for when a player leaves */
 const UNSUBSCRIBE_EVENTS = [
@@ -23,7 +24,7 @@ const UNSUBSCRIBE_EVENTS = [
   CARD_RSP_EVENT
 ];
 
-const GAME_OVER_TURN = 12;
+const GAME_OVER_TURN = 6;
 
 /* Generic RNG */
 function rng (min, max) {
@@ -61,20 +62,20 @@ class Game {
 
   /* Startup/shutdown methods */
   start () {
-    this.players.forEach(player => player.changeRoom(this.id));
+    this.players.forEach((player, idx) => {
+      player.changeRoom(this.id);
+      this.gameState.playerStates[idx].username = player.username;
+    });
 
     /* Let players know it's time to enter the game */
-    this.io.to(this.id).emit(ENTER_GAME_EVENT);
+    this.io.to(this.id).emit(ENTER_GAME_EVENT, { gameId: this.id });
 
     /* Initialize card deck */
-    cardController.localList()
-      .then(list => { this.cards = list; });
+    this.refreshCards();
 
     /* Initialize questions */
-    questionController.localList('frontend')
-      .then(list => { this.frontEndQs = list; });
-    questionController.localList('backend')
-      .then(list => { this.backEndQs = list; });
+    this.refreshQuestions('frontend');
+    this.refreshQuestions('backend');
 
     /* Randomly determine starting player */
     this.currentPlayer = rng(0, this.players.length);
@@ -98,6 +99,7 @@ class Game {
     this.gameState.gameOver = true;
     let topScore = -Infinity;
     let winningIdx = -1;
+    let tie = false;
 
     this.gameState.playerStates.forEach((state, idx) => {
       let score = Math.min(state.fep, state.bep) - state.bugs;
@@ -113,7 +115,19 @@ class Game {
       state.score = score;
     });
 
-    this.gameState.winner = this.players[winningIdx].username;
+    if (this.gameState.playerStates.every(state => state.score === topScore)) {
+      tie = true;
+    }
+
+    /* Stop listening for game process events */
+    this.players.forEach((player, idx) => {
+      player.socket.removeAllListeners(PLAYER_TURN_EVENT);
+      player.socket.removeAllListeners(CARD_RSP_EVENT);
+    });
+
+    if (!tie) {
+      this.gameState.winner = this.players[winningIdx].username;
+    }
 
     this.io.to(this.id).emit(GAME_OVER_EVENT, { gameState: this.gameState });
   }
@@ -131,10 +145,11 @@ class Game {
   removePlayer (idx) {
     if (this.players[idx]) {
       this.players[idx].changeRoom('lobby');
-      this.players[idx] = null;
-      UNSUBSCRIBE_EVENTS.forEach(event => this.socket.off(event));
+      if (this.players[idx].socket) {
+        UNSUBSCRIBE_EVENTS.forEach(event => this.players[idx].socket.removeAllListeners(event));
+      }
     }
-
+    this.players[idx] = null;
     /* If all players are gone, end the game */
     if (this.players.every(player => player === null)) {
       this.end();
@@ -162,6 +177,9 @@ class Game {
   startNextTurn () {
     this.gameState.turn++;
 
+    /* Pass turn to next player */
+    this.currentPlayer = (this.currentPlayer + 1) % (this.players.length);
+
     if (this.gameState.turn > GAME_OVER_TURN) {
       this.gameOver();
     }
@@ -179,7 +197,7 @@ class Game {
         if (this.currentPlayer === idx) {
           player.socket.on(PLAYER_TURN_EVENT, turnInfo => this.processPlayerTurn(turnInfo));
         } else {
-          player.socket.off(PLAYER_TURN_EVENT);
+          player.socket.removeAllListeners(PLAYER_TURN_EVENT);
         }
       }
     });
@@ -196,9 +214,7 @@ class Game {
       }
     });
 
-    console.log(`${this.players[this.currentPlayer].username} chose: ${turnInfo.option}`);
-
-    switch (turnInfo.option) {
+    switch (turnInfo.choice) {
       case 'card':
         this.processCardOption();
         break;
@@ -215,24 +231,37 @@ class Game {
         this.processBugfix();
         break;
       default:
-        console.log(`Incorrect turn option received: ${turnInfo.option}`);
+        console.log(`Incorrect turn option received: ${turnInfo.choice}`);
         this.processTurnResult({});
     }
   }
 
-  processTurnResult (result) {
+  processTurnResult (result, choice, success) {
     const playerState = this.gameState.playerStates[this.currentPlayer];
 
+    /* Apply results to player state */
     playerState.funding += result.funding ? result.funding : 0;
     playerState.fep += result.fep ? result.fep : 0;
     playerState.bep += result.bep ? result.bep : 0;
     playerState.bugs += result.bugs ? result.bugs : 0;
 
-    /* Send turn result to all players */
-    this.io.to(this.id).emit(TURN_RESULT_EVENT, {
+    /* Check boundaries */
+    playerState.fep = Math.max(playerState.fep, 0);
+    playerState.bep = Math.max(playerState.bep, 0);
+    playerState.bugs = Math.max(playerState.bugs, 0);
+
+    const turnResult = {
       username: this.players[this.currentPlayer].username,
+      choice,
       result
-    });
+    };
+
+    if (success !== undefined) {
+      turnResult.success = success;
+    }
+
+    /* Send turn result to all players */
+    this.io.to(this.id).emit(TURN_RESULT_EVENT, turnResult);
 
     this.startNextTurn();
   }
@@ -257,21 +286,36 @@ class Game {
 
   processCardResponse (rsp) {
     /* Forward response to current player's client */
-    this.players[this.currentPlayer].emit(CARD_RSP_EVENT, rsp);
+    this.players[this.currentPlayer].socket.emit(CARD_RSP_EVENT, rsp);
 
+    /* Wait for current player to acknowledge */
+    this.players[this.currentPlayer].socket.once(CARD_ACK_EVENT, () => this.processCardAck(rsp));
+  }
+
+  processCardAck (rsp) {
     /* Apply card effect and move to next turn */
-    this.getCardEffect(rsp.correct === 'true')
+    this.getCardEffect(rsp.correct)
       .then(effect => {
         this.currentCard = null;
-        this.processTurnResult(effect);
+        this.processTurnResult(effect, 'card', rsp.correct);
       });
+  }
+
+  refreshCards () {
+    cardController.localList()
+      .then(list => { this.cards = list; });
   }
 
   drawCard () {
     const idx = rng(0, this.cards.length);
+    const card = this.cards.splice(idx, 1)[0]; // Retrieve card and remove from list
 
-    /* Remove card from list and return it */
-    return this.cards.splice(idx, 1)[0];
+    /* Refresh deck is empty */
+    if (card.length < 1) {
+      this.refreshCards();
+    }
+
+    return card;
   }
 
   cardQuestion (card) {
@@ -288,12 +332,28 @@ class Game {
   }
 
   /* Question handling methods */
+  refreshQuestions (category) {
+    questionController.localList(category)
+      .then(list => {
+        if (category === 'frontend') {
+          this.frontEndQs = list;
+        } else if (category === 'backend') {
+          this.backEndQs = list;
+        }
+      });
+  }
+
   pickQuestion (category) {
     const list = category === 'frontend' ? this.frontEndQs : this.backEndQs;
     const idx = rng(0, list.length);
+    const question = list.splice(idx, 1)[0]._id; // Retrieve question ID and remove from list
 
-    /* Remove question from list and return its ID */
-    return list.splice(idx, 1)[0]._id;
+    /* Refresh deck is empty */
+    if (list.length < 1) {
+      this.refreshQuestions(category);
+    }
+
+    return question;
   }
 
   /* Other turn option handlers */
@@ -302,7 +362,7 @@ class Game {
 
     this.processTurnResult({
       funding: newFunding
-    });
+    }, 'fund');
   }
 
   processFrontend () {
@@ -313,7 +373,7 @@ class Game {
       funding: -1,
       fep: newFEP,
       bugs: newBugs
-    });
+    }, 'frontend');
   }
 
   processBackend () {
@@ -324,7 +384,7 @@ class Game {
       funding: -1,
       bep: newBEP,
       bugs: newBugs
-    });
+    }, 'backend');
   }
 
   processBugfix () {
@@ -333,7 +393,7 @@ class Game {
     this.processTurnResult({
       funding: -1,
       bugs: -1 * newBugs
-    });
+    }, 'bugfix');
   }
 }
 
