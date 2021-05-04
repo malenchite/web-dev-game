@@ -2,7 +2,15 @@ module.exports = {
   purge: ['./src/**/*.html', './src/**/*.jsx', './src/**/*.js'],
   darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {}
+    colors: {
+      red: {
+        blackBean: '#440D0F',
+        mauveTaupe: '#84596B',
+        cottonCandy: '#FEC2E3',
+        eggplant: '#603A40',
+        desertSand: '#E0C1B3'
+      }
+    }
   },
   variants: {
     extend: {}

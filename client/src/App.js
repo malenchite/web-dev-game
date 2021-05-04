@@ -10,6 +10,7 @@ import Lobby from "./pages/lobby";
 import Profile from "./pages/profile";
 import GamePage from "./pages/gamePage";
 import io from "socket.io-client";
+import Splash from "./pages/splash";
 
 const ENDPOINT = "http://localhost:3001";
 const USER_INFO_EVENT = "user info";
@@ -55,7 +56,7 @@ function App() {
       if (response.status === 200) {
         // update the state
         setLoggedIn(true);
-        connectUser(response.data.user)
+        connectUser(response.data.user);
         return setUser(response.data.user);
       }
     });
@@ -63,15 +64,15 @@ function App() {
 
   const connectUser = (info) => {
     if (!info) {
-      console.log('No user to connect!');
+      console.log("No user to connect!");
       return;
     }
 
     const newSocket = process.env.REACT_APP_DEPLOYED ? io() : io(ENDPOINT);
 
-    newSocket.on('connect', () => {
+    newSocket.on("connect", () => {
       newSocket.emit(USER_INFO_EVENT, {
-        userId: info._id
+        userId: info._id,
       });
 
       console.log(`Connecting on socket ${newSocket.id} as user ${info._id}`);
@@ -79,15 +80,14 @@ function App() {
       /* Store socket in state */
       setSocket(newSocket);
 
-
-      newSocket.on('disconnect', reason => {
-        if (reason === 'io server disconnect') {
+      newSocket.on("disconnect", (reason) => {
+        if (reason === "io server disconnect") {
           logout();
           setSocket(null);
         }
       });
     });
-  }
+  };
 
   const disconnectUser = () => {
     if (socket) {
@@ -95,7 +95,7 @@ function App() {
       socket.disconnect();
       setSocket(null);
     }
-  }
+  };
 
   return (
     <div className="App">
@@ -111,7 +111,7 @@ function App() {
                 <GamePage />
               </Route>
               <Route path="/profile">
-                <Profile />
+                <Profile user={user} />
               </Route>
 
               {process.env.REACT_APP_DEPLOYED ? (
@@ -124,17 +124,9 @@ function App() {
         )}
         {!loggedIn && (
           <div className="auth-wrapper">
-            <Route exact path="/" component={() => <LoginForm login={login} />} />
-            <Route
-              exact
-              path="/game"
-              component={() => <LoginForm login={login} />}
-            />
-            <Route
-              exact
-              path="/profile"
-              component={() => <LoginForm login={login} />}
-            />
+            <Route exact path="/" component={() => <Splash />} />
+            <Route exact path="/game" component={() => <Splash />} />
+            <Route exact path="/profile" component={() => <Splash />} />
             <Route path="/signup">
               <SignupForm />
             </Route>
@@ -144,7 +136,6 @@ function App() {
               <Route path="/socket" component={SocketTest} />
             )}
           </div>
-
         )}
         {/* {!loggedIn && (
           <div className="auth-wrapper">

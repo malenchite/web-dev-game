@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-// import { Dialog, Transition } from "@headlessui/react";
+import { Dialog, Transition } from "@headlessui/react";
 import { Redirect, Link } from "react-router-dom";
 import { Container, Row, Col } from "../components/Grid";
 import { Card } from "../components/Card";
 import { Input, FormBtn } from "../components/Form";
-// import NewIndex from '../components/Login/newindex'
 
 function LoginForm({ login }) {
 
@@ -56,7 +55,6 @@ function LoginForm({ login }) {
                 <Link to="/signup">Register</Link>
                 <FormBtn onClick={handleSubmit}>Login</FormBtn>
               </form>
-              {/* <NewIndex /> */}
             </Card>
           </Col>
           <Col size="md-3"></Col>
