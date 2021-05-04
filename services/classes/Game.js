@@ -64,7 +64,7 @@ class Game {
     this.players.forEach(player => player.changeRoom(this.id));
 
     /* Let players know it's time to enter the game */
-    this.io.to(this.id).emit(ENTER_GAME_EVENT);
+    this.io.to(this.id).emit(ENTER_GAME_EVENT, { gameId: this.id });
 
     /* Initialize card deck */
     cardController.localList()
@@ -131,10 +131,11 @@ class Game {
   removePlayer (idx) {
     if (this.players[idx]) {
       this.players[idx].changeRoom('lobby');
-      this.players[idx] = null;
-      UNSUBSCRIBE_EVENTS.forEach(event => this.socket.off(event));
+      if (this.players[idx].socket) {
+        UNSUBSCRIBE_EVENTS.forEach(event => this.players[idx].socket.removeAllListeners(event));
+      }
     }
-
+    this.players[idx] = null;
     /* If all players are gone, end the game */
     if (this.players.every(player => player === null)) {
       this.end();
@@ -179,7 +180,7 @@ class Game {
         if (this.currentPlayer === idx) {
           player.socket.on(PLAYER_TURN_EVENT, turnInfo => this.processPlayerTurn(turnInfo));
         } else {
-          player.socket.off(PLAYER_TURN_EVENT);
+          player.socket.removeAllListeners(PLAYER_TURN_EVENT);
         }
       }
     });
