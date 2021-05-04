@@ -71,14 +71,11 @@ class Game {
     this.io.to(this.id).emit(ENTER_GAME_EVENT, { gameId: this.id });
 
     /* Initialize card deck */
-    cardController.localList()
-      .then(list => { this.cards = list; });
+    this.refreshCards();
 
     /* Initialize questions */
-    questionController.localList('frontend')
-      .then(list => { this.frontEndQs = list; });
-    questionController.localList('backend')
-      .then(list => { this.backEndQs = list; });
+    this.refreshQuestions('frontend');
+    this.refreshQuestions('backend');
 
     /* Randomly determine starting player */
     this.currentPlayer = rng(0, this.players.length);
@@ -297,11 +294,21 @@ class Game {
       });
   }
 
+  refreshCards () {
+    cardController.localList()
+      .then(list => { this.cards = list; });
+  }
+
   drawCard () {
     const idx = rng(0, this.cards.length);
+    const card = this.cards.splice(idx, 1)[0]; // Retrieve card and remove from list
 
-    /* Remove card from list and return it */
-    return this.cards.splice(idx, 1)[0];
+    /* Refresh deck is empty */
+    if (card.length < 1) {
+      this.refreshCards();
+    }
+
+    return card;
   }
 
   cardQuestion (card) {
@@ -318,12 +325,28 @@ class Game {
   }
 
   /* Question handling methods */
+  refreshQuestions (category) {
+    questionController.localList(category)
+      .then(list => {
+        if (category === 'frontend') {
+          this.frontEndQs = list;
+        } else if (category === 'backend') {
+          this.backEndQs = list;
+        }
+      });
+  }
+
   pickQuestion (category) {
     const list = category === 'frontend' ? this.frontEndQs : this.backEndQs;
     const idx = rng(0, list.length);
+    const question = list.splice(idx, 1)[0]._id; // Retrieve question ID and remove from list
 
-    /* Remove question from list and return its ID */
-    return list.splice(idx, 1)[0]._id;
+    /* Refresh deck is empty */
+    if (list.length < 1) {
+      this.refreshQuestions(category);
+    }
+
+    return question;
   }
 
   /* Other turn option handlers */
