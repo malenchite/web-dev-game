@@ -36,7 +36,7 @@ class Game {
     this.id = id;
     this.players = players;
     this.endCB = endCB;
-    this.ready = Array.from({ length: players.length }, false);
+    this.ready = Array.from({ length: players.length }, () => false);
     this.cards = [];
     this.frontEndQs = [];
     this.backEndQs = [];
@@ -46,13 +46,15 @@ class Game {
       turn: 0,
       gameOver: false,
       winner: null,
-      playerStates: Array.from({ length: players.length }, {
-        username: null,
-        score: null,
-        funding: 2,
-        fep: 0,
-        bep: 0,
-        bugs: 0
+      playerStates: Array.from({ length: players.length }, () => {
+        return {
+          username: null,
+          score: null,
+          funding: 2,
+          fep: 0,
+          bep: 0,
+          bugs: 0
+        };
       })
     };
   }
