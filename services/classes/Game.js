@@ -61,7 +61,10 @@ class Game {
 
   /* Startup/shutdown methods */
   start () {
-    this.players.forEach(player => player.changeRoom(this.id));
+    this.players.forEach((player, idx) => {
+      player.changeRoom(this.id);
+      this.gameState.playerStates[idx].username = player.username;
+    });
 
     /* Let players know it's time to enter the game */
     this.io.to(this.id).emit(ENTER_GAME_EVENT, { gameId: this.id });
