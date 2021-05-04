@@ -67,9 +67,9 @@ const GameRender = ({ yourTurn, user, gameState, choiceMade, card, question, ans
     }
 
     return (
-      <div>
+      <Card>
         <span>Last turn, {lastTurnResult.username} chose to {choiceText}</span><br />
-        {lastTurnResult.success !== undefined && <><span>They {lastTurnResult ? 'succeeded' : 'failed'}</span><br /></>}
+        {lastTurnResult.success !== undefined && <><span>They {lastTurnResult.success ? 'succeeded' : 'failed'}</span><br /></>}
         {(result.funding || result.fep || result.bep || result.bugs)
           ? (<>
             {renderPointChange(lastTurnResult.result.funding, 'Funding')}
@@ -79,14 +79,14 @@ const GameRender = ({ yourTurn, user, gameState, choiceMade, card, question, ans
           </>)
           : (<><span>This had no effect</span></>)
         }
-      </div>
+      </Card>
     );
   }
 
   const renderGameOver = () => {
     return (
       <div>
-        The winner is <b>{gameState.winner}!</b><br />
+        {gameState.winner ? <>The winner is <b>{gameState.winner}!</b></> : <>It was a tie!</>}<br />
         Final scores were:<br />
         <>{gameState.playerStates.map(player => (
           <span key={player.username}>{player.username}: {player.score}<br /></span>

@@ -99,6 +99,7 @@ class Game {
     this.gameState.gameOver = true;
     let topScore = -Infinity;
     let winningIdx = -1;
+    let tie = false;
 
     this.gameState.playerStates.forEach((state, idx) => {
       let score = Math.min(state.fep, state.bep) - state.bugs;
@@ -114,13 +115,19 @@ class Game {
       state.score = score;
     });
 
+    if (this.gameState.playerStates.every(state => state.score === topScore)) {
+      tie = true;
+    }
+
     /* Stop listening for game process events */
     this.players.forEach((player, idx) => {
       player.socket.removeAllListeners(PLAYER_TURN_EVENT);
       player.socket.removeAllListeners(CARD_RSP_EVENT);
     });
 
-    this.gameState.winner = this.players[winningIdx].username;
+    if (!tie) {
+      this.gameState.winner = this.players[winningIdx].username;
+    }
 
     this.io.to(this.id).emit(GAME_OVER_EVENT, { gameState: this.gameState });
   }

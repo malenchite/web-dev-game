@@ -104,7 +104,7 @@ function GamePage ({ socket, user, game, updateGame }) {
     event.preventDefault();
     socket.emit(LEAVE_GAME_EVENT);
     updateGame(null);
-    history.goBack();
+    history.replace("/");
   }
 
   const handleTurnChoice = (event) => {
@@ -118,7 +118,7 @@ function GamePage ({ socket, user, game, updateGame }) {
 
   const handleJudgement = (event) => {
     event.preventDefault();
-    socket.emit(CARD_RSP_EVENT, { correct: event.target.value });
+    socket.emit(CARD_RSP_EVENT, { correct: event.target.value === 'true' });
   }
 
   const handleCardAck = (event) => {
@@ -137,6 +137,7 @@ function GamePage ({ socket, user, game, updateGame }) {
     setCard(null);
     setQuestionText(null);
     setAnswer(null);
+    setCorrect(null);
     setYourTurn(turnInfo.yourTurn);
   }
 
@@ -237,4 +238,4 @@ function GamePage ({ socket, user, game, updateGame }) {
   );
 }
 
-export default GamePage
+export default GamePage;
