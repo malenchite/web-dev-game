@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import { Card } from '../components/Card';
 import { Input } from '../components/Form';
 import GameRender from '../components/GameRender';
@@ -30,10 +30,13 @@ const UNSUBSCRIBE_EVENTS = [
   CHAT_MESSAGE_EVENT
 ];
 
-function GamePage ({ socket, user, game, setGame }) {
+function GamePage ({ socket, user, game, updateGame }) {
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
-  const [gameState, setGameState] = useState({});
+  const [yourTurn, setYourTurn] = useState(false);
+  const [gameState, setGameState] = useState(null);
+  const [opponentLeft, setOpponentLeft] = useState(false);
+  const history = useHistory();
 
   useEffect(() => {
     if (socket) {
@@ -65,7 +68,7 @@ function GamePage ({ socket, user, game, setGame }) {
     return (socket && user && game && game !== '');
   }
 
-  /* Chat room handling */
+  /* UI handling */
   const handleMessageChange = (event) => {
     setMessage(event.target.value);
   };
@@ -77,14 +80,20 @@ function GamePage ({ socket, user, game, setGame }) {
       socket.emit(CHAT_MESSAGE_EVENT, { message });
     }
   }
-
-  /* Game flow handling */
-  const processOpponentLeft = () => {
-
+  const handleReturnToLobby = (event) => {
+    event.preventDefault();
+    socket.emit(LEAVE_GAME_EVENT);
+    history.goBack();
   }
 
-  const processNextTurn = gameState => {
-    setGameState(gameState);
+  /* Game flow processing  */
+  const processOpponentLeft = () => {
+    setOpponentLeft(true);
+  }
+
+  const processNextTurn = turnInfo => {
+    setGameState(turnInfo.gameState);
+    setYourTurn(turnInfo.yourTurn);
   }
 
   return (
@@ -103,11 +112,22 @@ function GamePage ({ socket, user, game, setGame }) {
               <button onClick={handleSendMessage}>Send</button>
             </form>
           </Card>
-          <h3>Messages:</h3>
-          <ul>
-            {chat.map(msg => <li key={msg.id}>{msg.username}: {msg.message}</li>)}
-          </ul>
-          <GameRender gameState={gameState} setGameState={setGameState} />
+          <Card>
+            <h3>Messages:</h3>
+            <ul>
+              {chat.map(msg => <li key={msg.id}>{msg.username}: {msg.message}</li>)}
+            </ul>
+          </Card>
+          {
+            opponentLeft
+              ? (
+                <>
+                  <h2>Your opponent has left</h2>
+                  <button onClick={handleReturnToLobby}>Return to Lobby</button>
+                </>
+              )
+              : (<GameRender yourTurn={yourTurn} opponentLeft={opponentLeft} gameState={gameState} updateGame={updateGame} />)
+          }
         </>
       )
         : <Redirect to="/" />

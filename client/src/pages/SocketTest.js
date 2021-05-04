@@ -3,7 +3,6 @@ import io from "socket.io-client";
 import AUTH from "../utils/AUTH";
 import { Card } from '../components/Card';
 import { Input } from '../components/Form';
-import { Link } from 'react-router-dom';
 import GamePage from './gamePage';
 
 const ENDPOINT = "http://localhost:3001";
