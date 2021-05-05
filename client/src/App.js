@@ -15,10 +15,12 @@ import Splash from "./pages/splash";
 const ENDPOINT = "http://localhost:3001";
 const USER_INFO_EVENT = "user info";
 
-function App() {
+function App () {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [socket, setSocket] = useState(null);
+  const [game, setGame] = useState(null);
+
   useEffect(() => {
     AUTH.getUser().then((response) => {
       // console.log(response.data);
@@ -84,6 +86,7 @@ function App() {
         if (reason === "io server disconnect") {
           logout();
           setSocket(null);
+          setGame(null);
         }
       });
     });
@@ -94,8 +97,13 @@ function App() {
       console.log(`Disconnecting socket ${socket.id}`);
       socket.disconnect();
       setSocket(null);
+      setGame(null);
     }
   };
+
+  const updateGame = (id) => {
+    setGame(id);
+  }
 
   return (
     <div className="App">
@@ -105,10 +113,10 @@ function App() {
             <Nav user={user} logout={logout} />
             <div className="main">
               <Route exact path="/">
-                <Lobby socket={socket} user={user} />
+                <Lobby socket={socket} user={user} game={game} updateGame={updateGame} />
               </Route>
               <Route path="/game">
-                <GamePage />
+                <GamePage socket={socket} user={user} game={game} updateGame={updateGame} />
               </Route>
               <Route path="/profile">
                 <Profile user={user} />
