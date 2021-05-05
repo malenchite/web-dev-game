@@ -160,6 +160,7 @@ const GameRender = ({ yourTurn, user, gameState, choiceMade, card, question, ans
           }
           {lastTurnResult && <>{renderLastTurnResult()}</>}
           {renderPlayerStates()}
+          <button onClick={handleReturnToLobby}>Quit Game</button>
         </>)}
       {(gameState && gameState.gameOver) && (<>
         <h3>The game has ended!</h3>
