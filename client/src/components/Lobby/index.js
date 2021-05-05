@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-// import { Redirect, Link } from 'react-router-dom';
-import { Card } from '../components/Card';
-import { Input } from '../components/Form';
+import { Card } from '../Card';
+import { Input } from '../Form';
 
 const CHALLENGE_EVENT = 'challenge';
 const CHALLENGE_RSP_EVENT = 'challenge response';
@@ -9,11 +8,21 @@ const CHAT_MESSAGE_EVENT = 'chat message';
 const LOBBY_INFO_EVENT = 'lobby info';
 const ENTER_GAME_EVENT = 'enter game';
 
-function Lobby ({ socket, user, game, updateGame }) {
+/* Events to unsubscribe from when leaving */
+const UNSUBSCRIBE_EVENTS = [
+    CHALLENGE_EVENT,
+    CHALLENGE_RSP_EVENT,
+    CHAT_MESSAGE_EVENT,
+    LOBBY_INFO_EVENT,
+    ENTER_GAME_EVENT
+];
+
+function Lobby ({ socket, user, gameId, updateGameId, updateOpenGame }) {
     const [lobbyUsers, setLobbyUsers] = useState([]);
     const [message, setMessage] = useState("");
     const [challenger, setChallenger] = useState(null);
     const [challengeRsp, setChallengeRsp] = useState(null);
+
     const [chat, setChat] = useState([]);
 
     useEffect(() => {
@@ -40,10 +49,16 @@ function Lobby ({ socket, user, game, updateGame }) {
 
             /* Receive enter game */
             socket.on(ENTER_GAME_EVENT, gameInfo => {
-                handleEnterGame(gameInfo);
+                processEnterGame(gameInfo);
             });
 
-            return () => socket.removeAllListeners(CHAT_MESSAGE_EVENT);
+            return () => {
+                if (socket) {
+                    UNSUBSCRIBE_EVENTS.forEach(event => {
+                        socket.removeAllListeners(event);
+                    });
+                }
+            }
 
         }
     }, [socket])
@@ -77,8 +92,12 @@ function Lobby ({ socket, user, game, updateGame }) {
         }
     }
 
-    const handleEnterGame = gameInfo => {
-        updateGame(gameInfo.gameId);
+    const processEnterGame = gameInfo => {
+        updateGameId(gameInfo.gameId);
+    }
+
+    const handleEnterGameButton = () => {
+        updateOpenGame(true);
     }
 
     const renderLobbyList = () => {
@@ -86,7 +105,7 @@ function Lobby ({ socket, user, game, updateGame }) {
             {lobbyUsers.map(player => (
                 <li key={player}>
                     {player}
-                    {(player.username !== user.username && !game) && <button value={player} onClick={handleChallenge}>Challenge</button>}
+                    {(player !== user.username && !gameId && !challenger) && <button className="ml-3" value={player} onClick={handleChallenge}>Challenge</button>}
                 </li>
             ))}
         </>);
@@ -127,7 +146,7 @@ function Lobby ({ socket, user, game, updateGame }) {
                 {
                     challengeRsp && (
                         <div>
-                            <span>Your recent challenge has been {challengeRsp.accepted === "true" ? "accepted" : "rejected"}.</span>
+                            <span>Your recent challenge has been {challengeRsp.accepted ? "accepted" : "rejected"}.</span>
                             <br />
                             {challengeRsp.message && <span>The rejection message said: "{challengeRsp.message}"</span>}
                         </div>
@@ -141,18 +160,16 @@ function Lobby ({ socket, user, game, updateGame }) {
                 </ul>
             </Card>
             {
-                game && (
+                gameId && (
                     <Card>
                         <span>Your game is ready to enter!</span>
                         <br />
-                        <a href="/game"><button>Enter Game</button></a>
+                        <button onClick={handleEnterGameButton}>Enter Game</button>
                     </Card>
                 )
             }
         </div>
     )
-
-
 }
 
 export default Lobby

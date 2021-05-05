@@ -144,9 +144,11 @@ class Game {
 
   removePlayer (idx) {
     if (this.players[idx]) {
-      this.players[idx].changeRoom('lobby');
-      if (this.players[idx].socket) {
-        UNSUBSCRIBE_EVENTS.forEach(event => this.players[idx].socket.removeAllListeners(event));
+      const player = this.players[idx];
+      player.clearGame();
+      player.changeRoom('lobby');
+      if (player.socket) {
+        UNSUBSCRIBE_EVENTS.forEach(event => player.socket.removeAllListeners(event));
       }
     }
     this.players[idx] = null;

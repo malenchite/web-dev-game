@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import io from "socket.io-client";
 import AUTH from "../utils/AUTH";
 import { Card } from '../components/Card';
 import { Input } from '../components/Form';
-import GamePage from './gamePage';
+import GamePage from '../components/Game';
 
 const ENDPOINT = "http://localhost:3001";
 const CHALLENGE_EVENT = 'challenge';
@@ -262,7 +262,7 @@ function SocketTest () {
           </ul>
         </>
       ) : (
-        <GamePage socket={socket} user={userInfo} game={game} updateGame={updateGame} />
+        <GamePage socket={socket} user={userInfo} gameId={game} updateGameId={updateGame} />
       )
       }
     </div >
