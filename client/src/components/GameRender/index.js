@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Card } from '../Card';
 
-const GameRender = ({ yourTurn, user, gameState, choiceMade, card, question, answer, correct, handleTurnChoice, lastTurnResult, handleReturnToLobby, handleJudgement, handleCardAck }) => {
+const GameRender = ({ yourTurn, user, gameState, choiceMade, judgementMade, card, question, answer, correct, handleTurnChoice, lastTurnResult, handleReturnToLobby, handleJudgement, handleCardAck }) => {
 
   const [yourPlayerState, setYourPlayerState] = useState(null);
 
@@ -141,7 +141,7 @@ const GameRender = ({ yourTurn, user, gameState, choiceMade, card, question, ans
                   <Card>
                     {(card && question) && renderQuestion()}
                     {answer && renderAnswer()}
-                    {question && renderJudgementButtons()}
+                    {(question && !judgementMade) && renderJudgementButtons()}
                   </Card>
                 </>)
                 : <h2>Waiting on opponent</h2>
