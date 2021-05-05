@@ -14,7 +14,7 @@ import Splash from "./pages/splash";
 const ENDPOINT = "http://localhost:3001";
 const USER_INFO_EVENT = "user info";
 
-function App () {
+function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [socket, setSocket] = useState(null);
@@ -123,6 +123,9 @@ function App () {
             <Route path="/signup">
               <SignupForm />
             </Route>
+            <Route path="/login">
+              <LoginForm login={login} />
+            </Route>
             {process.env.REACT_APP_DEPLOYED ? (
               ""
             ) : (
@@ -155,13 +158,13 @@ function App () {
             </Router>
           </div>
         )} */}
-        <Router>
+        {/* <Router>
           <Switch>
             <Route path="/login">
               <LoginForm login={login} />
             </Route>
           </Switch>
-        </Router>
+        </Router> */}
       </Router>
     </div>
   );
