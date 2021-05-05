@@ -6,24 +6,25 @@ import SignupForm from "./pages/register";
 import Nav from "./components/Nav";
 import AUTH from "./utils/AUTH";
 import { useState, useEffect } from "react";
-import Lobby from "./pages/lobby";
+import GameMaster from "./pages/GameMaster";
 import Profile from "./pages/profile";
-import GamePage from "./pages/gamePage";
 import io from "socket.io-client";
 import Splash from "./pages/splash";
 
 const ENDPOINT = "http://localhost:3001";
 const USER_INFO_EVENT = "user info";
 
-function App() {
+function App () {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [socket, setSocket] = useState(null);
+
   useEffect(() => {
     AUTH.getUser().then((response) => {
       // console.log(response.data);
       if (!!response.data.user) {
         setLoggedIn(true);
+        connectUser(response.data.user);
         return setUser(response.data.user);
       } else {
         setLoggedIn(false);
@@ -38,8 +39,6 @@ function App() {
   }, []);
 
   const logout = (event) => {
-    event.preventDefault();
-
     AUTH.logout().then((response) => {
       // console.log(response.data);
       if (response.status === 200) {
@@ -75,8 +74,6 @@ function App() {
         userId: info._id,
       });
 
-      console.log(`Connecting on socket ${newSocket.id} as user ${info._id}`);
-
       /* Store socket in state */
       setSocket(newSocket);
 
@@ -105,10 +102,7 @@ function App() {
             <Nav user={user} logout={logout} />
             <div className="main">
               <Route exact path="/">
-                <Lobby socket={socket} user={user} />
-              </Route>
-              <Route path="/game">
-                <GamePage />
+                <GameMaster socket={socket} user={user} />
               </Route>
               <Route path="/profile">
                 <Profile user={user} />
@@ -125,7 +119,6 @@ function App() {
         {!loggedIn && (
           <div className="auth-wrapper">
             <Route exact path="/" component={() => <Splash />} />
-            <Route exact path="/game" component={() => <Splash />} />
             <Route exact path="/profile" component={() => <Splash />} />
             <Route path="/signup">
               <SignupForm />
@@ -165,7 +158,7 @@ function App() {
         <Router>
           <Switch>
             <Route path="/login">
-              <LoginForm />
+              <LoginForm login={login} />
             </Route>
           </Switch>
         </Router>

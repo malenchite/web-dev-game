@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Redirect, useHistory } from 'react-router-dom';
-import { Card } from '../components/Card';
-import { Input } from '../components/Form';
-import GameRender from '../components/GameRender';
-import API from '../utils/API';
+import { Card } from '../Card';
+import { Input } from '../Form';
+import GameRender from '../GameRender';
+import API from '../../utils/API';
 
 /* Events emitted from server */
 const GAME_OVER_EVENT = 'game over';
@@ -32,13 +31,12 @@ const UNSUBSCRIBE_EVENTS = [
   CHAT_MESSAGE_EVENT
 ];
 
-function GamePage ({ socket, user, game, updateGame }) {
+function Game ({ socket, user, updateGameId, updateOpenGame }) {
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
   const [yourTurn, setYourTurn] = useState(false);
   const [gameState, setGameState] = useState(null);
   const [opponentLeft, setOpponentLeft] = useState(false);
-  const [opponentTurn, setOpponentTurn] = useState(null);
   const [lastTurnResult, setLastTurnResult] = useState(null);
   const [card, setCard] = useState(null);
   const [questionId, setQuestionId] = useState(null);
@@ -46,12 +44,9 @@ function GamePage ({ socket, user, game, updateGame }) {
   const [answer, setAnswer] = useState(null);
   const [correct, setCorrect] = useState(null);
   const [choiceMade, setChoiceMade] = useState(false);
-  const history = useHistory();
 
   useEffect(() => {
     if (socket) {
-      socket.removeAllListeners(CHAT_MESSAGE_EVENT);
-
       socket.on(CHAT_MESSAGE_EVENT, msg => {
         setChat(prevChat => [...prevChat, msg]);
       });
@@ -61,8 +56,6 @@ function GamePage ({ socket, user, game, updateGame }) {
       socket.on(OPPONENT_LEFT_EVENT, processOpponentLeft);
 
       socket.on(NEXT_TURN_EVENT, gameState => processNextTurn(gameState));
-
-      socket.on(PLAYER_TURN_EVENT, playerTurn => processPlayerTurn(playerTurn));
 
       socket.on(TURN_RESULT_EVENT, turnResult => processTurnResult(turnResult));
 
@@ -74,6 +67,7 @@ function GamePage ({ socket, user, game, updateGame }) {
 
       return () => {
         if (socket) {
+          socket.emit(LEAVE_GAME_EVENT);
           UNSUBSCRIBE_EVENTS.forEach(event => {
             socket.removeAllListeners(event);
           });
@@ -81,11 +75,6 @@ function GamePage ({ socket, user, game, updateGame }) {
       }
     }
   }, [socket]);
-
-  /* Check that we have all the data we need */
-  const gameCheck = () => {
-    return (socket && user && game && game !== '');
-  }
 
   /* UI handling */
   const handleMessageChange = (event) => {
@@ -102,9 +91,8 @@ function GamePage ({ socket, user, game, updateGame }) {
 
   const handleReturnToLobby = (event) => {
     event.preventDefault();
-    socket.emit(LEAVE_GAME_EVENT);
-    updateGame(null);
-    history.replace("/");
+    updateGameId(null);
+    updateOpenGame(false);
   }
 
   const handleTurnChoice = (event) => {
@@ -139,10 +127,6 @@ function GamePage ({ socket, user, game, updateGame }) {
     setAnswer(null);
     setCorrect(null);
     setYourTurn(turnInfo.yourTurn);
-  }
-
-  const processPlayerTurn = playerTurn => {
-    setOpponentTurn(playerTurn);
   }
 
   const processTurnResult = turnResult => {
@@ -197,45 +181,39 @@ function GamePage ({ socket, user, game, updateGame }) {
 
   return (
     <div>
-      {gameCheck() ? (
-        <>
-          <Card>
-            <form>
-              <label htmlFor="message">Send Message: </label>
-              <Input
-                type="text"
-                name="message"
-                value={message}
-                onChange={handleMessageChange}
-              />
-              <button onClick={handleSendMessage}>Send</button>
-            </form>
-          </Card>
-          <Card>
-            <h3>Messages:</h3>
-            <ul>
-              {chat.map(msg => <li key={msg.id}>{msg.username}: {msg.message}</li>)}
-            </ul>
-          </Card>
-          {
-            opponentLeft
-              ? (
-                <>
-                  <h2>Your opponent has left</h2>
-                  <button onClick={handleReturnToLobby}>Return to Lobby</button>
-                </>
-              )
-              : (<GameRender yourTurn={yourTurn} user={user} gameState={gameState} choiceMade={choiceMade} card={card} question={questionText} answer={answer} correct={correct}
-                handleTurnChoice={handleTurnChoice} lastTurnResult={lastTurnResult} handleReturnToLobby={handleReturnToLobby} handleJudgement={handleJudgement}
-                handleCardAck={handleCardAck}
-              />)
-          }
-        </>
-      )
-        : <Redirect to="/" />
+      <Card>
+        <form>
+          <label htmlFor="message">Send Message: </label>
+          <Input
+            type="text"
+            name="message"
+            value={message}
+            onChange={handleMessageChange}
+          />
+          <button onClick={handleSendMessage}>Send</button>
+        </form>
+      </Card>
+      <Card>
+        <h3>Messages:</h3>
+        <ul>
+          {chat.map(msg => <li key={msg.id}>{msg.username}: {msg.message}</li>)}
+        </ul>
+      </Card>
+      {
+        opponentLeft
+          ? (
+            <>
+              <h2>Your opponent has left</h2>
+              <button onClick={handleReturnToLobby}>Return to Lobby</button>
+            </>
+          )
+          : (<GameRender yourTurn={yourTurn} user={user} gameState={gameState} choiceMade={choiceMade} card={card} question={questionText} answer={answer} correct={correct}
+            handleTurnChoice={handleTurnChoice} lastTurnResult={lastTurnResult} handleReturnToLobby={handleReturnToLobby} handleJudgement={handleJudgement}
+            handleCardAck={handleCardAck}
+          />)
       }
     </div>
   );
 }
 
-export default GamePage;
+export default Game;
