@@ -15,18 +15,21 @@ const userService = require('./services/userService');
 
 const PORT = process.env.PORT || 3001;
 
-const corsConfig = process.env.REACT_APP_DEPLOYED
-  ? {}
-  : {
-    origin: 'http://localhost:3000',
-    credentials: true
-  };
+/* CORS configuration for local development */
+const corsConfig =
+{
+  origin: 'http://localhost:3000',
+  credentials: true
+};
 
 /* Create server objects */
 const app = express();
 
 /* Middleware */
-app.use(cors(corsConfig));
+if (process.env.NODE_ENV !== 'production') {
+  console.log('Allowing CORS from React on localhost');
+  app.use(cors(corsConfig));
+}
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(session({
