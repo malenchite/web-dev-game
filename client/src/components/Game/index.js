@@ -44,6 +44,7 @@ function Game ({ socket, user, updateGameId, updateOpenGame }) {
   const [answer, setAnswer] = useState(null);
   const [correct, setCorrect] = useState(null);
   const [choiceMade, setChoiceMade] = useState(false);
+  const [judgementMade, setJudgementMade] = useState(false);
 
   useEffect(() => {
     if (socket) {
@@ -106,6 +107,7 @@ function Game ({ socket, user, updateGameId, updateOpenGame }) {
 
   const handleJudgement = (event) => {
     event.preventDefault();
+    setJudgementMade(true);
     socket.emit(CARD_RSP_EVENT, { correct: event.target.value === 'true' });
   }
 
@@ -160,6 +162,7 @@ function Game ({ socket, user, updateGameId, updateOpenGame }) {
           .then(res => {
             setQuestionText(res.data.text);
             setAnswer(res.data.answer);
+            setJudgementMade(false);
           })
           .catch(err => console.log(err));
       }
@@ -207,7 +210,7 @@ function Game ({ socket, user, updateGameId, updateOpenGame }) {
               <button onClick={handleReturnToLobby}>Return to Lobby</button>
             </>
           )
-          : (<GameRender yourTurn={yourTurn} user={user} gameState={gameState} choiceMade={choiceMade} card={card} question={questionText} answer={answer} correct={correct}
+          : (<GameRender yourTurn={yourTurn} user={user} gameState={gameState} choiceMade={choiceMade} judgementMade={judgementMade} card={card} question={questionText} answer={answer} correct={correct}
             handleTurnChoice={handleTurnChoice} lastTurnResult={lastTurnResult} handleReturnToLobby={handleReturnToLobby} handleJudgement={handleJudgement}
             handleCardAck={handleCardAck}
           />)

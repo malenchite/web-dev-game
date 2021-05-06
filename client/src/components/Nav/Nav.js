@@ -1,37 +1,32 @@
 import React, { Fragment } from "react";
 import { Link } from 'react-router-dom';
 import { Col } from '../Grid';
-import './Nav.css';
+// import './Nav.css';
 
-const Nav = (props) => {
+const Nav = ({ user, logout }) => {
   let greeting;
 
-  if (props.user === null) {
-		greeting = <p>Hello guest</p>
-	} else if (props.user.firstName) {
-		greeting = (
-			<Fragment>
-				Welcome back, <strong>{props.user.firstName}</strong>
-			</Fragment>
-		)
-	} else if (props.user.username) {
-		greeting = (
-			<Fragment>
-				Welcome back, <strong>{props.user.username} </strong>
-			</Fragment>
-		)
+  if (user === null) {
+    greeting = <p>Hello guest</p>
+  } else if (user.username) {
+    greeting = (
+      <Fragment>
+        Welcome back, <strong>{user.username} </strong>
+      </Fragment>
+    )
   }
-  
+
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-success">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-success bg-red-desertSand text-red-blackBean">
       <Col size="md-6 sm-6">
-        <Link to="/" className="navbar-brand">React Reading List With Auth</Link>
+        <Link to="/" className="navbar-brand">The Web Dev Game!</Link>
+
       </Col>
-      <Col size="md-6 sm-6">
-        <div className="float-right">
-        {greeting} - <Link to="#" className="logout" onClick={props.logout}>Logout</Link>
-        </div>
-      </Col>
+
+      <div className="float-right bg-red-desertSand text-red-blackBean">
+        {greeting} - <Link to="#" className="logout" onClick={logout}>Logout</Link>
+      </div>
+
     </nav>
   )
 };

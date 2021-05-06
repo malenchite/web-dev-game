@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Card } from '../Card';
 
-const GameRender = ({ yourTurn, user, gameState, choiceMade, card, question, answer, correct, handleTurnChoice, lastTurnResult, handleReturnToLobby, handleJudgement, handleCardAck }) => {
+const GameRender = ({ yourTurn, user, gameState, choiceMade, judgementMade, card, question, answer, correct, handleTurnChoice, lastTurnResult, handleReturnToLobby, handleJudgement, handleCardAck }) => {
 
   const [yourPlayerState, setYourPlayerState] = useState(null);
 
@@ -43,7 +43,7 @@ const GameRender = ({ yourTurn, user, gameState, choiceMade, card, question, ans
     if (!choiceMade) {
       return (<form>
         Make your selection:<br />
-        <button value='card' onClick={handleTurnChoice}>Draw a Card</button><br />
+        <button value='card' className=" w-16 h-24 bg-red-mauveTaupe hover:bg-red-desertSand text-white font-bold py-2 px-4 border-b-4 border-red-cottonCandy hover:border-red-blackBean rounded" onClick={handleTurnChoice}>Draw a Card</button><br />
         <button value='fund' onClick={handleTurnChoice}>Seek Funding</button><br />
         {yourPlayerState.funding > 0 && <><button value='frontend' onClick={handleTurnChoice}>Work on Front-end</button> (costs 1 funding)<br /></>}
         {yourPlayerState.funding > 0 && <><button value='backend' onClick={handleTurnChoice}>Work on Back-end</button> (costs 1 funding)<br /></>}
@@ -141,7 +141,7 @@ const GameRender = ({ yourTurn, user, gameState, choiceMade, card, question, ans
                   <Card>
                     {(card && question) && renderQuestion()}
                     {answer && renderAnswer()}
-                    {question && renderJudgementButtons()}
+                    {(question && !judgementMade) && renderJudgementButtons()}
                   </Card>
                 </>)
                 : <h2>Waiting on opponent</h2>
