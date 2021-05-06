@@ -77,6 +77,73 @@ const questionSeed = [
     answer: 'Comments in HTML begins with “<!–“and ends with “–>”.'
   },
   {
+    category: 'frontend',
+    subcategory: 'CSS',
+    text: 'What is CSS?',
+    answer: 'CSS stands for Cascading Style Sheet. It is a popular styling language which is used with HTML to design websites. It can also be used with any XML documents including plain XML, SVG, and XUL.'
+  },
+  {
+    category: 'frontend',
+    subcategory: 'CSS',
+    text: 'What is an advantage of using CSS?',
+    answer: 'Bandwidth, Site-wide consistency, Page reformatting, accessibility, content separated from presentation'
+  },
+  {
+    category: 'frontend',
+    subcategory: 'CSS',
+    text: 'Name one example of a CSS framework.',
+    answer: `Some examples are:
+    – Bootstrap
+    – Foundation
+    – Tailwind
+    – Semantic UI
+    – Gumby
+    – Ulkit`
+  },
+  {
+    category: 'frontend',
+    subcategory: 'CSS',
+    text: 'What is the float property of CSS?',
+    answer: 'The CSS float property is used to move the image to the right or left along with the texts to be wrapped around it. It doesn\'t change the property of the elements used before it.'
+  },
+  {
+    category: 'frontend',
+    subcategory: 'CSS',
+    text: 'Name the property used to specify the background color of an element.',
+    answer: 'The background-color property is used to specify the background color of the element.'
+  },
+  {
+    category: 'frontend',
+    subcategory: 'CSS',
+    text: 'What is the difference in formatting between using a class and id(# and .)?',
+    answer: 'id’s use “#” and classes use “.”'
+  },
+  {
+    category: 'frontend',
+    subcategory: 'CSS',
+    text: 'Can you target multiple elements using separators when styling?',
+    answer: `Yes, an example would be separating said elements with a comma like
+    “h2, h3 {   }”`
+  },
+  {
+    category: 'frontend',
+    subcategory: 'CSS',
+    text: 'What is responsive web design?',
+    answer: 'Responsive design is an approach to web page creation that makes use of flexible layouts, flexible images and cascading style sheet media queries. The goal of responsive design is to build web pages that detect the visitor’s screen size and orientation and change the layout accordingly.'
+  },
+  {
+    category: 'frontend',
+    subcategory: 'CSS',
+    text: 'How do you comment in CSS?',
+    answer: '/* This is a single-line comment */'
+  },
+  {
+    category: 'frontend',
+    subcategory: 'CSS',
+    text: 'Which property is used to change the font of an element?',
+    answer: 'font-family'
+  },
+  {
     category: 'backend',
     subcategory: 'Databases',
     text: 'What is the primary difference between SQL and NoSQL databases?',
@@ -139,6 +206,66 @@ const questionSeed = [
     subcategory: 'Databases',
     text: 'What does the SELECT statement do in SQL?',
     answer: 'SELECT operator in SQL is used to select data from a database. The data returned is stored in a result table, called the result-set.'
+  },
+  {
+    category: 'backend',
+    subcategory: 'Node.js',
+    text: 'What is the difference between Node.js and JavaScript?',
+    answer: 'Node is an interpreter and environment for JavaScript while JavaScript is a programming language. Node is used for performing actions in an operating system while JavaScript is used for client side activity in web apps.'
+  },
+  {
+    category: 'backend',
+    subcategory: 'Node.js',
+    text: 'What is Node.js?',
+    answer: 'Node.js is a framework developed using Chrome\'s V8 engine. It is a lightweight framework used for creating server side web applications.'
+  },
+  {
+    category: 'backend',
+    subcategory: 'Node.js',
+    text: 'What are 2 benefits of Node.js?',
+    answer: 'Fast, Asynchronous, Scalable, Open Source, and has No Buffering.'
+  },
+  {
+    category: 'backend',
+    subcategory: 'Node.js',
+    text: 'Is Node.js single threaded?',
+    answer: `Yes`
+  },
+  {
+    category: 'backend',
+    subcategory: 'Node.js',
+    text: 'What is package.json?',
+    answer: 'package.json is the file that contains all metadata for a project where we define properties.'
+  },
+  {
+    category: 'backend',
+    subcategory: 'Node.js',
+    text: 'What is an error first callback in Node.js?',
+    answer: 'Error-first callbacks in Node.js are used to pass errors and data. This way you can pass an error for handling and checking if anything is wrong.'
+  },
+  {
+    category: 'backend',
+    subcategory: 'Node.js',
+    text: 'What is module.exports?',
+    answer: 'A module in Node.js that encapsulates all the related codes into a single unit of code which can be interpreted by shifting related functions into a single file'
+  },
+  {
+    category: 'backend',
+    subcategory: 'Node.js',
+    text: 'What is middleware in Node.js?',
+    answer: 'Middleware receives the request and response objects along with next functions which can be used for: Executing types of code, updating or modifying request or response objects, finishing the request-response cycle, and invoking the next middleware in the stack.'
+  },
+  {
+    category: 'backend',
+    subcategory: 'Node.js',
+    text: 'What is ESLint?',
+    answer: 'Provides linting utility for JavaScript through a plug, this is used to search for bugs and formatting problems.'
+  },
+  {
+    category: 'backend',
+    subcategory: 'Node.js',
+    text: 'What is NPM?',
+    answer: 'NPM stands for Node Package Manager, responsible for managing all the packages and modules for Node.js.'
   }
 ];
 
