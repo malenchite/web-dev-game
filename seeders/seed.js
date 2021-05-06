@@ -404,6 +404,94 @@ const cardSeed = [
     }
   },
   {
+    category: 'frontend',
+    subcategory: '',
+    title: 'The Ol’ Reliable',
+    text: 'After struggling with some understanding why your code is not working, you decide to check Stack Overflow to see if there are any similar problems users have had before. Answer the question to find the right example. If you’re wrong, you miss the right link and waste further time with no progress.',
+    success:
+    {
+      funding: 0,
+      fep: 2,
+      bep: 0,
+      bugs: -1,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    }
+  },
+  {
+    category: 'frontend',
+    subcategory: '',
+    title: 'The Viral Opportunity',
+    text: 'The project you’re working on just got brought up on a semi-mainstream media outlet to showcase. Answer the following question for the demo to run smoothly and without bugs. If you’re wrong, a bug comes up during the presentation and the product stops working.',
+    success:
+    {
+      funding: 4,
+      fep: 0,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    },
+    failure:
+    {
+      funding: -1,
+      fep: 0,
+      bep: 0,
+      bugs: 1,
+      special: 0
+    }
+  },
+  {
+    category: 'frontend',
+    subcategory: '',
+    title: 'New Hire',
+    text: 'Your boss introduces you to a new recruit that’s being brought in to help with the design of the project. Answer the question to give the instructions and guide the new hire to what they need to do. If you’re wrong, they don’t understand the instructions correctly and give you an incorrect deliverable that sets you back on the front-end.',
+    success:
+    {
+      funding: 0,
+      fep: 3,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: -2,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    }
+  },
+  {
+    category: 'frontend',
+    subcategory: '',
+    title: 'The Forbidden Push',
+    text: 'You are about to send up a bunch of code in a git push, but right before you push up the code you think “Is there something I am forgetting right now?”. Answer the following question to jog your memory to pull before pushing. If you’re wrong, you push up your code without first pulling, pushing over a bunch of code from your coworker’s recent push from a few minutes ago. Your coworker later pulls therein losing all of his progress.',
+    success:
+    {
+      funding: 0,
+      fep: 2,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: -3,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    }
+  },
+  {
     category: 'backend',
     subcategory: '',
     title: 'Crunch Time',
@@ -532,6 +620,94 @@ const cardSeed = [
       fep: 0,
       bep: 0,
       bugs: 0,
+      special: 0
+    }
+  },
+  {
+    category: 'backend',
+    subcategory: '',
+    title: 'Good Communication',
+    text: 'A problem comes up in the back-end. You and a teammate delegate what tasks you each should be working on. Answer the following question to delegate tasks efficiently and so that you both understand what you will be working on. If you’re wrong, you both accidentally work on the same problems and waste a lot of time on back-end production.',
+    success:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 2,
+      bugs: 0,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    }
+  },
+  {
+    category: 'backend',
+    subcategory: '',
+    title: 'Potential Security Breach',
+    text: 'You notice a flaw in the security system you are using. Answer the following question to fix this security flaw. If you’re wrong, your answer doesn’t actually fix the problem and you suffer a database leak in the future.',
+    success:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 3,
+      bugs: -1,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: 0,
+      bep: -2,
+      bugs: 1,
+      special: 0
+    }
+  },
+  {
+    category: 'backend',
+    subcategory: '',
+    title: 'Product Success',
+    text: 'The product your team has been working on has been extremely successful recently, you decide to ask your boss for an increase in funding. Answer the following question to have a successful meeting with your boss. If you’re wrong he denies your request.',
+    success:
+    {
+      funding: 3,
+      fep: 0,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    }
+  },
+  {
+    category: 'backend',
+    subcategory: '',
+    title: 'App Breaking Bugs',
+    text: 'With a recent push from a coworker there has been a few app breaking bugs introduced. The code is crucial for the deadline in 2 days and these bugs have been made aware to your boss who needs this done, answer the following question to find the bugs and fix them. If you’re wrong, these bugs aren’t fixed, the deadline passes, and your project group is behind on production.',
+    success:
+    {
+      funding: 1,
+      fep: 0,
+      bep: 2,
+      bugs: -2,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 0,
+      bugs: 2,
       special: 0
     }
   }
