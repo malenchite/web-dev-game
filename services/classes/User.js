@@ -20,14 +20,14 @@ class User {
     socket.on(CHAT_MESSAGE_EVENT, msg => this.broadcastChat(msg.message));
   }
 
+  /* Leave current room and join the new one. Also callback if necessary. */
   changeRoom (room) {
+    this.socket.leave(this.room);
+
     if (room) {
       this.room = room;
       this.socket.join(room);
-    } else if (this.room) {
-      this.socket.leave(this.room);
     }
-
     if (this.roomCB) {
       this.roomCB();
     }
