@@ -77,6 +77,73 @@ const questionSeed = [
     answer: 'Comments in HTML begins with “<!–“and ends with “–>”.'
   },
   {
+    category: 'frontend',
+    subcategory: 'CSS',
+    text: 'What is CSS?',
+    answer: 'CSS stands for Cascading Style Sheet. It is a popular styling language which is used with HTML to design websites. It can also be used with any XML documents including plain XML, SVG, and XUL.'
+  },
+  {
+    category: 'frontend',
+    subcategory: 'CSS',
+    text: 'What is an advantage of using CSS?',
+    answer: 'Bandwidth, Site-wide consistency, Page reformatting, accessibility, content separated from presentation'
+  },
+  {
+    category: 'frontend',
+    subcategory: 'CSS',
+    text: 'Name one example of a CSS framework.',
+    answer: `Some examples are:
+    – Bootstrap
+    – Foundation
+    – Tailwind
+    – Semantic UI
+    – Gumby
+    – Ulkit`
+  },
+  {
+    category: 'frontend',
+    subcategory: 'CSS',
+    text: 'What is the float property of CSS?',
+    answer: 'The CSS float property is used to move the image to the right or left along with the texts to be wrapped around it. It doesn\'t change the property of the elements used before it.'
+  },
+  {
+    category: 'frontend',
+    subcategory: 'CSS',
+    text: 'Name the property used to specify the background color of an element.',
+    answer: 'The background-color property is used to specify the background color of the element.'
+  },
+  {
+    category: 'frontend',
+    subcategory: 'CSS',
+    text: 'What is the difference in formatting between using a class and id(# and .)?',
+    answer: 'id’s use “#” and classes use “.”'
+  },
+  {
+    category: 'frontend',
+    subcategory: 'CSS',
+    text: 'Can you target multiple elements using separators when styling?',
+    answer: `Yes, an example would be separating said elements with a comma like
+    “h2, h3 {   }”`
+  },
+  {
+    category: 'frontend',
+    subcategory: 'CSS',
+    text: 'What is responsive web design?',
+    answer: 'Responsive design is an approach to web page creation that makes use of flexible layouts, flexible images and cascading style sheet media queries. The goal of responsive design is to build web pages that detect the visitor’s screen size and orientation and change the layout accordingly.'
+  },
+  {
+    category: 'frontend',
+    subcategory: 'CSS',
+    text: 'How do you comment in CSS?',
+    answer: '/* This is a single-line comment */'
+  },
+  {
+    category: 'frontend',
+    subcategory: 'CSS',
+    text: 'Which property is used to change the font of an element?',
+    answer: 'font-family'
+  },
+  {
     category: 'backend',
     subcategory: 'Databases',
     text: 'What is the primary difference between SQL and NoSQL databases?',
@@ -139,6 +206,66 @@ const questionSeed = [
     subcategory: 'Databases',
     text: 'What does the SELECT statement do in SQL?',
     answer: 'SELECT operator in SQL is used to select data from a database. The data returned is stored in a result table, called the result-set.'
+  },
+  {
+    category: 'backend',
+    subcategory: 'Node.js',
+    text: 'What is the difference between Node.js and JavaScript?',
+    answer: 'Node is an interpreter and environment for JavaScript while JavaScript is a programming language. Node is used for performing actions in an operating system while JavaScript is used for client side activity in web apps.'
+  },
+  {
+    category: 'backend',
+    subcategory: 'Node.js',
+    text: 'What is Node.js?',
+    answer: 'Node.js is a framework developed using Chrome\'s V8 engine. It is a lightweight framework used for creating server side web applications.'
+  },
+  {
+    category: 'backend',
+    subcategory: 'Node.js',
+    text: 'What are 2 benefits of Node.js?',
+    answer: 'Fast, Asynchronous, Scalable, Open Source, and has No Buffering.'
+  },
+  {
+    category: 'backend',
+    subcategory: 'Node.js',
+    text: 'Is Node.js single threaded?',
+    answer: `Yes`
+  },
+  {
+    category: 'backend',
+    subcategory: 'Node.js',
+    text: 'What is package.json?',
+    answer: 'package.json is the file that contains all metadata for a project where we define properties.'
+  },
+  {
+    category: 'backend',
+    subcategory: 'Node.js',
+    text: 'What is an error first callback in Node.js?',
+    answer: 'Error-first callbacks in Node.js are used to pass errors and data. This way you can pass an error for handling and checking if anything is wrong.'
+  },
+  {
+    category: 'backend',
+    subcategory: 'Node.js',
+    text: 'What is module.exports?',
+    answer: 'A module in Node.js that encapsulates all the related codes into a single unit of code which can be interpreted by shifting related functions into a single file'
+  },
+  {
+    category: 'backend',
+    subcategory: 'Node.js',
+    text: 'What is middleware in Node.js?',
+    answer: 'Middleware receives the request and response objects along with next functions which can be used for: Executing types of code, updating or modifying request or response objects, finishing the request-response cycle, and invoking the next middleware in the stack.'
+  },
+  {
+    category: 'backend',
+    subcategory: 'Node.js',
+    text: 'What is ESLint?',
+    answer: 'Provides linting utility for JavaScript through a plug, this is used to search for bugs and formatting problems.'
+  },
+  {
+    category: 'backend',
+    subcategory: 'Node.js',
+    text: 'What is NPM?',
+    answer: 'NPM stands for Node Package Manager, responsible for managing all the packages and modules for Node.js.'
   }
 ];
 
@@ -277,6 +404,94 @@ const cardSeed = [
     }
   },
   {
+    category: 'frontend',
+    subcategory: '',
+    title: 'The Ol’ Reliable',
+    text: 'After struggling with some understanding why your code is not working, you decide to check Stack Overflow to see if there are any similar problems users have had before. Answer the question to find the right example. If you’re wrong, you miss the right link and waste further time with no progress.',
+    success:
+    {
+      funding: 0,
+      fep: 2,
+      bep: 0,
+      bugs: -1,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    }
+  },
+  {
+    category: 'frontend',
+    subcategory: '',
+    title: 'The Viral Opportunity',
+    text: 'The project you’re working on just got brought up on a semi-mainstream media outlet to showcase. Answer the following question for the demo to run smoothly and without bugs. If you’re wrong, a bug comes up during the presentation and the product stops working.',
+    success:
+    {
+      funding: 4,
+      fep: 0,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    },
+    failure:
+    {
+      funding: -1,
+      fep: 0,
+      bep: 0,
+      bugs: 1,
+      special: 0
+    }
+  },
+  {
+    category: 'frontend',
+    subcategory: '',
+    title: 'New Hire',
+    text: 'Your boss introduces you to a new recruit that’s being brought in to help with the design of the project. Answer the question to give the instructions and guide the new hire to what they need to do. If you’re wrong, they don’t understand the instructions correctly and give you an incorrect deliverable that sets you back on the front-end.',
+    success:
+    {
+      funding: 0,
+      fep: 3,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: -2,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    }
+  },
+  {
+    category: 'frontend',
+    subcategory: '',
+    title: 'The Forbidden Push',
+    text: 'You are about to send up a bunch of code in a git push, but right before you push up the code you think “Is there something I am forgetting right now?”. Answer the following question to jog your memory to pull before pushing. If you’re wrong, you push up your code without first pulling, pushing over a bunch of code from your coworker’s recent push from a few minutes ago. Your coworker later pulls therein losing all of his progress.',
+    success:
+    {
+      funding: 0,
+      fep: 2,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: -3,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    }
+  },
+  {
     category: 'backend',
     subcategory: '',
     title: 'Crunch Time',
@@ -405,6 +620,94 @@ const cardSeed = [
       fep: 0,
       bep: 0,
       bugs: 0,
+      special: 0
+    }
+  },
+  {
+    category: 'backend',
+    subcategory: '',
+    title: 'Good Communication',
+    text: 'A problem comes up in the back-end. You and a teammate delegate what tasks you each should be working on. Answer the following question to delegate tasks efficiently and so that you both understand what you will be working on. If you’re wrong, you both accidentally work on the same problems and waste a lot of time on back-end production.',
+    success:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 2,
+      bugs: 0,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    }
+  },
+  {
+    category: 'backend',
+    subcategory: '',
+    title: 'Potential Security Breach',
+    text: 'You notice a flaw in the security system you are using. Answer the following question to fix this security flaw. If you’re wrong, your answer doesn’t actually fix the problem and you suffer a database leak in the future.',
+    success:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 3,
+      bugs: -1,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: 0,
+      bep: -2,
+      bugs: 1,
+      special: 0
+    }
+  },
+  {
+    category: 'backend',
+    subcategory: '',
+    title: 'Product Success',
+    text: 'The product your team has been working on has been extremely successful recently, you decide to ask your boss for an increase in funding. Answer the following question to have a successful meeting with your boss. If you’re wrong he denies your request.',
+    success:
+    {
+      funding: 3,
+      fep: 0,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    }
+  },
+  {
+    category: 'backend',
+    subcategory: '',
+    title: 'App Breaking Bugs',
+    text: 'With a recent push from a coworker there has been a few app breaking bugs introduced. The code is crucial for the deadline in 2 days and these bugs have been made aware to your boss who needs this done, answer the following question to find the bugs and fix them. If you’re wrong, these bugs aren’t fixed, the deadline passes, and your project group is behind on production.',
+    success:
+    {
+      funding: 1,
+      fep: 0,
+      bep: 2,
+      bugs: -2,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 0,
+      bugs: 2,
       special: 0
     }
   }
