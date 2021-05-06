@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Redirect, Link } from 'react-router-dom';
-import { Container, Row, Col } from '../components/Grid';
-import { Card } from '../components/Card';
-import { Input, FormBtn } from '../components/Form';
+// import { Container, Row, Col } from '../components/Grid';
+// import { Card } from '../components/Card';
+// import { Input, FormBtn } from '../components/Form';
 import AUTH from '../utils/AUTH';
+import Alert from "../components/Alert"
 
 function SignupForm() {
     const [userObject, setUserObject] = useState({
@@ -32,9 +33,11 @@ function SignupForm() {
         }).then(response => {
             // console.log(response);
             if (!response.data.errmsg) {
-                setRedirectTo('/');
+                // <Alert title="Success!" message="Account created!" />
+                alert('account successfully created')
+                setRedirectTo('/login');
             } else {
-                console.log('duplicate');
+                alert('duplicate');
             }
         });
     };
@@ -44,7 +47,7 @@ function SignupForm() {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen flex items-center justify-center bg-red-desertSand py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md w-full space-y-8">
                 <div>
                     <img
@@ -52,7 +55,7 @@ function SignupForm() {
                         src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
                         alt="Workflow"
                     />
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Sign in to the Web Dev Game</h2>
+                    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Register for the Web Dev Game</h2>
                 </div>
                 <form className="mt-8 space-y-6" action="#" method="POST">
                     <input type="hidden" name="remember" defaultValue="true" />
@@ -65,7 +68,7 @@ function SignupForm() {
                                 id="username"
                                 name="username"
                                 type="text"
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-red-eggplant bg-red-linen rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                                 placeholder="UserName"
                                 value={userObject.username}
                                 onChange={handleChange}
@@ -79,7 +82,7 @@ function SignupForm() {
                                 id="email"
                                 name="email"
                                 type="text"
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-red-eggplant bg-red-linen rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                                 placeholder="Email"
                                 value={userObject.email}
                                 onChange={handleChange}
@@ -93,7 +96,7 @@ function SignupForm() {
                                 id="password"
                                 name="password"
                                 type="password"
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-red-eggplant bg-red-linen rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                                 placeholder="Password"
                                 value={userObject.password}
                                 onChange={handleChange}
@@ -107,7 +110,7 @@ function SignupForm() {
                                 id="confirmPassword"
                                 name="confirmPassword"
                                 type="password"
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-red-eggplant bg-red-linen rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                                 placeholder="Confirm Password"
                                 value={userObject.confirmPassword}
                                 onChange={handleChange}
@@ -118,7 +121,7 @@ function SignupForm() {
                     <div>
                         <button
                             type="submit"
-                            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            className="my-1 group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md bg-red-mauveTaupe text-red-eggplant bg-opacity-60 hover:bg-opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             onClick={handleSubmit}
                         >
                             Register
@@ -127,7 +130,7 @@ function SignupForm() {
 
                             <button
                                 type="button"
-                                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md bg-red-mauveTaupe text-red-eggplant bg-opacity-60 hover:bg-opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             >
                                 Login
             </button>

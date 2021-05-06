@@ -17,13 +17,15 @@ const Nav = ({ user, logout }) => {
   }
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-success bg-red-desertSand text-red-blackBean">
-      <Col size="md-6 sm-6">
-        <Link to="/" className="navbar-brand">The Web Dev Game!</Link>
 
-      </Col>
+    <nav className="grid grid-cols-3 bg-red-desertSand text-red-blackBean p-3">
+      {/* <Col size="md-4 sm-6"> */}
+      <div></div>
+      <Link to="/" className="navbar-brand text-center p-1">The Web Dev Game!</Link>
 
-      <div className="float-right bg-red-desertSand text-red-blackBean">
+      {/* </Col> */}
+
+      <div className="bg-red-desertSand text-red-blackBean text-right p-1">
         {greeting} - <Link to="#" className="logout" onClick={logout}>Logout</Link>
       </div>
 
