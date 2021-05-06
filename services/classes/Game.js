@@ -24,7 +24,7 @@ const UNSUBSCRIBE_EVENTS = [
   CARD_RSP_EVENT
 ];
 
-const GAME_OVER_TURN = 6;
+const GAME_OVER_TURN = process.env.GAME_OVER_TURN || 30;
 
 /* Generic RNG */
 function rng (min, max) {
