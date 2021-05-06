@@ -6,7 +6,7 @@ export const Card = (props) => {
       <div className="bg-white px-4 py-5 border-b border-gray-200 sm:px-6">
         <h5 className="text-lg leading-6 font-medium text-gray-900">{props.title}</h5>
       </div>
-      <div className="card-body">
+      <div className="card-body" >
         {props.children}
       </div>
     </div>
