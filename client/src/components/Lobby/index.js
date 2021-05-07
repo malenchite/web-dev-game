@@ -58,6 +58,7 @@ function Lobby({ socket, user, gameId, updateGameId, updateOpenGame }) {
         if (message.length > 0 && socket) {
             socket.emit(CHAT_MESSAGE_EVENT, { message });
         }
+        setMessage("")
     }
     const handleChallenge = (event) => {
         event.preventDefault();
