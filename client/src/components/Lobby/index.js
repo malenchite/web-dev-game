@@ -116,7 +116,7 @@ function Lobby({ socket, user, gameId, updateGameId, updateOpenGame }) {
                             value={message}
                             onChange={handleMessageChange}
                         />
-                        <button className="flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" onClick={handleSendMessage}>Send</button>
+                        <button className="flex items-center justify-center px-4 py-3 m-1 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" onClick={handleSendMessage}>Send</button>
                     </form>
                 </div>
 
