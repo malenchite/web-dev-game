@@ -107,16 +107,16 @@ function Lobby({ socket, user, gameId, updateGameId, updateOpenGame }) {
                 <br></br>
                 <div>
                     <form className="relative">
-                        <label className=" text-gray-700 block" htmlFor="message"> </label>
+                        <label className="text-gray-700 block" htmlFor="message"> </label>
                         <Input
-                            className="form-textarea mt-1 block w-half w-3/4 flex items-center justify-center rounded-md border border-gray-300" placeholder="Enter some long form content."
+                            className="form-textarea mt-1 block w-half w-3/4 flex items-center justify-center rounded-md border border-gray-300 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5"
                             placeholder="Send Message"
                             type="text"
                             name="message"
                             value={message}
                             onChange={handleMessageChange}
                         />
-                        <button className="right- h-16 w-16 px-4 bg-yellow-400  text-gray-800 font-bold p-4 uppercase border-yellow-500 border-t border-b border-r border-l" onClick={handleSendMessage}>Send</button>
+                        <button className="flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" onClick={handleSendMessage}>Send</button>
                     </form>
                 </div>
 
