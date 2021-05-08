@@ -31,7 +31,7 @@ const UNSUBSCRIBE_EVENTS = [
   CHAT_MESSAGE_EVENT
 ];
 
-function Game ({ socket, user, updateGameId, updateOpenGame }) {
+function Game({ socket, user, updateGameId, updateOpenGame }) {
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
   const [yourTurn, setYourTurn] = useState(false);
@@ -88,6 +88,7 @@ function Game ({ socket, user, updateGameId, updateOpenGame }) {
     if (message.length > 0 && socket) {
       socket.emit(CHAT_MESSAGE_EVENT, { message });
     }
+    setMessage("")
   }
 
   const handleReturnToLobby = (event) => {

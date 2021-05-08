@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { Link } from 'react-router-dom';
-import { Col } from '../Grid';
+// import { Col } from '../Grid';
 // import './Nav.css';
 
 const Nav = ({ user, logout }) => {
@@ -26,7 +26,7 @@ const Nav = ({ user, logout }) => {
       {/* </Col> */}
 
       <div className="bg-red-desertSand text-red-blackBean text-right p-1">
-        {greeting} | <Link to="#" className="logout" onClick={logout}>Logout</Link>
+        <Link to="/profile">{greeting} </Link>| <Link to="#" className="logout" onClick={logout}>Logout</Link>
       </div>
 
     </nav>
