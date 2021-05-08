@@ -5,6 +5,7 @@
   "dependencies": {
     "@craco/craco": "^6.1.1",
     "@headlessui/react": "^1.1.1",
+    "@multiavatar/multiavatar": "^1.0.6",
     "autoprefixer": "^9.8.6",
     "axios": "^0.21.1",
     "postcss": "^7.0.35",
