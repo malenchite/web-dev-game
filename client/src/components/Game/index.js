@@ -193,6 +193,7 @@ function Game({ socket, user, updateGameId, updateOpenGame }) {
             name="message"
             value={message}
             onChange={handleMessageChange}
+            autoComplete="off"
           />
           <button onClick={handleSendMessage}>Send</button>
         </form>
