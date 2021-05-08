@@ -27,6 +27,8 @@ class User {
     if (room) {
       this.room = room;
       this.socket.join(room);
+    } else {
+      this.room = null;
     }
     if (this.roomCB) {
       this.roomCB();
