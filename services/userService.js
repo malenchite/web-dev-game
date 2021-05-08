@@ -189,7 +189,7 @@ function processChallengeRsp (socket, accepted) {
   }
 
   /* Forward challenge response to initial challenger */
-  sendChallengeRsp(challenger.socket, true);
+  sendChallengeRsp(challenger.socket, accepted);
 }
 
 /* Exported functions */
