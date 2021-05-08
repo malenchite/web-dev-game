@@ -109,7 +109,7 @@ function Lobby({ socket, user, gameId, updateGameId, updateOpenGame }) {
                     <form className="relative">
                         <label className="text-gray-700 block" htmlFor="message"> </label>
                         <Input
-                            className="form-textarea mt-1 block w-half w-3/4 flex items-center justify-center rounded-md border border-gray-300 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5"
+                            className="form-textarea p-2 mt-1 block w-half w-3/4 flex items-center justify-center rounded-md border border-gray-300 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5"
                             placeholder="Send Message"
                             type="text"
                             name="message"
@@ -117,7 +117,7 @@ function Lobby({ socket, user, gameId, updateGameId, updateOpenGame }) {
                             onChange={handleMessageChange}
                             autoComplete="off"
                         />
-                        <button className="flex items-center justify-center px-4 py-3 m-1 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" onClick={handleSendMessage}>Send</button>
+                        <button className="flex items-center justify-center px-4 py-3 m-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" onClick={handleSendMessage}>Send</button>
                     </form>
                 </div>
 
