@@ -5,10 +5,46 @@ module.exports = {
   // gets the user data
   getUser: (req, res, next) => {
     if (req.user) {
-      return res.json({ user: req.user });
+      return res.json({ user: {
+        _id: req.user._id,
+        username: req.user.username,
+        email: req.user.email
+      }
+      });
     } else {
       return res.json({ user: null });
     }
+  },
+  // gets the game history data array
+  getGameHistory: (req, res) => {
+    db.User.findById(req.params.id, (_err, user) => {
+      const gameHistory = user.gamehistory;
+      if (gameHistory) {
+        res.json(gameHistory);
+      } else {
+        res.status(404).end();
+      }
+    })
+      .catch(err => console.log(err));
+  },
+  // saving the game history
+  saveGameHistory: (req, res) => {
+    db.User.findById(req.params.id, (_err, user) => {
+      if (user) {
+        const { result, frontEndCorrect, frontEndTotal, backEndCorrect, backEndTotal, timestamp } = req.body;
+        const gamedata = {
+          result,
+          frontEndCorrect,
+          frontEndTotal,
+          backEndCorrect,
+          backEndTotal,
+          timestamp
+        };
+        db.User.updateOne({ '_id': user._id }, { '$push': { 'gamehistory': gamedata } });
+      } else {
+        res.status(404).end();
+      }
+    });
   },
   // controller for registering the user
   register: (req, res) => {

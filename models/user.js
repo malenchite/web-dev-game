@@ -3,11 +3,21 @@ const Schema = mongoose.Schema;
 const bcrypt = require('bcryptjs');
 mongoose.promise = Promise;
 
+const gamedataSchema = new Schema({
+  result: { type: String, unique: false, required: true },
+  frontEndCorrect: { type: Number, unique: false, required: true },
+  frontEndTotal: { type: Number, unique: false, required: true },
+  backEndCorrect: { type: Number, unique: false, required: true },
+  backEndTotal: { type: Number, unique: false, required: true },
+  timestamp: { type: Date, unique: false, required: true }
+});
+
 // Define userSchema
 const userSchema = new Schema({
   username: { type: String, unique: false, required: false },
   email: { type: String, unique: false, required: false },
-  password: { type: String, unique: false, required: false }
+  password: { type: String, unique: false, required: false },
+  gamehistory: [gamedataSchema]
 });
 
 // Define schema methods
