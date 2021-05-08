@@ -93,13 +93,13 @@ function Lobby({ socket, user, gameId, updateGameId, updateOpenGame }) {
     return (
         <div className="grid grid-cols-3 gap-4">
             <div title="User List" className="shadow-xl bg-white rounded-lg h-18">
-                <h3>Users in current lobby:</h3>
+                <h3 className=" text-red-blackBean"><strong>Users in current lobby:</strong></h3>
                 <ul>
                     {renderLobbyList()}
                 </ul>
             </div>
             <div className=" col-span-2 col-start-2 row-start-1 row-end-3 shadow-xl bg-white rounded-lg h-18">
-                <h3>Messages:</h3>
+                <h3 className=" text-red-blackBean"><strong>Messages:</strong></h3>
                 <br></br>
                 <ul>
                     {chat.map(msg => <li key={msg.id}>{msg.username}: {msg.message}</li>)}
@@ -124,15 +124,15 @@ function Lobby({ socket, user, gameId, updateGameId, updateOpenGame }) {
             </div>
 
 
-            <div>
+            <div className="shadow-xl bg-white rounded-lg h-18" >
                 {
                     challenger && (
                         <form>
-                            <label htmlFor="challenge">You have been challenged by {challenger} </label>
+                            <label className=" text-red-blackBean" htmlFor="challenge"><strong> You have been challenged by {challenger} </strong> </label>
                             <br />
-                            <button value={true} onClick={handleChallengeResponse}>Accept</button>
+                            <button className="flex items-center justify-center px-4 py-3 m-1 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" value={true} onClick={handleChallengeResponse}>Accept</button>
                             <br />
-                            <button value={false} onClick={handleChallengeResponse}>Reject</button>
+                            <button className="flex items-center justify-center px-4 py-3 m-1 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" value={false} onClick={handleChallengeResponse}>Reject</button>
                         </form>
                     )
                 }
@@ -141,7 +141,7 @@ function Lobby({ socket, user, gameId, updateGameId, updateOpenGame }) {
                         <div>
                             <span>Your recent challenge has been {challengeRsp.accepted ? "accepted" : "rejected"}.</span>
                             <br />
-                            {challengeRsp.message && <span>The rejection message said: "{challengeRsp.message}"</span>}
+                            {challengeRsp.message && <span className=" text-red-blackBean">The rejection message said: "{challengeRsp.message}"</span>}
                         </div>
                     )
                 }
