@@ -5,11 +5,12 @@ module.exports = {
   // gets the user data
   getUser: (req, res, next) => {
     if (req.user) {
-      return res.json({ user: {
-        _id: req.user._id,
-        username: req.user.username,
-        email: req.user.email
-      }
+      return res.json({
+        user: {
+          _id: req.user._id,
+          username: req.user.username,
+          email: req.user.email
+        }
       });
     } else {
       return res.json({ user: null });
@@ -40,7 +41,11 @@ module.exports = {
           backEndTotal,
           timestamp
         };
-        db.User.updateOne({ '_id': user._id }, { '$push': { 'gamehistory': gamedata } });
+        db.User.updateOne({ '_id': user._id }, { '$push': { 'gamehistory': gamedata } })
+          .then(() => {
+            res.status(200).end();
+          }
+          );
       } else {
         res.status(404).end();
       }
