@@ -93,13 +93,13 @@ function Lobby({ socket, user, gameId, updateGameId, updateOpenGame }) {
     return (
         <div className="grid grid-cols-3 gap-4">
             <div title="User List" className="shadow-xl bg-white rounded-lg h-18">
-                <h3>Users in current lobby:</h3>
+                <h3 className=" text-red-blackBean"><strong>Users in current lobby:</strong></h3>
                 <ul>
                     {renderLobbyList()}
                 </ul>
             </div>
             <div className=" col-span-2 col-start-2 row-start-1 row-end-3 shadow-xl bg-white rounded-lg h-18">
-                <h3>Messages:</h3>
+                <h3 className=" text-red-blackBean"><strong>Messages:</strong></h3>
                 <br></br>
                 <ul>
                     {chat.map(msg => <li key={msg.id}>{msg.username}: {msg.message}</li>)}
@@ -107,16 +107,16 @@ function Lobby({ socket, user, gameId, updateGameId, updateOpenGame }) {
                 <br></br>
                 <div>
                     <form className="relative">
-                        <label className=" text-gray-700 block" htmlFor="message"> </label>
+                        <label className="text-gray-700 block" htmlFor="message"> </label>
                         <Input
-                            className="form-textarea mt-1 block w-half w-3/4 flex items-center justify-center rounded-md border border-gray-300" placeholder="Enter some long form content."
+                            className="form-textarea mt-1 block w-half w-3/4 flex items-center justify-center rounded-md border border-gray-300 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5"
                             placeholder="Send Message"
                             type="text"
                             name="message"
                             value={message}
                             onChange={handleMessageChange}
                         />
-                        <button className="right- h-16 w-16 px-4 bg-yellow-400  text-gray-800 font-bold p-4 uppercase border-yellow-500 border-t border-b border-r border-l" onClick={handleSendMessage}>Send</button>
+                        <button className="flex items-center justify-center px-4 py-3 m-1 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" onClick={handleSendMessage}>Send</button>
                     </form>
                 </div>
 
@@ -124,15 +124,15 @@ function Lobby({ socket, user, gameId, updateGameId, updateOpenGame }) {
             </div>
 
 
-            <div>
+            <div className="shadow-xl bg-white rounded-lg h-18" >
                 {
                     challenger && (
                         <form>
-                            <label htmlFor="challenge">You have been challenged by {challenger} </label>
+                            <label className=" text-red-blackBean" htmlFor="challenge"><strong> You have been challenged by {challenger} </strong> </label>
                             <br />
-                            <button value={true} onClick={handleChallengeResponse}>Accept</button>
+                            <button className="flex items-center justify-center px-4 py-3 m-1 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" value={true} onClick={handleChallengeResponse}>Accept</button>
                             <br />
-                            <button value={false} onClick={handleChallengeResponse}>Reject</button>
+                            <button className="flex items-center justify-center px-4 py-3 m-1 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" value={false} onClick={handleChallengeResponse}>Reject</button>
                         </form>
                     )
                 }
@@ -141,7 +141,7 @@ function Lobby({ socket, user, gameId, updateGameId, updateOpenGame }) {
                         <div>
                             <span>Your recent challenge has been {challengeRsp.accepted ? "accepted" : "rejected"}.</span>
                             <br />
-                            {challengeRsp.message && <span>The rejection message said: "{challengeRsp.message}"</span>}
+                            {challengeRsp.message && <span className=" text-red-blackBean">The rejection message said: "{challengeRsp.message}"</span>}
                         </div>
                     )
                 }
