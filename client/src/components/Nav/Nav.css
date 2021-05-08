@@ -2,4 +2,9 @@
 
 nav{
   font-family: 'Audiowide', cursive;
+
+}
+
+.navbar-brand {
+  font-size: 27px;
 }
