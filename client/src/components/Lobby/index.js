@@ -140,9 +140,9 @@ function Lobby({ socket, user, gameId, updateGameId, updateOpenGame }) {
                 {
                     challengeRsp && (
                         <div>
-                            <span>Your recent challenge has been {challengeRsp.accepted ? "accepted" : "rejected"}.</span>
+                            <span className=" text-red-blackBean">Your recent challenge has been {challengeRsp.accepted ? "accepted" : "rejected"}.</span>
                             <br />
-                            {challengeRsp.message && <span className=" text-red-blackBean">The rejection message said: "{challengeRsp.message}"</span>}
+                            {challengeRsp.message && <span className=" text-red-blackBean">Reason for rejection: "{challengeRsp.message}"</span>}
                         </div>
                     )
                 }
