@@ -26,7 +26,7 @@ const Nav = ({ user, logout }) => {
       {/* </Col> */}
 
       <div className="bg-red-desertSand text-red-blackBean text-right p-1">
-        <Link to="/profile">{greeting} </Link>| <Link to="#" className="logout" onClick={logout}>Logout</Link>
+        <Link to="/profile">{greeting} </Link>| <Link to="#" className="logout" onClick={logout}>Log Out</Link>
       </div>
 
     </nav>
