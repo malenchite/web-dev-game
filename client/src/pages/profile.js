@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import multiavatar from '@multiavatar/multiavatar'
+
 
 import Avatar from "../components/Avatar"
 
 function Profile({ user }) {
-    let svgCode = multiavatar('Binx Bond')
-    console.log(svgCode)
+
 
     return (
         <div className="grid grid-cols-3 gap-4">
