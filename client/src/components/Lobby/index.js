@@ -124,7 +124,7 @@ function Lobby({ socket, user, gameId, updateGameId, updateOpenGame }) {
             </div>
 
 
-            <div>
+            <div className="shadow-xl bg-white rounded-lg h-18" >
                 {
                     challenger && (
                         <form>
