@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Card } from '../Card';
 
-const GameRender = ({ yourTurn, user, gameState, choiceMade, judgementMade, card, question, answer, correct, handleTurnChoice, lastTurnResult, handleReturnToLobby, handleJudgement, handleCardAck }) => {
+const GameRender = ({ yourTurn, user, gameState, choiceMade, judgementMade, card, questionInfo, correct, handleTurnChoice, lastTurnResult, handleReturnToLobby, handleJudgement, handleCardAck }) => {
 
   const [yourPlayerState, setYourPlayerState] = useState(null);
 
@@ -40,7 +40,7 @@ const GameRender = ({ yourTurn, user, gameState, choiceMade, judgementMade, card
   }
 
   const renderChoiceSelection = () => {
-    if (!choiceMade) {
+    if (yourPlayerState && !choiceMade) {
       return (<form>
         Make your selection:<br />
         <button value='card' className=" w-16 h-24 bg-red-mauveTaupe hover:bg-red-desertSand text-white font-bold py-2 px-4 border-b-4 border-red-cottonCandy hover:border-red-blackBean rounded" onClick={handleTurnChoice}>Draw a Card</button><br />
@@ -108,14 +108,14 @@ const GameRender = ({ yourTurn, user, gameState, choiceMade, judgementMade, card
   const renderQuestion = () => {
     return (<>
       <h3>A {card.category} question has been posed:</h3>
-      <p>{question}</p>
+      <p>{questionInfo.text}</p>
     </>);
   }
 
   const renderAnswer = () => {
     return (<>
       <h3>The answer is:</h3>
-      <p style={{ backgroundColor: "lightgray" }}>{answer}</p>
+      <p style={{ backgroundColor: "lightgray" }}>{questionInfo.answer}</p>
     </>);
   }
 
@@ -132,16 +132,16 @@ const GameRender = ({ yourTurn, user, gameState, choiceMade, judgementMade, card
       {(gameState && !gameState.gameOver) &&
         (<>
           <h3>It's now turn {gameState.turn}</h3>
-          {!yourTurn
+          {!yourTurn.current
             ? (<>
               {card
                 ? (<>
                   <h2>Your opponent has drawn a card!</h2>
                   {renderCard()}
                   <Card>
-                    {(card && question) && renderQuestion()}
-                    {answer && renderAnswer()}
-                    {(question && !judgementMade) && renderJudgementButtons()}
+                    {(card && questionInfo.text) && renderQuestion()}
+                    {questionInfo.answer && renderAnswer()}
+                    {(questionInfo.text && !judgementMade) && renderJudgementButtons()}
                   </Card>
                 </>)
                 : <h2>Waiting on opponent</h2>
@@ -151,10 +151,10 @@ const GameRender = ({ yourTurn, user, gameState, choiceMade, judgementMade, card
               {renderChoiceSelection()}
               {card && renderCard()}
               <Card>
-                {(card && question) && renderQuestion()}
+                {(card && questionInfo && questionInfo.text) && renderQuestion()}
                 {correct !== null && <p>Your answer was judged {correct ? "correct" : "incorrect"}</p>}
-                {answer && renderAnswer()}
-                {answer && <button onClick={handleCardAck}>Done Reading</button>}
+                {questionInfo && questionInfo.answer && renderAnswer()}
+                {questionInfo && questionInfo.answer && <button onClick={handleCardAck}>Done Reading</button>}
               </Card>
             </>)
           }

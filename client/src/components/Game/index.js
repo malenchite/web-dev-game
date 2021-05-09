@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Card } from '../Card';
 import { Input } from '../Form';
 import GameRender from '../GameRender';
@@ -31,20 +31,31 @@ const UNSUBSCRIBE_EVENTS = [
   CHAT_MESSAGE_EVENT
 ];
 
-function Game({ socket, user, updateGameId, updateOpenGame }) {
+function Game ({ socket, user, updateGameId, updateOpenGame }) {
+  const category = useRef(null);
+  const yourTurn = useRef(false);
+  const stats = useRef({
+    frontEndCorrect: 0,
+    backEndCorrect: 0,
+    frontEndTotal: 0,
+    backEndTotal: 0
+  });
+
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
-  const [yourTurn, setYourTurn] = useState(false);
   const [gameState, setGameState] = useState(null);
   const [opponentLeft, setOpponentLeft] = useState(false);
   const [lastTurnResult, setLastTurnResult] = useState(null);
   const [card, setCard] = useState(null);
-  const [questionId, setQuestionId] = useState(null);
-  const [questionText, setQuestionText] = useState(null);
-  const [answer, setAnswer] = useState(null);
   const [correct, setCorrect] = useState(null);
   const [choiceMade, setChoiceMade] = useState(false);
   const [judgementMade, setJudgementMade] = useState(false);
+
+  const [questionInfo, setQuestionInfo] = useState({
+    text: null,
+    answer: null,
+    id: null
+  });
 
   useEffect(() => {
     if (socket) {
@@ -60,8 +71,6 @@ function Game({ socket, user, updateGameId, updateOpenGame }) {
 
       socket.on(TURN_RESULT_EVENT, turnResult => processTurnResult(turnResult));
 
-      socket.on(GAME_OVER_EVENT, turnResult => processGameOver(turnResult));
-
       socket.on(CARD_INFO_EVENT, cardInfo => processCardInfo(cardInfo));
 
       socket.on(CARD_RSP_EVENT, cardRsp => processCardResponse(cardRsp));
@@ -76,6 +85,13 @@ function Game({ socket, user, updateGameId, updateOpenGame }) {
       }
     }
   }, [socket]);
+
+  useEffect(() => {
+    if (socket && user) {
+      socket.removeAllListeners(GAME_OVER_EVENT);
+      socket.on(GAME_OVER_EVENT, gameOver => processGameOver(gameOver));
+    }
+  }, [socket, user]);
 
   /* UI handling */
   const handleMessageChange = (event) => {
@@ -123,13 +139,12 @@ function Game({ socket, user, updateGameId, updateOpenGame }) {
   }
 
   const processNextTurn = turnInfo => {
+    yourTurn.current = turnInfo.yourTurn;
     setGameState(turnInfo.gameState);
     setChoiceMade(false);
     setCard(null);
-    setQuestionText(null);
-    setAnswer(null);
+    setQuestionInfo(info => { return { ...info, text: null, answer: null } });
     setCorrect(null);
-    setYourTurn(turnInfo.yourTurn);
   }
 
   const processTurnResult = turnResult => {
@@ -137,51 +152,89 @@ function Game({ socket, user, updateGameId, updateOpenGame }) {
   }
 
   const processGameOver = gameOver => {
+    const gameData = {
+      result: "loss",
+      frontEndCorrect: stats.current.frontEndCorrect,
+      frontEndTotal: stats.current.frontEndTotal,
+      backEndCorrect: stats.current.backEndCorrect,
+      backEndTotal: stats.current.backEndTotal,
+      timestamp: new Date()
+    };
+
     setGameState(gameOver.gameState);
+
+    if (!gameOver.gameState.winner) {
+      gameData.result = "tie";
+    } else if (gameOver.gameState.winner === user.username) {
+      gameData.result = "win";
+    }
+
+    API.saveGameData(user._id, gameData)
+      .catch(err => console.log("Error saving game results"));
   }
 
   const processCardInfo = cardInfo => {
-    setQuestionId(cardInfo.questionId);
-
     /* Pull card information from database */
     API.getCard(cardInfo.cardId)
-      .then(res => setCard(res.data))
-      .catch(err => console.log(err));
+      .then(res => {
+        category.current = res.data.category;
+        setCard(res.data);
 
-    /* Need to use the setYourTurn function to get updated state of yourTurn */
-    setYourTurn(yT => {
-      if (yT) {
-        API.getQuestion(cardInfo.questionId)
-          .then(res => {
-            setCorrect(null);
-            setQuestionText(res.data);
-            setAnswer(null);
-          })
-          .catch(err => console.log(err));
-      } else {
-        API.getQuestionComplete(cardInfo.questionId)
-          .then(res => {
-            setQuestionText(res.data.text);
-            setAnswer(res.data.answer);
-            setJudgementMade(false);
-          })
-          .catch(err => console.log(err));
-      }
-      return yT
-    });
+        /* If your turn, update stats and retrieve question. Otherwise, just retrieve question & answer */
+        if (yourTurn.current) {
+          switch (category.current) {
+            case "frontend":
+              stats.current.frontEndTotal++;
+              break;
+            case "backend":
+              stats.current.backEndTotal++;
+              break;
+            default: console.log("Unknown card category");
+          }
+
+          API.getQuestion(cardInfo.questionId)
+            .then(res => {
+              setCorrect(null);
+              setQuestionInfo(info => { return { ...info, id: cardInfo.questionId, text: res.data, answer: null } });
+            })
+            .catch(err => console.log(err));
+        } else {
+          API.getQuestionComplete(cardInfo.questionId)
+            .then(res => {
+              setQuestionInfo(info => { return { ...info, id: cardInfo.questionId, text: res.data.text, answer: res.data.answer } });
+              setJudgementMade(false);
+            })
+            .catch(err => console.log(err));
+        }
+      })
+      .catch(err => console.log(err));
   }
 
   const processCardResponse = (cardRsp) => {
     setCorrect(cardRsp.correct);
-    setQuestionId(id => {
-      API.getQuestionComplete(id)
+    if (cardRsp.correct) {
+      switch (category.current) {
+        case "frontend":
+          stats.current.frontEndCorrect++;
+          break;
+        case "backend":
+          stats.current.backEndCorrect++;
+          break;
+        default: console.log("Unknown card category");
+      }
+    }
+
+    setQuestionInfo(oldInfo => {
+      API.getQuestionComplete(oldInfo.id)
         .then(res => {
-          setAnswer(res.data.answer);
+          setQuestionInfo(info => {
+            return { ...info, answer: res.data.answer };
+          });
         })
         .catch(err => console.log(err));
-      return null;
+      return oldInfo;
     });
-  }
+  };
 
   return (
     <div>
@@ -212,7 +265,7 @@ function Game({ socket, user, updateGameId, updateOpenGame }) {
               <button onClick={handleReturnToLobby}>Return to Lobby</button>
             </>
           )
-          : (<GameRender yourTurn={yourTurn} user={user} gameState={gameState} choiceMade={choiceMade} judgementMade={judgementMade} card={card} question={questionText} answer={answer} correct={correct}
+          : (<GameRender yourTurn={yourTurn} user={user} gameState={gameState} choiceMade={choiceMade} judgementMade={judgementMade} card={card} questionInfo={questionInfo} correct={correct}
             handleTurnChoice={handleTurnChoice} lastTurnResult={lastTurnResult} handleReturnToLobby={handleReturnToLobby} handleJudgement={handleJudgement}
             handleCardAck={handleCardAck}
           />)

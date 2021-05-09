@@ -11,6 +11,9 @@ const API = {
   },
   getQuestionComplete: function (id) {
     return axios.get(DEV_ROUTE + '/api/questions/complete/' + id)
+  },
+  saveGameData: function (userId, gameData) {
+    return axios.post(DEV_ROUTE + '/api/users/gamehistory/' + userId, gameData);
   }
 };
 
