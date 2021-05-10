@@ -16,4 +16,7 @@ router.route('/questions/complete/:id')
 router.route('/users/gamehistory/:id')
   .get(userController.getGameHistory)
   .post(userController.saveGameHistory);
+
+router.route('/users/avatar/:id')
+  .post(userController.saveAvatar);
 module.exports = router;
