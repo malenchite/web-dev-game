@@ -14,7 +14,7 @@ const UNSUBSCRIBE_EVENTS = [
     LOBBY_INFO_EVENT,
     ENTER_GAME_EVENT
 ];
-function Lobby({ socket, user, gameId, updateGameId, updateOpenGame }) {
+function Lobby ({ socket, user, gameId, updateGameId, updateOpenGame }) {
     const [lobbyUsers, setLobbyUsers] = useState([]);
     const [message, setMessage] = useState("");
     const [challenger, setChallenger] = useState(null);
@@ -31,6 +31,7 @@ function Lobby({ socket, user, gameId, updateGameId, updateOpenGame }) {
             });
             /* Receive challenge message */
             socket.on(CHALLENGE_EVENT, msg => {
+                setChallengeRsp(null);
                 setChallenger(msg.username);
             });
             /* Receive challenge response */
