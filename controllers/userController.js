@@ -10,7 +10,8 @@ module.exports = {
         user: {
           _id: req.user._id,
           username: req.user.username,
-          email: req.user.email
+          email: req.user.email,
+          avatar: req.user.avatar
         }
       });
     } else {
@@ -97,6 +98,22 @@ module.exports = {
           timestamp
         };
         db.User.updateOne({ '_id': user._id }, { '$push': { 'gamehistory': gameData } })
+          .then(() => {
+            res.status(200).end();
+          }
+          );
+      } else {
+        res.status(404).end();
+      }
+    });
+  },
+  /* Game history methods */
+  // gets the avatar that was saved
+  saveAvatar: (req, res) => {
+    db.User.findById(req.params.id, (_err, user) => {
+      if (user) {
+        const userAvatar = req.body;
+        db.User.updateOne({ '_id': user.id }, { '$push': { 'avatar': userAvatar } })
           .then(() => {
             res.status(200).end();
           }
