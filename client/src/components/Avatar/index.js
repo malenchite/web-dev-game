@@ -4,7 +4,14 @@ import './avatar.css'
 
 
 function Avatar({ user }) {
-    let svgCode = multiavatar(user.username)
+    let seed = ""
+    if (user.avatar) {
+        seed = user.avatar
+    }
+    else {
+        seed = user.username
+    }
+    let svgCode = multiavatar(seed)
     return (
         <div dangerouslySetInnerHTML={{ __html: svgCode }} />
     )
