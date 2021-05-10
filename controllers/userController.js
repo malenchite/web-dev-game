@@ -112,8 +112,8 @@ module.exports = {
   saveAvatar: (req, res) => {
     db.User.findById(req.params.id, (_err, user) => {
       if (user) {
-        const userAvatar = req.body;
-        db.User.updateOne({ '_id': user.id }, { '$push': { 'avatar': userAvatar } })
+        const userAvatar = req.body.avatar;
+        db.User.updateOne({ '_id': user.id }, { '$set': { 'avatar': userAvatar } })
           .then(() => {
             res.status(200).end();
           }
