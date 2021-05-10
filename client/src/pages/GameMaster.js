@@ -7,7 +7,7 @@ import GameRules from '../components/GameRules';
 const DEV_ENDPOINT = "http://localhost:3001";
 const USER_INFO_EVENT = "user info";
 
-function GameMaster ({ user }) {
+function GameMaster ({ user, logout }) {
   const [gameId, setGameId] = useState(null);
   const [openGame, setOpenGame] = useState(false);
   const [socket, setSocket] = useState(null);
@@ -46,6 +46,7 @@ function GameMaster ({ user }) {
 
       newSocket.on("disconnect", (reason) => {
         if (reason === "io server disconnect") {
+          logout();
           setSocket(null);
         }
       });
