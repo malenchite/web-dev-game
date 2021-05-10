@@ -60,7 +60,7 @@ function App () {
             <Nav user={user} logout={logout} />
             <div className="main">
               <Route exact path="/">
-                <GameMaster user={user} />
+                <GameMaster user={user} logout={logout} />
               </Route>
               <Route path="/profile">
                 <Profile user={user} />
