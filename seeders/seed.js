@@ -11,20 +11,14 @@ const questionSeed = [
   {
     category: 'frontend',
     subcategory: 'HTML',
-    text: 'What are tags?',
+    text: 'What is a "tag" in HTML?',
     answer: 'Content is placed in between HTML tags in order to properly format it. It makes use of the less than symbol (<) and the greater than symbol (>). A slash symbol is also used as a closing tag.'
   },
   {
     category: 'frontend',
     subcategory: 'HTML',
     text: 'Name at least two of the common lists that can be used when designing a page in HTML.',
-    answer: `You can insert any or a combination of the following list types:
-    – ordered list
-    – unordered list
-    – definition list
-    – menu list
-    – directory list
-    Each of this list types makes use of a different tag set to compose`
+    answer: 'Options include: ordered list, unordered list, definition list, menu list, and directory list. Each of this list types makes use of a different tag set to compose'
   },
   {
     category: 'frontend',
@@ -41,7 +35,7 @@ const questionSeed = [
   {
     category: 'frontend',
     subcategory: 'HTML',
-    text: 'in HTML, can attribute values be set to anything or are there specific values that they accept?',
+    text: 'In HTML, can attribute values be set to anything or are there specific values that they accept?',
     answer: 'Some attribute values can be set to only predefined values. Other attributes can accept any numerical value that represents the number of pixels for a size.'
   },
   {
@@ -54,15 +48,7 @@ const questionSeed = [
     category: 'frontend',
     subcategory: 'HTML',
     text: 'What are two types of Web Storage in HTML5?',
-    answer: `Two storage types of HTML5 are:
-
-    Session Storage:
-    
-    It stores data of current sessions only. It means that the data stored in session storage clears automatically when the browser is closed.
-    
-    Local Storage:
-
-    Local storage is another type of HTML5 Web Storage. In local storage, data is not deleted automatically when the current browser window is closed.`
+    answer: 'Two storage types of HTML5 are session storage (automatically clears when the browser is closed) and local storage (persistent between sessions)'
   },
   {
     category: 'frontend',
@@ -85,20 +71,14 @@ const questionSeed = [
   {
     category: 'frontend',
     subcategory: 'CSS',
-    text: 'What is an advantage of using CSS?',
+    text: 'Name at least one advantage of using CSS.',
     answer: 'Bandwidth, Site-wide consistency, Page reformatting, accessibility, content separated from presentation'
   },
   {
     category: 'frontend',
     subcategory: 'CSS',
     text: 'Name one example of a CSS framework.',
-    answer: `Some examples are:
-    – Bootstrap
-    – Foundation
-    – Tailwind
-    – Semantic UI
-    – Gumby
-    – Ulkit`
+    answer: 'Some examples are: Bootstrap, Foundation, Tailwind, Semantic UI, Gumby, and Ulkit.'
   },
   {
     category: 'frontend',
@@ -109,21 +89,20 @@ const questionSeed = [
   {
     category: 'frontend',
     subcategory: 'CSS',
-    text: 'Name the property used to specify the background color of an element.',
+    text: 'Name the CSS property used to specify the background color of an element.',
     answer: 'The background-color property is used to specify the background color of the element.'
   },
   {
     category: 'frontend',
     subcategory: 'CSS',
-    text: 'What is the difference in formatting between using a class and id(# and .)?',
+    text: 'In CSS, what is the difference in formatting between using a class and id(# and .)?',
     answer: 'id’s use “#” and classes use “.”'
   },
   {
     category: 'frontend',
     subcategory: 'CSS',
-    text: 'Can you target multiple elements using separators when styling?',
-    answer: `Yes, an example would be separating said elements with a comma like
-    “h2, h3 {   }”`
+    text: 'Can you target multiple elements using separators when styling in CSS?',
+    answer: 'Yes, an example would be separating said elements with a comma like  "h2, h3 {   }"'
   },
   {
     category: 'frontend',
@@ -140,7 +119,7 @@ const questionSeed = [
   {
     category: 'frontend',
     subcategory: 'CSS',
-    text: 'Which property is used to change the font of an element?',
+    text: 'Which CSS property is used to change the font of an element?',
     answer: 'font-family'
   },
   {
@@ -164,12 +143,8 @@ const questionSeed = [
   {
     category: 'backend',
     subcategory: 'Databases',
-    text: 'What is one example of a benefit of working with SQL?',
-    answer: `Some examples, Simple SQL queries can be used to retrieve a large amount of data from the database very quickly and efficiently.
-
-    SQL is easy to learn and almost every DBMS supports SQL.
-    
-    It is easier to manage the database using SQL as no large amount of coding is required.`
+    text: 'What is an example of a benefit of working with SQL?',
+    answer: 'Some examples: simple SQL queries can be used to retrieve a large amount of data from the database very quickly and efficiently. SQL is easy to learn and almost every DBMS supports SQL. It is easier to manage the database using SQL as no large amount of coding is required.'
   },
   {
     category: 'backend',
@@ -186,19 +161,19 @@ const questionSeed = [
   {
     category: 'backend',
     subcategory: 'Databases',
-    text: 'What would VARCHAR(255) be expected to do when defining a column in SQL ?',
+    text: 'What would VARCHAR(255) be expected to do when defining a column in SQL?',
     answer: 'A varchar or Variable Character Field is a set of character data of indeterminate length. In this case, it would restrict the amount of characters used to 255 for the field.'
   },
   {
     category: 'backend',
     subcategory: 'Databases',
-    text: 'What is a primary key?',
+    text: 'What is a SQL primary key?',
     answer: 'The PRIMARY KEY constraint uniquely identifies each row in a table. It must contain UNIQUE values and has an implicit NOT NULL constraint. A table in SQL is strictly restricted to have one and only one primary key, which consists of single or multiple fields (columns).'
   },
   {
     category: 'backend',
     subcategory: 'Databases',
-    text: 'What is a query?',
+    text: 'What is a query in SQL?',
     answer: 'A query is a request for data or information from a database table or combination of tables. A database query can be either a select query or an action query.'
   },
   {
@@ -222,7 +197,7 @@ const questionSeed = [
   {
     category: 'backend',
     subcategory: 'Node.js',
-    text: 'What are 2 benefits of Node.js?',
+    text: 'Name two benefits of Node.js.',
     answer: 'Fast, Asynchronous, Scalable, Open Source, and has No Buffering.'
   },
   {
@@ -234,25 +209,25 @@ const questionSeed = [
   {
     category: 'backend',
     subcategory: 'Node.js',
-    text: 'What is package.json?',
-    answer: 'package.json is the file that contains all metadata for a project where we define properties.'
+    text: 'What does a Node.js package.json contain?',
+    answer: 'The package.json file contains all metadata for a project where we define properties.'
   },
   {
     category: 'backend',
     subcategory: 'Node.js',
-    text: 'What is an error first callback in Node.js?',
+    text: 'What is an error-first callback in Node.js?',
     answer: 'Error-first callbacks in Node.js are used to pass errors and data. This way you can pass an error for handling and checking if anything is wrong.'
   },
   {
     category: 'backend',
     subcategory: 'Node.js',
-    text: 'What is module.exports?',
+    text: 'In Node.js, what is module.exports?',
     answer: 'A module in Node.js that encapsulates all the related codes into a single unit of code which can be interpreted by shifting related functions into a single file'
   },
   {
     category: 'backend',
-    subcategory: 'Node.js',
-    text: 'What is middleware in Node.js?',
+    subcategory: 'Express',
+    text: 'What is middleware in Express?',
     answer: 'Middleware receives the request and response objects along with next functions which can be used for: Executing types of code, updating or modifying request or response objects, finishing the request-response cycle, and invoking the next middleware in the stack.'
   },
   {
@@ -407,7 +382,7 @@ const cardSeed = [
     category: 'frontend',
     subcategory: '',
     title: 'The Ol’ Reliable',
-    text: 'After struggling with some understanding why your code is not working, you decide to check Stack Overflow to see if there are any similar problems users have had before. Answer the question to find the right example. If you’re wrong, you miss the right link and waste further time with no progress.',
+    text: 'After struggling with understanding why your code is not working, you decide to check Stack Overflow for some valuable insights. Answer the question to find the right example. If you’re wrong, you miss the right link and waste further time with no progress.',
     success:
     {
       funding: 0,
@@ -429,7 +404,7 @@ const cardSeed = [
     category: 'frontend',
     subcategory: '',
     title: 'The Viral Opportunity',
-    text: 'The project you’re working on just got brought up on a semi-mainstream media outlet to showcase. Answer the following question for the demo to run smoothly and without bugs. If you’re wrong, a bug comes up during the presentation and the product stops working.',
+    text: 'The project you’re working on was just brought up on a local media outlet in their tech showcase. Answer the following question for the demo to run smoothly and without bugs. If you’re wrong, a bug comes up during the presentation and the product stops working.',
     success:
     {
       funding: 4,
@@ -451,7 +426,7 @@ const cardSeed = [
     category: 'frontend',
     subcategory: '',
     title: 'New Hire',
-    text: 'Your boss introduces you to a new recruit that’s being brought in to help with the design of the project. Answer the question to give the instructions and guide the new hire to what they need to do. If you’re wrong, they don’t understand the instructions correctly and give you an incorrect deliverable that sets you back on the front-end.',
+    text: 'Your boss introduces you to a new recruit that’s been brought on to help with project design. Answer the question to guide the new hire in the right direction. If you’re wrong, they don’t understand the instructions correctly and you are given a broken deliverable that sets you back on the front-end.',
     success:
     {
       funding: 0,
@@ -473,7 +448,7 @@ const cardSeed = [
     category: 'frontend',
     subcategory: '',
     title: 'The Forbidden Push',
-    text: 'You are about to send up a bunch of code in a git push, but right before you push up the code you think “Is there something I am forgetting right now?”. Answer the following question to jog your memory to pull before pushing. If you’re wrong, you push up your code without first pulling, pushing over a bunch of code from your coworker’s recent push from a few minutes ago. Your coworker later pulls therein losing all of his progress.',
+    text: 'You are about to push up a bit of code with Git. Right before you do, you think “Is there something I am forgetting right now?”. Answer the question to jog your memory and remember to pull before pushing. If you’re wrong, you forget and accidentally overwrite a bunch of a coworker\'s changes. When they later pull, they have some major setbacks getting things functioning again.',
     success:
     {
       funding: 0,
@@ -627,7 +602,7 @@ const cardSeed = [
     category: 'backend',
     subcategory: '',
     title: 'Good Communication',
-    text: 'A problem comes up in the back-end. You and a teammate delegate what tasks you each should be working on. Answer the following question to delegate tasks efficiently and so that you both understand what you will be working on. If you’re wrong, you both accidentally work on the same problems and waste a lot of time on back-end production.',
+    text: 'A problem comes up in the back-end. You and a teammate delegate what tasks you each should be working on. Answer the following question to delegate tasks efficiently. If you’re wrong, you both accidentally work on the same problems and waste a lot of time on back-end production.',
     success:
     {
       funding: 0,
@@ -649,7 +624,7 @@ const cardSeed = [
     category: 'backend',
     subcategory: '',
     title: 'Potential Security Breach',
-    text: 'You notice a flaw in the security system you are using. Answer the following question to fix this security flaw. If you’re wrong, your answer doesn’t actually fix the problem and you suffer a database leak in the future.',
+    text: 'You notice a flaw in the security system you are using. Answer the following question to fix the flaw. If you’re wrong, your answer doesn’t actually fix the problem and you suffer a database leak in the future.',
     success:
     {
       funding: 0,
@@ -671,7 +646,7 @@ const cardSeed = [
     category: 'backend',
     subcategory: '',
     title: 'Product Success',
-    text: 'The product your team has been working on has been extremely successful recently, you decide to ask your boss for an increase in funding. Answer the following question to have a successful meeting with your boss. If you’re wrong he denies your request.',
+    text: 'The product your team has been working on has been extremely successful, so you decide to ask your boss for an increase in funding. Answer the following question to have a successful meeting with your boss. If you’re wrong they deny your request.',
     success:
     {
       funding: 3,
@@ -692,8 +667,8 @@ const cardSeed = [
   {
     category: 'backend',
     subcategory: '',
-    title: 'App Breaking Bugs',
-    text: 'With a recent push from a coworker there has been a few app breaking bugs introduced. The code is crucial for the deadline in 2 days and these bugs have been made aware to your boss who needs this done, answer the following question to find the bugs and fix them. If you’re wrong, these bugs aren’t fixed, the deadline passes, and your project group is behind on production.',
+    title: 'App-Breaking Bugs',
+    text: 'A recent push from a coworker introduced several app-breaking bugs. The code is crucial for a deadline in two days and your boss is intently focused on getting these worked out. Answer the question to fix it up and impress the leadership. If you’re wrong, these bugs aren’t fixed, the deadline passes, and your project group is even more behind.',
     success:
     {
       funding: 1,
