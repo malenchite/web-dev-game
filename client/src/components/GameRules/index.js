@@ -19,8 +19,8 @@ export default function GameRules ({ open, closeRules }) {
             leaveFrom="translate-x-0"
             leaveTo="-translate-x-full"
           >
-            <div className="fixed inset-y-0 left-0 pl-0 max-w-full flex">
-              <div className="max-w-md backgroundWhite">
+            <div className="fixed inset-y-0 left-0 pl-0 max-w-full flex bg-red-linen">
+              <div className="max-w-md">
                 <div className="h-full flex flex-col py-6 bg-white shadow-xl overflow-y-scroll">
                   <div className="px-4 sm:px-6">
                     <div className="flex items-start justify-between">
@@ -44,27 +44,28 @@ export default function GameRules ({ open, closeRules }) {
                     <p>On your turn, you will be presented with several options:</p>
                     <br />
                     <ul>
-                      <li>Seek Funding: Generates 0-3 Funding</li>
-                      <li>Work on Front-End: Costs 1 Funding, generates 1-3 Front-End.
+                      <li><strong>Seek Funding</strong>: Generates 0-3 Funding</li>
+                      <li><strong>Work on Front-End</strong>: Costs 1 Funding, generates 1-3 Front-End.
                             May develop Bugs up to the number of Front-End generated.</li>
-                      <li>Work on Back-End: Costs 1 Funding. Generates 1-3 Back-End.
+                      <li><strong>Work on Back-End</strong>: Costs 1 Funding. Generates 1-3 Back-End.
                             May develop Bugs up to the number of Back-End generated.</li>
-                      <li>Fix Bugs: Costs 1 Funding. Removes 1-3 Bugs.</li>
-                      <li>Draw Card: This is where the real game is! Draw a card and be posed a web development question. Answer correctly for bonuses. Answer incorrectly and you may take a penalty instead.</li>
+                      <li><strong>Fix Bugs</strong>: Costs 1 Funding. Removes 1-3 Bugs.</li>
+                      <li><strong>Draw Card</strong>: This is where the real game is! Draw a card and be posed a web development question. Answer correctly for bonuses. Answer incorrectly and you may take a penalty instead.</li>
                     </ul>
                     <br />
                     <p>And the end of the final turn, the players will be scored with the following points:</p>
                     <br />
                     <ul>
-                      <li>App Development: The lowest of your Front-End and Back-End. It takes both to make a successful app!</li>
-                      <li>Bugs: Subtract 1 point for each remaining bug in your application. Keep that code polished!</li>
-                      <li>Funding: Subtract 1 point for each negative Funding you have. Try to stay out of debt!</li>
+                      <li><strong>App Development</strong>: The lowest of your Front-End and Back-End. It takes both to make a successful app!</li>
+                      <li><strong>Bugs</strong>: Subtract 1 point for each remaining bug in your application. Keep that code polished!</li>
+                      <li><strong>Funding</strong>: Subtract 1 point for each negative Funding you have. Try to stay out of debt!</li>
                     </ul>
                     <br />
                     <p>Highest score wins!</p>
                   </div>
                 </div>
               </div>
+              
             </div>
           </Transition.Child>
         </div>
