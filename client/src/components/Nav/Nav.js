@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
-import { Link } from 'react-router-dom';
-// import { Col } from '../Grid';
-import './Nav.css';
+import { Link } from "react-router-dom";
+import Logo from "../Logo";
+import "./Nav.css";
 
 const Nav = ({ user, logout }) => {
   let greeting;
@@ -21,19 +21,15 @@ const Nav = ({ user, logout }) => {
   }
 
   return (
-
     <nav className="grid grid-cols-3 bg-red-desertSand text-red-blackBean p-3">
-
-      {/* <Col size="md-4 sm-6"> */}
-      <div></div>
-      <Link to="/" className="navbar-brand text-center p-1">The Web Dev Game!</Link>
-
-      {/* </Col> */}
-
+      <div className="w-12">
+        <Link to="/"><Logo className="h-auto w-12" /></Link>
+      </div>
+      <div className="navbar-brand text-center p-1">The Web Dev Game!</div>
       <div className="bg-red-desertSand text-red-blackBean text-right p-1">
         <Link to="/profile">{greeting} </Link>| <Link to="#" className="logout" onClick={logout}>Log Out</Link>
       </div>
-    </nav>
+    </nav >
   )
 };
 

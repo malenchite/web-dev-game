@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { Redirect, Link } from 'react-router-dom';
-// import { Container, Row, Col } from '../components/Grid';
-// import { Card } from '../components/Card';
-// import { Input, FormBtn } from '../components/Form';
+import { Redirect } from 'react-router-dom';
 import AUTH from '../utils/AUTH';
-import Alert from "../components/Alert"
+import Alert from "../components/Alert";
+import Logo from "../components/Logo";
 
 function SignupForm () {
     const [userObject, setUserObject] = useState({
@@ -56,11 +54,7 @@ function SignupForm () {
 
             <div className="max-w-md w-full space-y-8">
                 <div>
-                    <img
-                        className="mx-auto h-12 w-auto"
-                        src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-                        alt="Workflow"
-                    />
+                    <Logo className="mx-auto h-12 w-auto" />
                     <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Register for the Web Dev Game</h2>
                     {
                         registered && <Alert title="Success! " message="Account created!" handleAlert={handleAlert} />
