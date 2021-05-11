@@ -31,7 +31,7 @@ const UNSUBSCRIBE_EVENTS = [
   CHAT_MESSAGE_EVENT
 ];
 
-function Game ({ socket, user, updateGameId, updateOpenGame }) {
+function Game({ socket, user, updateGameId, updateOpenGame }) {
   const category = useRef(null);
   const yourTurn = useRef(false);
   const stats = useRef({
@@ -237,7 +237,7 @@ function Game ({ socket, user, updateGameId, updateOpenGame }) {
   };
 
   return (
-    <div>
+    <div className="grid grid-cols-3 gap-4">
       <Card>
         <form>
           <label htmlFor="message">Send Message: </label>
@@ -250,14 +250,12 @@ function Game ({ socket, user, updateGameId, updateOpenGame }) {
           />
           <button onClick={handleSendMessage}>Send</button>
         </form>
-      </Card>
-      <Card>
         <h3>Messages:</h3>
         <ul>
           {chat.map(msg => <li key={msg.id}>{msg.username}: {msg.message}</li>)}
         </ul>
       </Card>
-      {
+      <div className="col-span-2">{
         opponentLeft
           ? (
             <>
@@ -265,11 +263,25 @@ function Game ({ socket, user, updateGameId, updateOpenGame }) {
               <button onClick={handleReturnToLobby}>Return to Lobby</button>
             </>
           )
-          : (<GameRender yourTurn={yourTurn} user={user} gameState={gameState} choiceMade={choiceMade} judgementMade={judgementMade} card={card} questionInfo={questionInfo} correct={correct}
+          : <GameRender yourTurn={yourTurn} user={user} gameState={gameState} choiceMade={choiceMade} judgementMade={judgementMade} card={card} questionInfo={questionInfo} correct={correct}
             handleTurnChoice={handleTurnChoice} lastTurnResult={lastTurnResult} handleReturnToLobby={handleReturnToLobby} handleJudgement={handleJudgement}
             handleCardAck={handleCardAck}
-          />)
-      }
+          />
+      } </div>
+      {/* <div>
+        <Card>
+          Players:
+        {gameState.playerStates.map(state => (
+          <div key={state.username} style={{ backgroundColor: 'tan', marginBottom: 10 }}>
+            <b>{state.username}</b><br />
+            Funding: {state.funding}<br />
+            Front-End: {state.fep}<br />
+            Back-End: {state.bep}<br />
+            Bugs: {state.bugs}
+          </div>
+        ))}
+        </Card>
+      </div> */}
     </div>
   );
 }
