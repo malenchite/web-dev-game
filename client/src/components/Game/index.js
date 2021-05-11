@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { Card } from '../Card';
 import { Input } from '../Form';
+import Chat from "../Chat";
 import GameRender from '../GameRender';
 import API from '../../utils/API';
 
@@ -12,7 +13,6 @@ const CARD_INFO_EVENT = 'card info';
 const TURN_RESULT_EVENT = 'turn result';
 
 /* Events sent by players (also possibly relayed by server) */
-const CHAT_MESSAGE_EVENT = 'chat message';
 const LEAVE_GAME_EVENT = 'leave game';
 const PLAYER_JOINED_EVENT = 'player joined';
 const PLAYER_TURN_EVENT = 'player turn';
@@ -27,11 +27,10 @@ const UNSUBSCRIBE_EVENTS = [
   CARD_INFO_EVENT,
   TURN_RESULT_EVENT,
   PLAYER_TURN_EVENT,
-  CARD_RSP_EVENT,
-  CHAT_MESSAGE_EVENT
+  CARD_RSP_EVENT
 ];
 
-function Game({ socket, user, updateGameId, updateOpenGame }) {
+function Game ({ socket, user, updateGameId, updateOpenGame }) {
   const category = useRef(null);
   const yourTurn = useRef(false);
   const stats = useRef({
@@ -59,10 +58,6 @@ function Game({ socket, user, updateGameId, updateOpenGame }) {
 
   useEffect(() => {
     if (socket) {
-      socket.on(CHAT_MESSAGE_EVENT, msg => {
-        setChat(prevChat => [...prevChat, msg]);
-      });
-
       socket.emit(PLAYER_JOINED_EVENT);
 
       socket.on(OPPONENT_LEFT_EVENT, processOpponentLeft);
@@ -94,19 +89,6 @@ function Game({ socket, user, updateGameId, updateOpenGame }) {
   }, [socket, user]);
 
   /* UI handling */
-  const handleMessageChange = (event) => {
-    setMessage(event.target.value);
-  };
-
-  const handleSendMessage = (event) => {
-    event.preventDefault();
-    console.log(message, socket);
-    if (message.length > 0 && socket) {
-      socket.emit(CHAT_MESSAGE_EVENT, { message });
-    }
-    setMessage("")
-  }
-
   const handleReturnToLobby = (event) => {
     event.preventDefault();
     updateGameId(null);
@@ -238,23 +220,9 @@ function Game({ socket, user, updateGameId, updateOpenGame }) {
 
   return (
     <div className="grid grid-cols-3 gap-4">
-      <Card>
-        <form>
-          <label htmlFor="message">Send Message: </label>
-          <Input
-            type="text"
-            name="message"
-            value={message}
-            onChange={handleMessageChange}
-            autoComplete="off"
-          />
-          <button onClick={handleSendMessage}>Send</button>
-        </form>
-        <h3>Messages:</h3>
-        <ul>
-          {chat.map(msg => <li key={msg.id}>{msg.username}: {msg.message}</li>)}
-        </ul>
-      </Card>
+      <div className="col-span-1 shadow-xl bg-red-desertSand rounded-lg h-18">
+        <Chat socket={socket} />
+      </div>
       <div className="col-span-2">{
         opponentLeft
           ? (
@@ -268,20 +236,6 @@ function Game({ socket, user, updateGameId, updateOpenGame }) {
             handleCardAck={handleCardAck}
           />
       } </div>
-      {/* <div>
-        <Card>
-          Players:
-        {gameState.playerStates.map(state => (
-          <div key={state.username} style={{ backgroundColor: 'tan', marginBottom: 10 }}>
-            <b>{state.username}</b><br />
-            Funding: {state.funding}<br />
-            Front-End: {state.fep}<br />
-            Back-End: {state.bep}<br />
-            Bugs: {state.bugs}
-          </div>
-        ))}
-        </Card>
-      </div> */}
     </div>
   );
 }
