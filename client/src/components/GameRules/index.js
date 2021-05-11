@@ -24,7 +24,7 @@ export default function GameRules ({ open, closeRules }) {
                 <div className="h-full flex flex-col py-6 bg-white shadow-xl overflow-y-scroll">
                   <div className="px-4 sm:px-6">
                     <div className="flex items-start justify-between">
-                      <div className="text-lg font-medium text-gray-900">Game Instructions</div>
+                      <div className="text-lg font-medium text-gray-900">Game Rules</div>
                       <div className="ml-3 h-7 flex items-center">
                         <button
                           className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-eggplant"
@@ -65,7 +65,7 @@ export default function GameRules ({ open, closeRules }) {
                   </div>
                 </div>
               </div>
-              
+
             </div>
           </Transition.Child>
         </div>
