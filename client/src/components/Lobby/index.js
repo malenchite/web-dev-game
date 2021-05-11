@@ -1,36 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import { Card } from '../Card';
-import { Input } from '../Form';
+
+import Chat from "../Chat";
+
 const CHALLENGE_EVENT = 'challenge';
 const CHALLENGE_RSP_EVENT = 'challenge response';
-const CHAT_MESSAGE_EVENT = 'chat message';
 const LOBBY_INFO_EVENT = 'lobby info';
 const ENTER_GAME_EVENT = 'enter game';
+
 /* Events to unsubscribe from when leaving */
 const UNSUBSCRIBE_EVENTS = [
     CHALLENGE_EVENT,
     CHALLENGE_RSP_EVENT,
-    CHAT_MESSAGE_EVENT,
     LOBBY_INFO_EVENT,
     ENTER_GAME_EVENT
 ];
+
 function Lobby ({ socket, user, gameId, updateGameId, updateOpenGame }) {
     const [lobbyUsers, setLobbyUsers] = useState([]);
-    const [message, setMessage] = useState("");
+
     const [pendingChallenge, setPendingChallenge] = useState(null);
     const [challenger, setChallenger] = useState(null);
     const [challengeRsp, setChallengeRsp] = useState(null);
-    const [chat, setChat] = useState([]);
 
     useEffect(() => {
         if (socket) {
             socket.on(LOBBY_INFO_EVENT, lobbyInfo => {
                 setLobbyUsers(lobbyInfo.users);
-            });
-
-            /* Update chat messages */
-            socket.on(CHAT_MESSAGE_EVENT, msg => {
-                setChat(prevChat => [...prevChat, msg]);
             });
 
             /* Receive challenge message */
@@ -59,18 +54,6 @@ function Lobby ({ socket, user, gameId, updateGameId, updateOpenGame }) {
             }
         }
     }, [socket]);
-
-    const handleMessageChange = (event) => {
-        setMessage(event.target.value);
-    };
-
-    const handleSendMessage = (event) => {
-        event.preventDefault();
-        if (message.length > 0 && socket) {
-            socket.emit(CHAT_MESSAGE_EVENT, { message });
-        }
-        setMessage("");
-    }
 
     const handleChallenge = (event) => {
         event.preventDefault();
@@ -117,27 +100,7 @@ function Lobby ({ socket, user, gameId, updateGameId, updateOpenGame }) {
                 </ul>
             </div>
             <div className="col-span-2 col-start-2 row-start-1 row-end-3 shadow-xl bg-red-desertSand rounded-lg h-18">
-                <h3 className=" text-red-blackBean"><strong>Messages:</strong></h3>
-                <br></br>
-                <ul>
-                    {chat.map(msg => <li key={msg.id}>{msg.username}: {msg.message}</li>)}
-                </ul>
-                <br></br>
-                <div>
-                    <form className="relative">
-                        <label className="text-gray-700 block" htmlFor="message"> </label>
-                        <Input
-                            className="form-textarea p-2 mt-1 block w-half w-3/4 flex items-center justify-center rounded-md border border-gray-300 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5"
-                            placeholder="Send Message"
-                            type="text"
-                            name="message"
-                            value={message}
-                            onChange={handleMessageChange}
-                            autoComplete="off"
-                        />
-                        <button className="flex items-center justify-center px-4 py-3 m-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" onClick={handleSendMessage}>Send</button>
-                    </form>
-                </div>
+                <Chat socket={socket} />
             </div>
 
             <div className="shadow-xl bg-red-desertSand rounded-lg h-18" >
