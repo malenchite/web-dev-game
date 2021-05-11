@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Card } from '../Card';
 
 const GameRender = ({ yourTurn, user, gameState, choiceMade, judgementMade, card, questionInfo, correct, handleTurnChoice, lastTurnResult, handleReturnToLobby, handleJudgement, handleCardAck }) => {
 
@@ -14,7 +13,7 @@ const GameRender = ({ yourTurn, user, gameState, choiceMade, judgementMade, card
   /* Rendering functions */
   const renderPlayerStates = () => {
     return (
-      <Card>
+      <div>
         Players:
         {gameState.playerStates.map(state => (
           <div key={state.username} style={{ backgroundColor: 'tan', marginBottom: 10 }}>
@@ -25,7 +24,7 @@ const GameRender = ({ yourTurn, user, gameState, choiceMade, judgementMade, card
             Bugs: {state.bugs}
           </div>
         ))}
-      </Card>)
+      </div>)
   }
 
   const renderPointChange = (pointChange, label) => {
@@ -67,7 +66,7 @@ const GameRender = ({ yourTurn, user, gameState, choiceMade, judgementMade, card
     }
 
     return (
-      <Card>
+      <div>
         <span>Last turn, {lastTurnResult.username} chose to {choiceText}</span><br />
         {lastTurnResult.success !== undefined && <><span>They {lastTurnResult.success ? 'succeeded' : 'failed'}</span><br /></>}
         {(result.funding || result.fep || result.bep || result.bugs)
@@ -79,7 +78,7 @@ const GameRender = ({ yourTurn, user, gameState, choiceMade, judgementMade, card
           </>)
           : (<><span>This had no effect</span></>)
         }
-      </Card>
+      </div>
     );
   }
 
@@ -97,11 +96,11 @@ const GameRender = ({ yourTurn, user, gameState, choiceMade, judgementMade, card
   }
 
   const renderCard = () => {
-    return (<Card>
+    return (<div>
       The card reads: <br />
       <b>{card.title}</b><br />
       <p>{card.text}</p>
-    </Card>
+    </div>
     )
   }
 
@@ -128,21 +127,22 @@ const GameRender = ({ yourTurn, user, gameState, choiceMade, judgementMade, card
   }
 
   return (
-    <Card className="grid grid-cols-3 gap-4">
+    <div class="grid grid-cols-3">
       {(gameState && !gameState.gameOver) &&
         (<>
-          <div><h3>It's now turn {gameState.turn}</h3>
+          <div className="col-span-2">
+            <h3>It's now turn {gameState.turn}</h3>
             {!yourTurn.current
               ? (<>
                 {card
                   ? (<>
                     <h2>Your opponent has drawn a card!</h2>
                     {renderCard()}
-                    <Card>
+                    <div>
                       {(card && questionInfo.text) && renderQuestion()}
                       {questionInfo.answer && renderAnswer()}
                       {(questionInfo.text && !judgementMade) && renderJudgementButtons()}
-                    </Card>
+                    </div>
                   </>)
                   : <h2>Waiting on opponent</h2>
                 }</>)
@@ -150,25 +150,28 @@ const GameRender = ({ yourTurn, user, gameState, choiceMade, judgementMade, card
                 <h2>It's your turn!</h2>
                 {renderChoiceSelection()}
                 {card && renderCard()}
-                <Card>
+                <div>
                   {(card && questionInfo && questionInfo.text) && renderQuestion()}
                   {correct !== null && <p>Your answer was judged {correct ? "correct" : "incorrect"}</p>}
                   {questionInfo && questionInfo.answer && renderAnswer()}
                   {questionInfo && questionInfo.answer && <button onClick={handleCardAck}>Done Reading</button>}
-                </Card>
+                </div>
               </>)
             }
             {lastTurnResult && <>{renderLastTurnResult()}</>}
           </div>
-          <div>{renderPlayerStates()}
+          <div>
+            {renderPlayerStates()}
             <button onClick={handleReturnToLobby}>Quit Game</button>
           </div>
+        </>)
+      }
+      {(gameState && gameState.gameOver)
+        && (<>
+          <h3>The game has ended!</h3>
+          {renderGameOver()}
         </>)}
-      {(gameState && gameState.gameOver) && (<>
-        <h3>The game has ended!</h3>
-        {renderGameOver(Card)}
-      </>)}
-    </Card>
+    </div>
   )
 }
 
