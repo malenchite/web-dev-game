@@ -100,23 +100,23 @@ function Lobby ({ socket, user, gameId, updateGameId, updateOpenGame }) {
     const renderLobbyList = () => {
         return (<>
             {lobbyUsers.map(player => (
-                <li key={player}>
+                <strong><li key={player}>
                     {player}
-                    {(!pendingChallenge && player !== user.username && !gameId && !challenger) && <button className="ml-3" value={player} onClick={handleChallenge}>Challenge</button>}
-                </li>
+                    {(!pendingChallenge && player !== user.username && !gameId && !challenger) && <button className="flex items-center justify-center p-2 m-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 space-x-4 sm:inline-grid sm:grid-cols-1 sm:gap-5" value={player} onClick={handleChallenge}>Challenge</button>}
+                </li></strong>
             ))}
         </>);
     }
 
     return (
         <div className="grid grid-cols-3 gap-4">
-            <div title="User List" className="shadow-xl bg-white rounded-lg h-18">
-                <h3 className=" text-red-blackBean"><strong>Users in Lobby:</strong></h3>
+            <div title="User List" className="shadow-xl bg-red-desertSand rounded-lg h-18">
+                <h3 className="text-red-blackBean"><strong>Users in Lobby:</strong></h3>
                 <ul>
                     {renderLobbyList()}
                 </ul>
             </div>
-            <div className="col-span-2 col-start-2 row-start-1 row-end-3 shadow-xl bg-white rounded-lg h-18">
+            <div className="col-span-2 col-start-2 row-start-1 row-end-3 shadow-xl bg-red-desertSand rounded-lg h-18">
                 <h3 className=" text-red-blackBean"><strong>Messages:</strong></h3>
                 <br></br>
                 <ul>
@@ -140,7 +140,7 @@ function Lobby ({ socket, user, gameId, updateGameId, updateOpenGame }) {
                 </div>
             </div>
 
-            <div className="shadow-xl bg-white rounded-lg h-18" >
+            <div className="shadow-xl bg-red-desertSand rounded-lg h-18" >
                 {
                     challenger && (
                         <form>
