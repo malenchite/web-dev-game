@@ -128,39 +128,41 @@ const GameRender = ({ yourTurn, user, gameState, choiceMade, judgementMade, card
   }
 
   return (
-    <Card>
+    <Card className="grid grid-cols-3 gap-4">
       {(gameState && !gameState.gameOver) &&
         (<>
-          <h3>It's now turn {gameState.turn}</h3>
-          {!yourTurn.current
-            ? (<>
-              {card
-                ? (<>
-                  <h2>Your opponent has drawn a card!</h2>
-                  {renderCard()}
-                  <Card>
-                    {(card && questionInfo.text) && renderQuestion()}
-                    {questionInfo.answer && renderAnswer()}
-                    {(questionInfo.text && !judgementMade) && renderJudgementButtons()}
-                  </Card>
-                </>)
-                : <h2>Waiting on opponent</h2>
-              }</>)
-            : (<>
-              <h2>It's your turn!</h2>
-              {renderChoiceSelection()}
-              {card && renderCard()}
-              <Card>
-                {(card && questionInfo && questionInfo.text) && renderQuestion()}
-                {correct !== null && <p>Your answer was judged {correct ? "correct" : "incorrect"}</p>}
-                {questionInfo && questionInfo.answer && renderAnswer()}
-                {questionInfo && questionInfo.answer && <button onClick={handleCardAck}>Done Reading</button>}
-              </Card>
-            </>)
-          }
-          {lastTurnResult && <>{renderLastTurnResult()}</>}
-          {renderPlayerStates()}
-          <button onClick={handleReturnToLobby}>Quit Game</button>
+          <div><h3>It's now turn {gameState.turn}</h3>
+            {!yourTurn.current
+              ? (<>
+                {card
+                  ? (<>
+                    <h2>Your opponent has drawn a card!</h2>
+                    {renderCard()}
+                    <Card>
+                      {(card && questionInfo.text) && renderQuestion()}
+                      {questionInfo.answer && renderAnswer()}
+                      {(questionInfo.text && !judgementMade) && renderJudgementButtons()}
+                    </Card>
+                  </>)
+                  : <h2>Waiting on opponent</h2>
+                }</>)
+              : (<>
+                <h2>It's your turn!</h2>
+                {renderChoiceSelection()}
+                {card && renderCard()}
+                <Card>
+                  {(card && questionInfo && questionInfo.text) && renderQuestion()}
+                  {correct !== null && <p>Your answer was judged {correct ? "correct" : "incorrect"}</p>}
+                  {questionInfo && questionInfo.answer && renderAnswer()}
+                  {questionInfo && questionInfo.answer && <button onClick={handleCardAck}>Done Reading</button>}
+                </Card>
+              </>)
+            }
+            {lastTurnResult && <>{renderLastTurnResult()}</>}
+          </div>
+          <div>{renderPlayerStates()}
+            <button onClick={handleReturnToLobby}>Quit Game</button>
+          </div>
         </>)}
       {(gameState && gameState.gameOver) && (<>
         <h3>The game has ended!</h3>
