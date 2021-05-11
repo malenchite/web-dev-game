@@ -10,7 +10,7 @@ import GameMaster from "./pages/GameMaster";
 import Profile from "./pages/profile";
 import Splash from "./pages/splash";
 
-function App () {
+function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
 
@@ -63,7 +63,7 @@ function App () {
                 <GameMaster user={user} logout={logout} />
               </Route>
               <Route path="/profile">
-                <Profile user={user} />
+                <Profile user={user} setUser={setUser} />
               </Route>
 
               {process.env.REACT_APP_DEPLOYED ? (
