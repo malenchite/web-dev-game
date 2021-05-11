@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
-import Lobby from '../components/Lobby'
-import Game from '../components/Game';
-import GameRules from '../components/GameRules';
+import Lobby from "../components/Lobby"
+import Game from "../components/Game";
+import GameRules from "../components/GameRules";
 
 const DEV_ENDPOINT = "http://localhost:3001";
 const USER_INFO_EVENT = "user info";
@@ -14,7 +14,7 @@ function GameMaster ({ user, logout }) {
   const [rulesOpen, setRulesOpen] = useState(false);
 
   function classNames (...classes) {
-    return classes.filter(Boolean).join(' ')
+    return classes.filter(Boolean).join(" ")
   }
 
   useEffect(() => {
@@ -77,31 +77,27 @@ function GameMaster ({ user, logout }) {
   }
 
   return (
-    <div>
-      {/* Slideover Code */}
+    <div className="grid grid-cols-2 gap-1 mt-3" style={{ gridTemplateColumns: "2rem auto" }}>
       <div>
-        <div
-          className={classNames(
-            rulesOpen ? 'text-gray-900' : 'text-gray-500',
-            'group bg-white rounded-md inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cursor-pointer select-none'
-          )}>
-          <span
-            className={classNames(rulesOpen ? 'text-gray-600' : 'text-gray-400', 'ml-2 group-hover:text-gray-500')}
-            aria-hidden="true"
-            onClick={openRules}
-          >
-            Game Rules
-        </span>
+        <div className="transform -rotate-90 translate-y-36">
+          <div>
+            <div
+              aria-hidden="true"
+              onClick={openRules}
+              className="font-medium cursor-pointer select-none px-1 py-1 rounded-b-md w-40 bg-red-linen"
+            >
+              Game Rules
+            </div>
+          </div>
         </div>
       </div>
-      <div>
-        <GameRules open={rulesOpen} closeRules={closeRules} />
-        {(openGame && socket && user && gameId)
+      <GameRules open={rulesOpen} closeRules={closeRules} />
+      {
+        (openGame && socket && user && gameId)
           ? <Game socket={socket} user={user} updateGameId={updateGameId} updateOpenGame={updateOpenGame} />
           : <Lobby socket={socket} user={user} gameId={gameId} updateGameId={updateGameId} updateOpenGame={updateOpenGame} />
-        }
-      </div>
-    </div>
+      }
+    </div >
   )
 }
 
