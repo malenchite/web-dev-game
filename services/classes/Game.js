@@ -62,14 +62,6 @@ class Game {
 
   /* Startup/shutdown methods */
   start () {
-    this.players.forEach((player, idx) => {
-      player.changeRoom(this.id);
-      this.gameState.playerStates[idx].username = player.username;
-    });
-
-    /* Let players know it's time to enter the game */
-    this.io.to(this.id).emit(ENTER_GAME_EVENT, { gameId: this.id });
-
     /* Initialize card deck */
     this.refreshCards();
 
@@ -88,6 +80,12 @@ class Game {
     /* Subscribe to "leave game" event for all players */
     this.players.forEach((player, idx) => {
       player.socket.once(LEAVE_GAME_EVENT, () => this.playerLeft(idx));
+    });
+
+    /* Store usernames in game state and let players know they can enter the game */
+    this.players.forEach((player, idx) => {
+      this.gameState.playerStates[idx].username = player.username;
+      player.socket.emit(ENTER_GAME_EVENT, { gameId: this.id });
     });
   }
 
@@ -135,6 +133,7 @@ class Game {
   /* Player management methods */
   joinPlayer (idx) {
     this.ready[idx] = true;
+    this.players[idx].changeRoom(this.id);
 
     /* If every player is ready, start the game */
     if (this.ready.every(rdy => rdy)) {
