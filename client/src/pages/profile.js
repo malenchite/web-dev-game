@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Avatar from "../components/Avatar";
 import API from "../utils/API";
 
-function Profile ({ user, setUser }) {
+function Profile({ user, setUser }) {
     const [history, setHistory] = useState([]);
 
     useEffect(() => {
@@ -25,7 +25,7 @@ function Profile ({ user, setUser }) {
         return result.join("");
     }
 
-    function saveAvatar () {
+    function saveAvatar() {
         setUser(oldUser => {
             return { ...oldUser, avatar: randomGenerator() };
         })
