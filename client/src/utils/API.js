@@ -17,6 +17,9 @@ const API = {
   },
   getGameData: function (id) {
     return axios.get(DEV_ROUTE + '/api/users/gamehistory/' + id)
+  },
+  saveAvatar: function (id, picture) {
+    return axios.post(DEV_ROUTE + '/api/users/avatar/' + id, {avatar:picture});
   }
 };
 
