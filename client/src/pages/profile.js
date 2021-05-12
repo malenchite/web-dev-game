@@ -5,8 +5,10 @@ import API from "../utils/API";
 
 function Profile({ user, setUser }) {
     const [history, setHistory] = useState([]);
+    const [userPicture, setPicture] = useState([]);
 
     useEffect(() => {
+        console.log(user);
         if (user) {
             API.getGameData(user._id)
                 .then(res => {
@@ -27,7 +29,11 @@ function Profile({ user, setUser }) {
 
     function saveAvatar() {
         setUser(oldUser => {
-            return { ...oldUser, avatar: randomGenerator() };
+            let randomPicture = randomGenerator();
+            //oldUser.avatar = randomPicture;
+            API.saveAvatar(oldUser._id, randomPicture);
+            console.log(oldUser);
+            return { ...oldUser, avatar: randomPicture };
         })
     }
 
