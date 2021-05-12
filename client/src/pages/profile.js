@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { compareAsc, format } from 'date-fns'
 
 import Avatar from "../components/Avatar";
 import API from "../utils/API";
@@ -48,15 +49,21 @@ function Profile({ user, setUser }) {
                         <h1 className="text-left text-red-blackBean">Welcome: {user.username}</h1>
                         <h2 className="text-left text-red-blackBean">Your Email: {user.email}</h2>
                     </div>
-                    <div>
-                        {history.slice(0).reverse().map(gameData => (
-                            <ul>
-                                <li>{gameData.result}</li>
-                                <li>{gameData.frontEndCorrect}/{gameData.frontEndTotal}</li>
-                                <li>{gameData.backEndCorrect}/{gameData.backEndTotal}</li>
-                                <li>{gameData.timestamp.split('T')[0]}</li>
-                            </ul>
-                        ))}
+                    <div className="shadow-xl bg-red-linen rounded-lg h-18 p-2 my-2 col-start-2 col-end-5">
+                        <h1><strong>Game History:</strong></h1>
+                        {history.slice(0).reverse().map(({ result, frontEndCorrect, frontEndTotal, backEndCorrect, backEndTotal, timestamp }) => {
+                            // console.log(timestamp)
+                            return (
+                                <ul>
+                                    <hr></hr>
+                                    <li>Game Result: {result}</li>
+                                    <li>Front End Points: {frontEndCorrect}/{frontEndTotal}</li>
+                                    <li>Back End Points: {backEndCorrect}/{backEndTotal}</li>
+                                    <li>Time: {format(new Date(timestamp), 'MM/dd/yyyy')}</li>
+
+                                </ul>
+                            )
+                        })}
                     </div>
                 </>)
             }

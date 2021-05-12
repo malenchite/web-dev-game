@@ -30,7 +30,7 @@ const UNSUBSCRIBE_EVENTS = [
   CARD_RSP_EVENT
 ];
 
-function Game ({ socket, user, updateGameId, updateOpenGame }) {
+function Game({ socket, user, updateGameId, updateOpenGame }) {
   const category = useRef(null);
   const yourTurn = useRef(false);
   const stats = useRef({
@@ -134,6 +134,7 @@ function Game ({ socket, user, updateGameId, updateOpenGame }) {
   }
 
   const processGameOver = gameOver => {
+
     const gameData = {
       result: "loss",
       frontEndCorrect: stats.current.frontEndCorrect,
