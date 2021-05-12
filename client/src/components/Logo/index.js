@@ -1,9 +1,11 @@
+import logo from "./logo.png";
+
 function Logo (props) {
   return (
     <img
       {...props}
-      src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-      alt="Placeholder Logo"
+      src={logo}
+      alt="The Web Dev Game Logo"
     />
   );
 }
