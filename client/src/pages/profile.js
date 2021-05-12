@@ -37,6 +37,7 @@ function Profile({ user, setUser }) {
         })
     }
 
+    //the split is a temp fix
     return (
         <div className="grid grid-cols-3 gap-4">
             {user && (
@@ -48,12 +49,12 @@ function Profile({ user, setUser }) {
                         <h2 className="text-left text-red-blackBean">Your Email: {user.email}</h2>
                     </div>
                     <div>
-                        {history.map(gameData => (
+                        {history.slice(0).reverse().map(gameData => (
                             <ul>
                                 <li>{gameData.result}</li>
                                 <li>{gameData.frontEndCorrect}/{gameData.frontEndTotal}</li>
                                 <li>{gameData.backEndCorrect}/{gameData.backEndTotal}</li>
-                                <li>{gameData.timestamp}</li>
+                                <li>{gameData.timestamp.split('T')[0]}</li>
                             </ul>
                         ))}
                     </div>
