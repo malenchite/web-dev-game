@@ -5,6 +5,7 @@ const userController = require('../controllers/userController');
 const gameService = require('./gameService');
 
 const CHALLENGE_EVENT = 'challenge';
+const WITHDRAW_EVENT = 'withdraw challenge';
 const CHALLENGE_RSP_EVENT = 'challenge response';
 const USER_INFO_EVENT = 'user info';
 const LOBBY_INFO_EVENT = 'lobby info';
@@ -98,7 +99,7 @@ function removeUser (idx) {
       const opponentIdx = findUserIndex(user.gameInfo.opponent);
       if (opponentIdx > -1) {
         if (user.gameInfo.pending) {
-          sendChallengeRsp(activeUsers[opponentIdx].socket, false, 'Your opponent has disconnected');
+          sendChallengeRsp(activeUsers[opponentIdx].socket, false, 'Your opponent has disconnected.');
         }
         activeUsers[opponentIdx].clearGame();
       }
@@ -118,25 +119,25 @@ function processChallenge (socket, username) {
 
   /* If challenger already has an active challenge, reject */
   if (challengerIdx === -1 || activeUsers[challengerIdx].gameInfo.opponent) {
-    sendChallengeRsp(socket, false, 'You already have an opponent');
+    sendChallengeRsp(socket, false, 'You already have an opponent.');
     return;
   }
 
   /* If target not found, reject */
   if (targetIdx === -1) {
-    sendChallengeRsp(socket, false, 'Invalid target for challenge');
+    sendChallengeRsp(socket, false, 'Invalid target for challenge.');
     return;
   }
 
   /* If target is yourself, reject */
   if (targetIdx === challengerIdx) {
-    sendChallengeRsp(socket, false, 'You cannot challenge yourself');
+    sendChallengeRsp(socket, false, 'You cannot challenge yourself.');
     return;
   }
 
   /* If target already has an opponent, reject */
   if (activeUsers[targetIdx].gameInfo.opponent) {
-    sendChallengeRsp(socket, false, 'Target is not available to challenge');
+    sendChallengeRsp(socket, false, 'Target is not available to challenge.');
     return;
   }
 
@@ -150,6 +151,28 @@ function processChallenge (socket, username) {
   challenger.challenge(target.id, room);
 
   target.socket.emit(CHALLENGE_EVENT, { username: challenger.username });
+}
+
+/* Processes a challenger withdrawing their challenge */
+function processChallengeWithdraw (socket) {
+  const challengerIdx = findSocketIndex(socket.id);
+
+  /* If challenger does not exist or does not have an active opponnent, ignore */
+  if (challengerIdx === -1 || !activeUsers[challengerIdx].gameInfo.opponent) {
+    console.log('Error: received challenge withdrawal from invalid user');
+    return;
+  }
+
+  const targetIdx = findUserIndex(activeUsers[challengerIdx].gameInfo.opponent);
+
+  /* Clear game info from challenger */
+  activeUsers[challengerIdx].clearGame();
+
+  /* If target is valid, clear its game info and send challenge response with withdrawn message */
+  if (targetIdx !== -1) {
+    activeUsers[targetIdx].clearGame();
+    sendChallengeRsp(activeUsers[targetIdx].socket, false, 'The challenge has been withdrawn.');
+  }
 }
 
 /* Processes response from a challenge's target */
@@ -209,6 +232,11 @@ function start (newIO) {
     /* Process challenge event from client */
     socket.on(CHALLENGE_EVENT, chalInfo => {
       processChallenge(socket, chalInfo.username);
+    });
+
+    /* Process challenge withdraw from client */
+    socket.on(WITHDRAW_EVENT, () => {
+      processChallengeWithdraw(socket);
     });
 
     /* Process challenge response event from client */

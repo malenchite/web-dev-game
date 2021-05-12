@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Chat from "../Chat";
 
 const CHALLENGE_EVENT = 'challenge';
+const WITHDRAW_EVENT = 'withdraw challenge';
 const CHALLENGE_RSP_EVENT = 'challenge response';
 const LOBBY_INFO_EVENT = 'lobby info';
 const ENTER_GAME_EVENT = 'enter game';
@@ -37,6 +38,7 @@ function Lobby ({ socket, user, gameId, updateGameId, updateOpenGame }) {
             /* Receive challenge response */
             socket.on(CHALLENGE_RSP_EVENT, rsp => {
                 setPendingChallenge(null);
+                setChallenger(null);
                 setChallengeRsp(rsp);
             });
 
@@ -61,6 +63,15 @@ function Lobby ({ socket, user, gameId, updateGameId, updateOpenGame }) {
         setPendingChallenge(event.target.value);
         if (socket) {
             socket.emit(CHALLENGE_EVENT, { username: event.target.value });
+        }
+    }
+
+    const handleChallengeWithdraw = (event) => {
+        event.preventDefault();
+        setChallenger(null);
+        setPendingChallenge(null);
+        if (socket) {
+            socket.emit(WITHDRAW_EVENT);
         }
     }
 
@@ -119,14 +130,15 @@ function Lobby ({ socket, user, gameId, updateGameId, updateOpenGame }) {
                     pendingChallenge && (
                         <div>
                             <span className="text-red-blackBean">You have challenged <strong>{pendingChallenge}</strong>. Awaiting response...</span>
+                            <br />
+                            <button className="flex items-center justify-center px-4 py-3 m-1 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" value={true} onClick={handleChallengeWithdraw}>Withdraw</button>
                         </div>
                     )
                 }
                 {
                     challengeRsp && (
                         <div>
-                            <span className="text-red-blackBean">Your challenge has been {challengeRsp.accepted ? "accepted" : "rejected"}.</span>
-                            <br />
+                            {!challengeRsp.message && <span className="text-red-blackBean">Your challenge has been {challengeRsp.accepted ? "accepted" : "rejected"}.</span>}
                             {challengeRsp.message && <span className=" text-red-blackBean">{challengeRsp.message}</span>}
                         </div>
                     )
