@@ -8,7 +8,7 @@ export default function GameRules ({ open, closeRules }) {
       show={open}
       as={Fragment}
     >
-      <div className="fixed inset-left-0 overflow-hidden z-50 text-left" >
+      <div className="fixed inset-left-0 overflow-hidden z-50 text-left">
         <div className="absolute inset-0 overflow-hidden">
           <Transition.Child
             as={Fragment}
@@ -21,7 +21,7 @@ export default function GameRules ({ open, closeRules }) {
           >
             <div className="fixed inset-y-0 left-0 pl-0 max-w-full flex bg-red-linen">
               <div className="max-w-md">
-                <div className="h-75 flex flex-col py-6 bg-white shadow-xl overflow-y-scroll scrollbar-thin scrollbar-thumb-red-eggplant scrollbar-track-red-linen">
+                <div className="h-full flex flex-col py-6 bg-white shadow-xl overflow-y-scroll scrollbar-thin scrollbar-thumb-red-eggplant scrollbar-track-red-linen border-r border-red-eggplant">
                   <div className="px-4 sm:px-6">
                     <div className="flex items-start justify-between">
                       <div className="text-lg font-medium text-gray-900">Game Rules</div>
