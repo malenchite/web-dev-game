@@ -38,7 +38,7 @@ function Challenge ({ challenger, pendingChallenge, challengeRsp, gameId, handle
             )
           }
           {
-            gameId && (
+            (gameId && !(challengeRsp && challengeRsp.message)) && (
               <>
                 {challengeRsp && challengeRsp.accepted && <br />}
                 <span className="text-red-blackBean">Your game is ready to enter!</span>

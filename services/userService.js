@@ -94,13 +94,11 @@ function removeUser (idx) {
     const user = activeUsers[idx];
     console.log(`User ${user.id} removed on socket ${user.socket.id}`);
 
-    /* Send challenge response message to pending opponent, if any */
+    /* Send challenge response message to opponent, if any */
     if (user.gameInfo.opponent) {
       const opponentIdx = findUserIndex(user.gameInfo.opponent);
       if (opponentIdx > -1) {
-        if (user.gameInfo.pending) {
-          sendChallengeRsp(activeUsers[opponentIdx].socket, false, 'Your opponent has disconnected.');
-        }
+        sendChallengeRsp(activeUsers[opponentIdx].socket, false, 'Your opponent has disconnected.');
         activeUsers[opponentIdx].clearGame();
       }
     }

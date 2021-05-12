@@ -98,6 +98,7 @@ function Lobby ({ socket, user, gameId, updateGameId, updateOpenGame }) {
         setChallenger(null);
         setPendingChallenge(null);
         setChallengeRsp(null);
+        updateGameId(null);
     }
 
     const renderLobbyList = () => {
