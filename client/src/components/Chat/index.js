@@ -43,7 +43,7 @@ function Chat ({ socket }) {
         {chat.map(msg => <li key={msg.id}>{msg.username}: {msg.message}</li>)}
       </ul>
       <br />
-      <div>
+      <div className="h-75 overflow-y-scroll scrollbar-thin scrollbar-thumb-red-eggplant scrollbar-track-red-linen">
         <form className="relative">
           <label className="text-gray-700 block" htmlFor="message"> </label>
           <Input
