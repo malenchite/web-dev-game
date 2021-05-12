@@ -57,7 +57,7 @@ class User {
   }
 
   clearGame () {
-    this.pending = false;
+    this.gameInfo.pending = false;
     this.gameInfo.room = null;
     this.gameInfo.opponent = null;
   }

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 
 import Chat from "../Chat";
+import Challenge from "../Challenge";
 
 const CHALLENGE_EVENT = 'challenge';
+const WITHDRAW_EVENT = 'withdraw challenge';
 const CHALLENGE_RSP_EVENT = 'challenge response';
 const LOBBY_INFO_EVENT = 'lobby info';
 const ENTER_GAME_EVENT = 'enter game';
@@ -37,6 +39,7 @@ function Lobby ({ socket, user, gameId, updateGameId, updateOpenGame }) {
             /* Receive challenge response */
             socket.on(CHALLENGE_RSP_EVENT, rsp => {
                 setPendingChallenge(null);
+                setChallenger(null);
                 setChallengeRsp(rsp);
             });
 
@@ -64,11 +67,22 @@ function Lobby ({ socket, user, gameId, updateGameId, updateOpenGame }) {
         }
     }
 
+    const handleChallengeWithdraw = (event) => {
+        event.preventDefault();
+        clearChallenge();
+        if (socket) {
+            socket.emit(WITHDRAW_EVENT);
+        }
+    }
+
     const handleChallengeResponse = (event) => {
         event.preventDefault();
         setChallenger(null);
         if (socket) {
             socket.emit(CHALLENGE_RSP_EVENT, { accepted: event.target.value });
+        }
+        if (event.target.value === false) {
+            clearChallenge();
         }
     }
 
@@ -80,68 +94,37 @@ function Lobby ({ socket, user, gameId, updateGameId, updateOpenGame }) {
         updateOpenGame(true);
     }
 
+    const clearChallenge = () => {
+        setChallenger(null);
+        setPendingChallenge(null);
+        setChallengeRsp(null);
+        updateGameId(null);
+    }
+
     const renderLobbyList = () => {
         return (<>
             {lobbyUsers.map(player => (
-                <strong><li key={player}>
-                    {player}
-                    {(!pendingChallenge && player !== user.username && !gameId && !challenger) && <button className="flex items-center justify-center p-2 m-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 space-x-4 sm:inline-grid sm:grid-cols-1 sm:gap-5" value={player} onClick={handleChallenge}>Challenge</button>}
-                </li></strong>
+                <li key={player} className="text-left">
+                    <span className="font-bold select-none">{player}</span>
+                    {<button className={`${(!pendingChallenge && player !== user.username && !gameId && !challenger) ? "" : "invisible"} flex items-center justify-center p-1 py-0 ml-3 m-1 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 space-x-4 sm:inline-grid sm:grid-cols-1 sm:gap-5`} value={player} onClick={handleChallenge}>Challenge</button>}
+                </li>
             ))}
         </>);
     }
 
     return (
-        <div className="grid grid-cols-3 gap-4">
-            <div title="User List" className="shadow-xl bg-red-desertSand rounded-lg h-18">
-                <h3 className="text-red-blackBean"><strong>Users in Lobby:</strong></h3>
-                <ul>
+        <div className="grid grid-cols-3 gap-x-4">
+            <div title="Players in Lobby" className="shadow-xl bg-red-desertSand rounded-lg">
+                <h3 className="text-red-blackBean font-bold mt-1">Players in Lobby</h3>
+                <ul className="bg-red-linen mx-5 my-3 px-2 h-96 overflow-y-scroll scrollbar-thin scrollbar-thumb-red-eggplant scrollbar-track-red-linen">
                     {renderLobbyList()}
                 </ul>
+                <Challenge challenger={challenger} pendingChallenge={pendingChallenge} challengeRsp={challengeRsp} gameId={gameId}
+                    handleChallengeResponse={handleChallengeResponse} handleChallengeWithdraw={handleChallengeWithdraw} handleEnterGameButton={handleEnterGameButton} handleClose={clearChallenge} />
             </div>
-            <div className="col-span-2 col-start-2 row-start-1 row-end-3 shadow-xl bg-red-desertSand rounded-lg h-18">
-                <Chat socket={socket} />
+            <div className="col-span-2 col-start-2 row-start-1 row-end-3 shadow-xl bg-red-desertSand rounded-lg">
+                <Chat socket={socket} title="Lobby" />
             </div>
-
-            <div className="shadow-xl bg-red-desertSand rounded-lg h-18" >
-                {
-                    challenger && (
-                        <form>
-                            <label className="text-red-blackBean" htmlFor="challenge"><strong> You have been challenged by {challenger} </strong> </label>
-                            <br />
-                            <button className="flex items-center justify-center px-4 py-3 m-1 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" value={true} onClick={handleChallengeResponse}>Accept</button>
-                            <br />
-                            <button className="flex items-center justify-center px-4 py-3 m-1 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" value={false} onClick={handleChallengeResponse}>Reject</button>
-                        </form>
-                    )
-                }
-                {
-                    pendingChallenge && (
-                        <div>
-                            <span className="text-red-blackBean">You have challenged <strong>{pendingChallenge}</strong>. Awaiting response...</span>
-                        </div>
-                    )
-                }
-                {
-                    challengeRsp && (
-                        <div>
-                            <span className="text-red-blackBean">Your challenge has been {challengeRsp.accepted ? "accepted" : "rejected"}.</span>
-                            <br />
-                            {challengeRsp.message && <span className=" text-red-blackBean">{challengeRsp.message}</span>}
-                        </div>
-                    )
-                }
-                {
-                    gameId && (
-                        <div>
-                            <span>Your game is ready to enter!</span>
-                            <br />
-                            <button className="flex items-center justify-center px-4 py-3 m-1 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" onClick={handleEnterGameButton}>Enter Game</button>
-                        </div>
-                    )
-                }
-            </div>
-
         </div>
     )
 }
