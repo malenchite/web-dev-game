@@ -139,7 +139,12 @@ class Game {
 
     /* If every player is ready, start the game */
     if (this.ready.every(rdy => rdy)) {
-      this.startNextTurn();
+      /* If any players have left, then announce this to players as they join */
+      if (this.players.some(player => player === null)) {
+        this.io.to(this.id).emit(OPPONENT_LEFT_EVENT);
+      } else {
+        this.startNextTurn();
+      }
     }
   }
 

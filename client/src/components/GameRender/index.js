@@ -43,23 +43,38 @@ const GameRender = ({ currentPlayer, user, gameState, choiceMade, judgementMade,
     let changeText = '';
 
     if (pointChange > 0) {
-      changeText = <><span>gaining {pointChange} {label}</span><br /></>
+      changeText = <><span>They gained {pointChange} {label}</span>.<br /></>
     } else if (pointChange < 0) {
-      changeText = <><span>losing {-1 * pointChange} {label}</span><br /></>
+      changeText = <><span>They lost {-1 * pointChange} {label}</span>.<br /></>
     }
     return changeText;
   }
 
   const renderChoiceSelection = () => {
     if (yourPlayerState && !choiceMade) {
-      return (<form>
-        Make your selection:<br />
-        <button value='card' className=" w-16 h-24 bg-red-mauveTaupe hover:bg-red-desertSand text-white font-bold py-2 px-4 border-b-4 border-red-cottonCandy hover:border-red-blackBean rounded" onClick={handleTurnChoice}>Draw a Card</button><br />
-        <button value='fund' onClick={handleTurnChoice}>Seek Funding</button><br />
-        {yourPlayerState.funding > 0 && <><button value='frontend' onClick={handleTurnChoice}>Work on Front-end</button> (costs 1 funding)<br /></>}
-        {yourPlayerState.funding > 0 && <><button value='backend' onClick={handleTurnChoice}>Work on Back-end</button> (costs 1 funding)<br /></>}
-        {(yourPlayerState.bugs > 0 && yourPlayerState.funding > 0) && <><button value='bugfix' onClick={handleTurnChoice}>Fix Bugs</button> (costs 1 funding)<br /></>}
-      </form>
+      return (
+        <form className="bg-red-linen mt-2 mx-3 h-60">
+          <div className="grid grid-col-2 justify-evenly gap-0" style={{ gridTemplateColumns: "12rem auto" }}>
+            <div className="col-span-1 flex justify-center items-center h-60">
+              <button value="card" className="w-28 h-40 bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-80 font-bold py-2 px-4 border border-b-4 hover:border-red-cottonCandy border-red-blackBean rounded" onClick={handleTurnChoice}>Draw Card</button><br />
+            </div>
+            <div className="col-span-1 p-3 h-60">
+              <button className="flex items-center justify-center px-1 py-1 m-1 border hover:border-red-cottonCandy border-red-blackBean text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-80 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5 w-44" value="fund" onClick={handleTurnChoice}>Seek Funding</button><br />
+              {yourPlayerState.funding > 0 && (
+                <>
+                  <button className="flex items-center justify-center px-1 py-1 m-1 border hover:border-red-cottonCandy border-red-blackBean text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-80 sm:px-2 space-y-2 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-0 w-44" value="frontend" onClick={handleTurnChoice}>Work on Front End<span className="text-xs pointer-events-none">(costs 1 funding)</span></button> <br />
+                </>)}
+              {yourPlayerState.funding > 0 && (
+                <>
+                  <button className="flex items-center justify-center px-1 py-1 m-1 border hover:border-red-cottonCandy border-red-blackBean text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-80 sm:px-2 space-y-2 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-0 w-44" value="backend" onClick={handleTurnChoice}>Work on Back End<span className="text-xs pointer-events-none">(costs 1 funding)</span></button> <br />
+                </>)}
+              {(yourPlayerState.bugs > 0 && yourPlayerState.funding > 0) && (
+                <>
+                  <button className="flex items-center justify-center px-1 py-1 m-1 border hover:border-red-cottonCandy border-red-blackBean text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-80 sm:px-2 space-y-2 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-0 w-44" value="bugfix" onClick={handleTurnChoice}>Fix Bugs<span className="text-xs pointer-events-none">(costs 1 funding)</span></button> <br />
+                </>)}
+            </div>
+          </div>
+        </form>
       )
     }
   }
@@ -78,9 +93,9 @@ const GameRender = ({ currentPlayer, user, gameState, choiceMade, judgementMade,
     }
 
     return (
-      <div>
-        <span>Last turn, {lastTurnResult.username} chose to {choiceText}</span><br />
-        {lastTurnResult.success !== undefined && <><span>They {lastTurnResult.success ? 'succeeded' : 'failed'}</span><br /></>}
+      <div className="h-40 bg-red-linen mx-3 mb-3 p-1">
+        <span>Last turn, <span className="font-bold">{lastTurnResult.username}</span> chose to {choiceText}.</span><br />
+        {lastTurnResult.success !== undefined && <><span>They {lastTurnResult.success ? 'succeeded at' : 'failed'} the challenge.</span><br /></>}
         {(result.funding || result.fep || result.bep || result.bugs)
           ? (<>
             {renderPointChange(lastTurnResult.result.funding, 'Funding')}
@@ -88,7 +103,7 @@ const GameRender = ({ currentPlayer, user, gameState, choiceMade, judgementMade,
             {renderPointChange(lastTurnResult.result.bep, 'Back-End')}
             {renderPointChange(lastTurnResult.result.bugs, 'Bugs')}
           </>)
-          : (<><span>This had no effect</span></>)
+          : (<><span>This had no effect.</span></>)
         }
       </div>
     );
@@ -96,51 +111,53 @@ const GameRender = ({ currentPlayer, user, gameState, choiceMade, judgementMade,
 
   const renderGameOver = () => {
     return (
-      <div>
-        {gameState.winner ? <>The winner is <b>{gameState.winner}!</b></> : <>It was a tie!</>}<br />
-        Final scores were:<br />
-        <>{gameState.playerStates.map(player => (
-          <span key={player.username}>{player.username}: {player.score}<br /></span>
-        ))}</>
-        <button onClick={handleReturnToLobby}>Return to Lobby</button>
-      </div>
+      <>
+        <h3 className="text-red-blackBean mt-1 mb-3 font-bold">The game has ended.</h3>
+        <div className="bg-red-linen p-1 mx-3">
+          <div className="mb-2 text-xl">{gameState.winner ? <>The winner is <span className="font-bold">{gameState.winner}</span>!</> : <>It was a tie!</>}</div>
+          <>{gameState.playerStates.map(player => (
+            <span key={player.username}><span className="font-bold">{player.username}:</span> {player.score}<br /></span>
+          ))}</>
+          <button className="flex items-center justify-center px-4 py-3 m-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" value={false} onClick={handleReturnToLobby}>Return to Lobby</button>
+        </div>
+      </>
     )
   }
 
   const renderCard = () => {
     return (
-      <div className="bg-red-linen mb-5 mx-3 px-2">
-        <b>{card.title}</b><br />
-        <p>{card.text}</p>
+      <div className="bg-red-linen mb-3 mx-3 px-2">
+        <span className="font-bold">{card.title}</span>
+        <p className="mt-1 leading-snug">{card.text}</p>
       </div>
     )
   }
 
   const renderQuestion = () => {
-    return (<>
-      <h3>A <span className="font-bold">{card.category}</span> question has been posed:</h3>
-      <p className="bg-red-linen px-2 mx-3">{questionInfo.text}</p>
-    </>);
+    return (<div className="mb-2">
+      <span className="text-sm">A <span className="font-bold">{card.category === "frontend" ? "front-end" : "back-end"}</span> question has been posed:</span>
+      <p className="bg-red-desertSand bg-opacity-70 px-2 mx-3 leading-snug">{questionInfo.text}</p>
+    </div>);
   }
 
   const renderAnswer = () => {
-    return (<>
-      <h3>The answer is:</h3>
-      <p className="bg-red-linen mx-3 px-2 text-left">{questionInfo.answer}</p>
-    </>);
+    return (<div>
+      <span className="text-sm">The answer is:</span>
+      <p className="bg-red-desertSand bg-opacity-70  mx-3 px-2 leading-snug">{questionInfo.answer}</p>
+    </div>);
   }
 
   const renderJudgementButtons = () => {
     return (
-      <div className="mt-3 space-x-3">
+      <div className="mt-3 space-x-3 text-sm">
         Wait for the opponent to respond in chat, then judge their answer:<br />
-        <button className="flex items-center justify-center px-4 py-3 m-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" onClick={handleJudgement}>Correct</button>
+        <button className="flex items-center justify-center px-4 py-3 m-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" value={true} onClick={handleJudgement}>Correct</button>
         <button className="flex items-center justify-center px-4 py-3 m-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" value={false} onClick={handleJudgement}>Incorrect</button>
       </div>);
   }
 
   return (
-    <div class="grid grid-cols-3 gap-x-4 h-full">
+    <div className="grid grid-cols-3 gap-x-4 h-full">
       {
         (<>
           <div className="col-span-2 shadow-xl bg-red-desertSand rounded-lg relative">
@@ -149,19 +166,15 @@ const GameRender = ({ currentPlayer, user, gameState, choiceMade, judgementMade,
                 {opponentLeft
                   ? (
                     <>
-                      <h3 className="text-red-blackBean mt-1 mb-3 font-bold">Your opponent has left</h3>
+                      <h3 className="text-red-blackBean mt-1 mb-3 font-bold">Your opponent has left.</h3>
                       <button className="flex items-center justify-center px-4 py-3 m-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" onClick={handleReturnToLobby}>Return to Lobby</button>
                     </>
                   )
-                  : <h3 className="text-red-blackBean mt-1 mb-3 font-bold">Waiting for players to join</h3>
+                  : <h3 className="text-red-blackBean mt-1 mb-3 font-bold">Waiting for players to join...</h3>
                 }
               </>)
             }
-            {(gameState && gameState.gameOver)
-              && (<>
-                <h3 className="text-red-blackBean mt-1 mb-3 font-bold">The game has ended!</h3>
-                {renderGameOver()}
-              </>)}
+            {(gameState && gameState.gameOver) && renderGameOver()}
             {(gameState && !gameState.gameOver) && (
               <>
                 <h3 className="text-red-blackBean mt-1 mb-3 font-bold">Turn {gameState.turn}</h3>
@@ -169,7 +182,7 @@ const GameRender = ({ currentPlayer, user, gameState, choiceMade, judgementMade,
                   ? (<>
                     {card
                       ? (<>
-                        <h2>Your opponent has drawn a card!</h2>
+                        <h4>Your opponent has drawn a card.</h4>
                         <GamePopup>
                           <div>
                             {renderCard()}
@@ -180,21 +193,23 @@ const GameRender = ({ currentPlayer, user, gameState, choiceMade, judgementMade,
                             </div>
                           </div>
                         </GamePopup></>)
-                      : <h2>Waiting on opponent</h2>
+                      : <h4>Waiting on opponent...</h4>
                     }</>)
                   : (<>
-                    <h2>It's your turn!</h2>
+                    <h4>It's your turn!</h4>
                     {renderChoiceSelection()}
 
                     {card && (
                       <GamePopup>
                         <div>
-                          {card && renderCard()}
-                          {(card && questionInfo && questionInfo.text) && renderQuestion()}
-                          {correct !== null && <p>Your answer was judged {correct ? "correct" : "incorrect"}</p>}
-                          {questionInfo && questionInfo.answer && renderAnswer()}
-
-                          {questionInfo && questionInfo.answer && <button className="flex items-center justify-center px-4 py-3 m-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" onClick={handleCardAck}>Done</button>}
+                          {renderCard()}
+                          {(questionInfo && questionInfo.text) && renderQuestion()}
+                          {correct === null && <span className="text-sm">Enter your response into the game chat.</span>}
+                          {correct !== null && <p>Your answer was judged <span className="font-bold">{correct ? "correct" : "incorrect"}</span>.</p>}
+                          {(questionInfo && questionInfo.answer) && (<>
+                            {renderAnswer()}
+                            <button className="flex items-center justify-center px-4 py-3 m-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" onClick={handleCardAck}>Done</button>
+                          </>)}
                         </div>
                       </GamePopup>
                     )
@@ -202,7 +217,9 @@ const GameRender = ({ currentPlayer, user, gameState, choiceMade, judgementMade,
                   </>)}
               </>)
             }
-            {lastTurnResult && <>{renderLastTurnResult()}</>}
+            <div className="absolute left-0 bottom-0 w-full items-center">
+              {lastTurnResult && renderLastTurnResult()}
+            </div>
           </div>
           <div className="col-span-1 shadow-xl bg-red-desertSand rounded-lg relative">
             {gameState && renderPlayerStates()}
