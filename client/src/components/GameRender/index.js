@@ -3,15 +3,19 @@ import { useEffect, useState, Fragment } from 'react';
 import GamePopup from "../GamePopup";
 import Avatar from "../Avatar";
 
-const GameRender = ({ yourTurn, user, gameState, choiceMade, judgementMade, card, questionInfo, correct, handleTurnChoice, lastTurnResult, handleReturnToLobby, handleJudgement, handleCardAck }) => {
-
+const GameRender = ({ currentPlayer, user, gameState, choiceMade, judgementMade, card, questionInfo, correct, handleTurnChoice, lastTurnResult, handleReturnToLobby, handleJudgement, handleCardAck }) => {
+  const [yourTurn, setYourTurn] = useState(false);
   const [yourPlayerState, setYourPlayerState] = useState(null);
 
   useEffect(() => {
     if (gameState) {
       setYourPlayerState(gameState.playerStates.find(player => player.username === user.username));
     }
-  }, [gameState])
+  }, [gameState]);
+
+  useEffect(() => {
+    setYourTurn(currentPlayer.current === user.username);
+  }, [currentPlayer.current]);
 
   /* Rendering functions */
   const renderPlayerStates = () => {
@@ -21,8 +25,8 @@ const GameRender = ({ yourTurn, user, gameState, choiceMade, judgementMade, card
           <div key={state.username} className="bg-red-linen mx-3 my-3">
             <div className="font-bold mb-1">{state.username}</div>
             <div className="mx-4 py-3 flex justify-center">
-              <Avatar user={{ username: state.username, avatar: state.avatar }} size={100} className="mr-6" />
-              <div className="text-left">
+              <Avatar user={{ username: state.username, avatar: state.avatar }} size={100} className={`${state.username !== currentPlayer.current ? "border-opacity-0" : ""} border-4 border-red-eggplant border-double mr-6 rounded-full`} />
+              <div className="text-left mt-1">
                 Funding: {state.funding}<br />
                 Front-End: {state.fep}<br />
                 Back-End: {state.bep}<br />
@@ -141,7 +145,7 @@ const GameRender = ({ yourTurn, user, gameState, choiceMade, judgementMade, card
         (<>
           <div className="col-span-2 shadow-xl bg-red-desertSand rounded-lg relative">
             <h3>Turn {gameState.turn}</h3>
-            {!yourTurn.current
+            {!yourTurn
               ? (<>
                 {card
                   ? (<>

@@ -30,7 +30,7 @@ const UNSUBSCRIBE_EVENTS = [
 
 function Game ({ socket, user, updateGameId, updateOpenGame }) {
   const category = useRef(null);
-  const yourTurn = useRef(false);
+  const currentPlayer = useRef(null);
   const stats = useRef({
     frontEndCorrect: 0,
     backEndCorrect: 0,
@@ -117,7 +117,7 @@ function Game ({ socket, user, updateGameId, updateOpenGame }) {
   }
 
   const processNextTurn = turnInfo => {
-    yourTurn.current = turnInfo.currentPlayer === user.username;
+    currentPlayer.current = turnInfo.currentPlayer;
     setGameState(turnInfo.gameState);
     setChoiceMade(false);
     setCard(null);
@@ -160,7 +160,7 @@ function Game ({ socket, user, updateGameId, updateOpenGame }) {
         setCard(res.data);
 
         /* If your turn, update stats and retrieve question. Otherwise, just retrieve question & answer */
-        if (yourTurn.current) {
+        if (currentPlayer.current === user.username) {
           switch (category.current) {
             case "frontend":
               stats.current.frontEndTotal++;
@@ -228,7 +228,7 @@ function Game ({ socket, user, updateGameId, updateOpenGame }) {
               <button onClick={handleReturnToLobby}>Return to Lobby</button>
             </>
           )
-          : <GameRender yourTurn={yourTurn} user={user} gameState={gameState} choiceMade={choiceMade} judgementMade={judgementMade} card={card} questionInfo={questionInfo} correct={correct}
+          : <GameRender currentPlayer={currentPlayer} user={user} gameState={gameState} choiceMade={choiceMade} judgementMade={judgementMade} card={card} questionInfo={questionInfo} correct={correct}
             handleTurnChoice={handleTurnChoice} lastTurnResult={lastTurnResult} handleReturnToLobby={handleReturnToLobby} handleJudgement={handleJudgement}
             handleCardAck={handleCardAck}
           />
