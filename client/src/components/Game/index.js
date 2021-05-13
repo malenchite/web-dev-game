@@ -1,6 +1,4 @@
 import { useEffect, useState, useRef } from 'react';
-import { Card } from '../Card';
-import { Input } from '../Form';
 import Chat from "../Chat";
 import GameRender from '../GameRender';
 import API from '../../utils/API';
@@ -30,7 +28,7 @@ const UNSUBSCRIBE_EVENTS = [
   CARD_RSP_EVENT
 ];
 
-function Game({ socket, user, updateGameId, updateOpenGame }) {
+function Game ({ socket, user, updateGameId, updateOpenGame }) {
   const category = useRef(null);
   const yourTurn = useRef(false);
   const stats = useRef({
@@ -40,8 +38,6 @@ function Game({ socket, user, updateGameId, updateOpenGame }) {
     backEndTotal: 0
   });
 
-  const [message, setMessage] = useState("");
-  const [chat, setChat] = useState([]);
   const [gameState, setGameState] = useState(null);
   const [opponentLeft, setOpponentLeft] = useState(false);
   const [lastTurnResult, setLastTurnResult] = useState(null);
@@ -121,7 +117,7 @@ function Game({ socket, user, updateGameId, updateOpenGame }) {
   }
 
   const processNextTurn = turnInfo => {
-    yourTurn.current = turnInfo.yourTurn;
+    yourTurn.current = turnInfo.currentPlayer === user.username;
     setGameState(turnInfo.gameState);
     setChoiceMade(false);
     setCard(null);

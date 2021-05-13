@@ -62,7 +62,7 @@ function activateUser (userID, socket) {
   userController.localAccess(userID)
     .then(match => {
       if (match) {
-        const newUser = new User(userID, socket, match.username, io, sendLobbyInfo);
+        const newUser = new User(userID, socket, match.username, match.avatar, io, sendLobbyInfo);
         const oldIdx = findUserIndex(userID);
 
         if (oldIdx > -1) {

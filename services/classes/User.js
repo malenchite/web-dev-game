@@ -3,9 +3,10 @@ const uuid = require('uuid');
 const CHAT_MESSAGE_EVENT = 'chat message';
 
 class User {
-  constructor (userID, socket, username, io, roomCB) {
+  constructor (userID, socket, username, avatar, io, roomCB) {
     this.io = io;
     this.username = username;
+    this.avatar = avatar;
     this.id = userID;
     this.socket = socket;
     this.room = null;
