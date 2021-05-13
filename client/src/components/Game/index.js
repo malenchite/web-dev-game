@@ -1,6 +1,4 @@
 import { useEffect, useState, useRef } from 'react';
-import { Card } from '../Card';
-import { Input } from '../Form';
 import Chat from "../Chat";
 import GameRender from '../GameRender';
 import API from '../../utils/API';
@@ -30,9 +28,9 @@ const UNSUBSCRIBE_EVENTS = [
   CARD_RSP_EVENT
 ];
 
-function Game({ socket, user, updateGameId, updateOpenGame }) {
+function Game ({ socket, user, updateGameId, updateOpenGame }) {
   const category = useRef(null);
-  const yourTurn = useRef(false);
+  const currentPlayer = useRef(null);
   const stats = useRef({
     frontEndCorrect: 0,
     backEndCorrect: 0,
@@ -40,8 +38,6 @@ function Game({ socket, user, updateGameId, updateOpenGame }) {
     backEndTotal: 0
   });
 
-  const [message, setMessage] = useState("");
-  const [chat, setChat] = useState([]);
   const [gameState, setGameState] = useState(null);
   const [opponentLeft, setOpponentLeft] = useState(false);
   const [lastTurnResult, setLastTurnResult] = useState(null);
@@ -118,10 +114,11 @@ function Game({ socket, user, updateGameId, updateOpenGame }) {
   /* Game flow processing  */
   const processOpponentLeft = () => {
     setOpponentLeft(true);
+    setGameState(null);
   }
 
   const processNextTurn = turnInfo => {
-    yourTurn.current = turnInfo.yourTurn;
+    currentPlayer.current = turnInfo.currentPlayer;
     setGameState(turnInfo.gameState);
     setChoiceMade(false);
     setCard(null);
@@ -164,7 +161,7 @@ function Game({ socket, user, updateGameId, updateOpenGame }) {
         setCard(res.data);
 
         /* If your turn, update stats and retrieve question. Otherwise, just retrieve question & answer */
-        if (yourTurn.current) {
+        if (currentPlayer.current === user.username) {
           switch (category.current) {
             case "frontend":
               stats.current.frontEndTotal++;
@@ -221,22 +218,15 @@ function Game({ socket, user, updateGameId, updateOpenGame }) {
 
   return (
     <div className="grid grid-cols-3 gap-4">
-      <div className="col-span-1 shadow-xl bg-red-desertSand rounded-lg">
-        <Chat socket={socket} />
+      <div className="col-span-1 shadow-xl bg-red-desertSand rounded-lg pb-4">
+        <Chat socket={socket} title="Game Chat" />
       </div>
-      <div className="col-span-2">{
-        opponentLeft
-          ? (
-            <>
-              <h2>Your opponent has left</h2>
-              <button onClick={handleReturnToLobby}>Return to Lobby</button>
-            </>
-          )
-          : <GameRender yourTurn={yourTurn} user={user} gameState={gameState} choiceMade={choiceMade} judgementMade={judgementMade} card={card} questionInfo={questionInfo} correct={correct}
-            handleTurnChoice={handleTurnChoice} lastTurnResult={lastTurnResult} handleReturnToLobby={handleReturnToLobby} handleJudgement={handleJudgement}
-            handleCardAck={handleCardAck}
-          />
-      } </div>
+      <div className="col-span-2">
+        <GameRender currentPlayer={currentPlayer} user={user} gameState={gameState} choiceMade={choiceMade} judgementMade={judgementMade} card={card} questionInfo={questionInfo} correct={correct} opponentLeft={opponentLeft}
+          handleTurnChoice={handleTurnChoice} lastTurnResult={lastTurnResult} handleReturnToLobby={handleReturnToLobby} handleJudgement={handleJudgement}
+          handleCardAck={handleCardAck}
+        />
+      </div>
     </div>
   );
 }

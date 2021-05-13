@@ -1,21 +1,16 @@
-import React from 'react';
-import multiavatar from '@multiavatar/multiavatar'
-import './avatar.css'
+import multiavatar from '@multiavatar/multiavatar';
 
+function Avatar ({ user, className, size }) {
+    let svgCode = multiavatar(user.avatar ? user.avatar : user.username);
 
-function Avatar (props) {
-    const user = props.user;
-    let seed = ""
-    if (user.avatar) {
-        seed = user.avatar
+    /* Adds a height attribute to the svg tag to change its size */
+    if (size) {
+        svgCode = svgCode.replace(/<svg/g, `<svg height="${size}"`);
     }
-    else {
-        seed = user.username
-    }
-    let svgCode = multiavatar(seed)
+
     return (
-        <div className={props.className} dangerouslySetInnerHTML={{ __html: svgCode }} />
+        <div className={className} dangerouslySetInnerHTML={{ __html: svgCode }} />
     )
 }
 
-export default Avatar
+export default Avatar;

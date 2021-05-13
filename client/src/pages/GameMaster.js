@@ -13,10 +13,6 @@ function GameMaster ({ user, logout }) {
   const [socket, setSocket] = useState(null);
   const [rulesOpen, setRulesOpen] = useState(false);
 
-  function classNames (...classes) {
-    return classes.filter(Boolean).join(" ")
-  }
-
   useEffect(() => {
     connectUser();
   }, [user])

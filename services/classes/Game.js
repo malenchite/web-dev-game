@@ -50,6 +50,7 @@ class Game {
       playerStates: Array.from({ length: players.length }, () => {
         return {
           username: null,
+          avatar: null,
           score: null,
           funding: 2,
           fep: 0,
@@ -82,9 +83,10 @@ class Game {
       player.socket.once(LEAVE_GAME_EVENT, () => this.playerLeft(idx));
     });
 
-    /* Store usernames in game state and let players know they can enter the game */
+    /* Store usernames and avatars in game state and let players know they can enter the game */
     this.players.forEach((player, idx) => {
       this.gameState.playerStates[idx].username = player.username;
+      this.gameState.playerStates[idx].avatar = player.avatar;
       player.socket.emit(ENTER_GAME_EVENT, { gameId: this.id });
     });
   }
@@ -118,7 +120,7 @@ class Game {
     }
 
     /* Stop listening for game process events */
-    this.players.forEach((player, idx) => {
+    this.players.forEach((player) => {
       player.socket.removeAllListeners(PLAYER_TURN_EVENT);
       player.socket.removeAllListeners(CARD_RSP_EVENT);
     });
@@ -137,7 +139,12 @@ class Game {
 
     /* If every player is ready, start the game */
     if (this.ready.every(rdy => rdy)) {
-      this.startNextTurn();
+      /* If any players have left, then announce this to players as they join */
+      if (this.players.some(player => player === null)) {
+        this.io.to(this.id).emit(OPPONENT_LEFT_EVENT);
+      } else {
+        this.startNextTurn();
+      }
     }
   }
 
@@ -190,7 +197,7 @@ class Game {
       if (player) {
         /* Send next turn with current game state */
         player.socket.emit(NEXT_TURN_EVENT, {
-          yourTurn: this.currentPlayer === idx,
+          currentPlayer: this.players[this.currentPlayer].username,
           gameState: this.gameState
         });
 
