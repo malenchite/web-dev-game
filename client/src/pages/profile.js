@@ -6,10 +6,8 @@ import API from "../utils/API";
 
 function Profile({ user, setUser }) {
     const [history, setHistory] = useState([]);
-    const [userPicture, setPicture] = useState([]);
 
     useEffect(() => {
-        console.log(user);
         if (user) {
             API.getGameData(user._id)
                 .then(res => {
@@ -28,17 +26,20 @@ function Profile({ user, setUser }) {
         return result.join("");
     }
 
+
     function saveAvatar() {
-        setUser(oldUser => {
-            let randomPicture = randomGenerator();
-            //oldUser.avatar = randomPicture;
-            API.saveAvatar(oldUser._id, randomPicture);
-            console.log(oldUser);
-            return { ...oldUser, avatar: randomPicture };
-        })
+        let randomPicture = randomGenerator();
+        API.saveAvatar(user._id, randomPicture)
+          .then(() => setUser({...user, avatar: randomPicture}))
+        // setUser(oldUser => {
+        //     let randomPicture = randomGenerator();
+        //     //oldUser.avatar = randomPicture;
+        //     API.saveAvatar(oldUser._id, randomPicture);
+        //     console.log(oldUser);
+        //     return { ...oldUser, avatar: randomPicture };
+        // })
     }
 
-    //the split is a temp fix
     return (
         <div className="grid grid-cols-3 gap-4">
             {user && (
@@ -52,7 +53,6 @@ function Profile({ user, setUser }) {
                     <div className="shadow-xl bg-red-linen rounded-lg h-18 p-2 my-2 col-start-2 col-end-5">
                         <h1><strong>Game History:</strong></h1>
                         {history.slice(0).reverse().map(({ result, frontEndCorrect, frontEndTotal, backEndCorrect, backEndTotal, timestamp }) => {
-                            // console.log(timestamp)
                             return (
                                 <ul>
                                     <hr></hr>

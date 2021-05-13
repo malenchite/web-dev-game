@@ -110,13 +110,12 @@ module.exports = {
   /* Game history methods */
   // gets the avatar that was saved
   saveAvatar: (req, res) => {
-    console.log(req.body);
     db.User.findById(req.params.id, (_err, user) => {
       if (user) {
-        console.log(user);
         const userAvatar = req.body.avatar;
-        db.User.updateOne({ '_id': user.id }, { '$set': { 'avatar': userAvatar } })
-          .then(() => {
+        db.User.findOneAndUpdate({ _id: user.id }, { avatar: userAvatar }, { new: true })
+          .then((updatedUser) => {
+            req.user = updatedUser;
             res.status(200).end();
           }
           );
