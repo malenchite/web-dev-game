@@ -3,7 +3,7 @@ import { useEffect, useState, Fragment } from 'react';
 import GamePopup from "../GamePopup";
 import Avatar from "../Avatar";
 
-const GameRender = ({ currentPlayer, user, gameState, choiceMade, judgementMade, card, questionInfo, correct, handleTurnChoice, lastTurnResult, handleReturnToLobby, handleJudgement, handleCardAck }) => {
+const GameRender = ({ currentPlayer, user, gameState, choiceMade, judgementMade, card, questionInfo, correct, opponentLeft, handleTurnChoice, lastTurnResult, handleReturnToLobby, handleJudgement, handleCardAck }) => {
   const [yourTurn, setYourTurn] = useState(false);
   const [yourPlayerState, setYourPlayerState] = useState(null);
 
@@ -141,61 +141,78 @@ const GameRender = ({ currentPlayer, user, gameState, choiceMade, judgementMade,
 
   return (
     <div class="grid grid-cols-3 gap-x-4 h-full">
-      {(gameState && !gameState.gameOver) &&
+      {
         (<>
           <div className="col-span-2 shadow-xl bg-red-desertSand rounded-lg relative">
-            <h3>Turn {gameState.turn}</h3>
-            {!yourTurn
-              ? (<>
-                {card
-                  ? (<>
-                    <h2>Your opponent has drawn a card!</h2>
-                    <GamePopup>
-                      <div>
-                        {renderCard()}
-                        <div>
-                          {(card && questionInfo.text) && renderQuestion()}
-                          {questionInfo.answer && renderAnswer()}
-                          {(questionInfo.text && !judgementMade) && renderJudgementButtons()}
-                        </div>
-                      </div>
-                    </GamePopup></>)
-                  : <h2>Waiting on opponent</h2>
-                }</>)
-              : (<>
-                <h2>It's your turn!</h2>
-                {renderChoiceSelection()}
-
-                {card && (
-                  <GamePopup>
-                    <div>
-                      {card && renderCard()}
-                      {(card && questionInfo && questionInfo.text) && renderQuestion()}
-                      {correct !== null && <p>Your answer was judged {correct ? "correct" : "incorrect"}</p>}
-                      {questionInfo && questionInfo.answer && renderAnswer()}
-
-                      {questionInfo && questionInfo.answer && <button className="flex items-center justify-center px-4 py-3 m-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" onClick={handleCardAck}>Done</button>}
-                    </div>
-                  </GamePopup>
-                )
+            {!gameState && (
+              <>
+                {opponentLeft
+                  ? (
+                    <>
+                      <h3 className="text-red-blackBean mt-1 mb-3 font-bold">Your opponent has left</h3>
+                      <button className="flex items-center justify-center px-4 py-3 m-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" onClick={handleReturnToLobby}>Return to Lobby</button>
+                    </>
+                  )
+                  : <h3 className="text-red-blackBean mt-1 mb-3 font-bold">Waiting for players to join</h3>
                 }
+              </>)
+            }
+            {(gameState && gameState.gameOver)
+              && (<>
+                <h3 className="text-red-blackBean mt-1 mb-3 font-bold">The game has ended!</h3>
+                {renderGameOver()}
+              </>)}
+            {(gameState && !gameState.gameOver) && (
+              <>
+                <h3 className="text-red-blackBean mt-1 mb-3 font-bold">Turn {gameState.turn}</h3>
+                {!yourTurn
+                  ? (<>
+                    {card
+                      ? (<>
+                        <h2>Your opponent has drawn a card!</h2>
+                        <GamePopup>
+                          <div>
+                            {renderCard()}
+                            <div>
+                              {(card && questionInfo.text) && renderQuestion()}
+                              {questionInfo.answer && renderAnswer()}
+                              {(questionInfo.text && !judgementMade) && renderJudgementButtons()}
+                            </div>
+                          </div>
+                        </GamePopup></>)
+                      : <h2>Waiting on opponent</h2>
+                    }</>)
+                  : (<>
+                    <h2>It's your turn!</h2>
+                    {renderChoiceSelection()}
+
+                    {card && (
+                      <GamePopup>
+                        <div>
+                          {card && renderCard()}
+                          {(card && questionInfo && questionInfo.text) && renderQuestion()}
+                          {correct !== null && <p>Your answer was judged {correct ? "correct" : "incorrect"}</p>}
+                          {questionInfo && questionInfo.answer && renderAnswer()}
+
+                          {questionInfo && questionInfo.answer && <button className="flex items-center justify-center px-4 py-3 m-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" onClick={handleCardAck}>Done</button>}
+                        </div>
+                      </GamePopup>
+                    )
+                    }
+                  </>)}
               </>)
             }
             {lastTurnResult && <>{renderLastTurnResult()}</>}
           </div>
           <div className="col-span-1 shadow-xl bg-red-desertSand rounded-lg relative">
-            {renderPlayerStates()}
+            {gameState && renderPlayerStates()}
             <div className="absolute bottom-4 w-full">
               <button className="flex items-center justify-center px-4 py-3 m-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" onClick={handleReturnToLobby}>Quit Game</button>
             </div>
           </div>
         </>)
       }
-      {(gameState && gameState.gameOver)
-        && (<>
-          <h3>The game has ended!</h3>
-          {renderGameOver()}
-        </>)}
+
     </div>
   )
 }

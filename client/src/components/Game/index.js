@@ -114,6 +114,7 @@ function Game ({ socket, user, updateGameId, updateOpenGame }) {
   /* Game flow processing  */
   const processOpponentLeft = () => {
     setOpponentLeft(true);
+    setGameState(null);
   }
 
   const processNextTurn = turnInfo => {
@@ -220,19 +221,12 @@ function Game ({ socket, user, updateGameId, updateOpenGame }) {
       <div className="col-span-1 shadow-xl bg-red-desertSand rounded-lg pb-4">
         <Chat socket={socket} title="Game Chat" />
       </div>
-      <div className="col-span-2">{
-        opponentLeft
-          ? (
-            <>
-              <h2>Your opponent has left</h2>
-              <button onClick={handleReturnToLobby}>Return to Lobby</button>
-            </>
-          )
-          : <GameRender currentPlayer={currentPlayer} user={user} gameState={gameState} choiceMade={choiceMade} judgementMade={judgementMade} card={card} questionInfo={questionInfo} correct={correct}
-            handleTurnChoice={handleTurnChoice} lastTurnResult={lastTurnResult} handleReturnToLobby={handleReturnToLobby} handleJudgement={handleJudgement}
-            handleCardAck={handleCardAck}
-          />
-      } </div>
+      <div className="col-span-2">
+        <GameRender currentPlayer={currentPlayer} user={user} gameState={gameState} choiceMade={choiceMade} judgementMade={judgementMade} card={card} questionInfo={questionInfo} correct={correct} opponentLeft={opponentLeft}
+          handleTurnChoice={handleTurnChoice} lastTurnResult={lastTurnResult} handleReturnToLobby={handleReturnToLobby} handleJudgement={handleJudgement}
+          handleCardAck={handleCardAck}
+        />
+      </div>
     </div>
   );
 }
