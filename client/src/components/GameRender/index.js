@@ -25,7 +25,7 @@ const GameRender = ({ currentPlayer, user, gameState, choiceMade, judgementMade,
           <div key={state.username} className="bg-red-linen mx-3 my-3">
             <div className="font-bold mb-1">{state.username}</div>
             <div className="mx-4 py-3 flex justify-center">
-              <Avatar user={{ username: state.username, avatar: state.avatar }} size={100} className={`${state.username !== currentPlayer.current ? "border-opacity-0" : ""} border-4 border-red-eggplant border-double mr-6 rounded-full`} />
+              <Avatar user={{ username: state.username, avatar: state.avatar }} size={100} className={`${state.username !== currentPlayer.current ? "border-opacity-0" : ""} border-4 border-red-eggplant border-double mr-6 rounded-full h-1/2`} />
               <div className="text-left mt-1">
                 Funding: {state.funding}<br />
                 Front-End: {state.fep}<br />
@@ -183,9 +183,9 @@ const GameRender = ({ currentPlayer, user, gameState, choiceMade, judgementMade,
             }
             {lastTurnResult && <>{renderLastTurnResult()}</>}
           </div>
-          <div className="col-span-1 shadow-xl bg-red-desertSand rounded-lg">
+          <div className="col-span-1 shadow-xl bg-red-desertSand rounded-lg relative">
             {renderPlayerStates()}
-            <div className="mt-32">
+            <div className="absolute bottom-0 w-full">
               <button className="flex items-center justify-center px-4 py-3 m-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" onClick={handleReturnToLobby}>Quit Game</button>
             </div>
           </div>
