@@ -77,7 +77,7 @@ function GameMaster ({ user, logout }) {
   }
 
   return (
-    <div className="grid grid-cols-3 gap-1 mt-3" style={{ gridTemplateColumns: "2rem auto 2rem" }}>
+    <div className="grid grid-cols-3 mt-3" style={{ gridTemplateColumns: "2rem auto 2rem" }}>
       <div>
         <div className="transform -rotate-90 translate-y-36">
           <div>
