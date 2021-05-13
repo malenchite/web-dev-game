@@ -185,7 +185,7 @@ const GameRender = ({ currentPlayer, user, gameState, choiceMade, judgementMade,
           </div>
           <div className="col-span-1 shadow-xl bg-red-desertSand rounded-lg relative">
             {renderPlayerStates()}
-            <div className="absolute bottom-0 w-full">
+            <div className="absolute bottom-4 w-full">
               <button className="flex items-center justify-center px-4 py-3 m-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" onClick={handleReturnToLobby}>Quit Game</button>
             </div>
           </div>
