@@ -4,7 +4,7 @@ import { compareAsc, format } from 'date-fns'
 import Avatar from "../components/Avatar";
 import API from "../utils/API";
 
-function Profile({ user, setUser }) {
+function Profile ({ user, setUser }) {
     const [history, setHistory] = useState([]);
 
     useEffect(() => {
@@ -27,7 +27,7 @@ function Profile({ user, setUser }) {
     }
 
 
-    function saveAvatar() {
+    function saveAvatar () {
         let randomPicture = randomGenerator();
         API.saveAvatar(user._id, randomPicture)
             .then(() => setUser({ ...user, avatar: randomPicture }))
@@ -45,7 +45,7 @@ function Profile({ user, setUser }) {
             {user && (
                 <>
                     <div className="shadow-xl bg-red-linen rounded-lg h-18 p-2 my-2 col-start-1 col-end-2">
-                        <Avatar user={user} />
+                        <Avatar user={user} size={150} />
                         <button className="group relative flex justify-center my-2 py-2 px-4 border border-transparent text-sm font-medium rounded-md bg-red-mauveTaupe text-red-eggplant bg-opacity-60 hover:bg-opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={saveAvatar} >Generate Random Avatar</button>
                         <h1 className="text-left text-red-blackBean text-lg">Welcome: {user.username}</h1>
                         <h2 className="text-left text-red-blackBean text-lg">Your Email: {user.email}</h2>

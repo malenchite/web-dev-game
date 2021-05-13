@@ -22,7 +22,7 @@ const GameRender = ({ yourTurn, user, gameState, choiceMade, judgementMade, card
           <div className="bg-red-linen mx-3 my-3">
             <div className="font-bold mb-1">{state.username}</div>
             <div key={state.username} className="mx-4 py-3 flex justify-center">
-              <Avatar user={user} className="mr-6" />
+              <Avatar user={user} size={100} className="mr-6" />
               <div className="text-left">
                 Funding: {state.funding}<br />
                 Front-End: {state.fep}<br />
