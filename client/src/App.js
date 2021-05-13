@@ -15,7 +15,7 @@ function App() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    AUTH.getUser().then((response) => {
+    AUTH.getUser().then((response) => {console.log(response.data.user)
       if (!!response.data.user) {
         setLoggedIn(true);
         return setUser(response.data.user);
@@ -43,7 +43,7 @@ function App() {
 
   const login = (username, password) => {
     AUTH.login(username, password).then((response) => {
-      console.log(response.data);
+      //console.log(response.data);
       if (response.status === 200) {
         // update the state
         setLoggedIn(true);
