@@ -1,8 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Fragment } from 'react';
+
+import GamePopup from "../GamePopup";
+import Avatar from "../Avatar";
 
 const GameRender = ({ yourTurn, user, gameState, choiceMade, judgementMade, card, questionInfo, correct, handleTurnChoice, lastTurnResult, handleReturnToLobby, handleJudgement, handleCardAck }) => {
 
   const [yourPlayerState, setYourPlayerState] = useState(null);
+  const [popupOpen, setPopupOpen] = useState(true);
 
   useEffect(() => {
     if (gameState) {
@@ -13,15 +17,19 @@ const GameRender = ({ yourTurn, user, gameState, choiceMade, judgementMade, card
   /* Rendering functions */
   const renderPlayerStates = () => {
     return (
-      <div>
-        Players:
+      <div className="mt-3">
         {gameState.playerStates.map(state => (
-          <div key={state.username} style={{ backgroundColor: 'tan', marginBottom: 10 }}>
-            <b>{state.username}</b><br />
-            Funding: {state.funding}<br />
-            Front-End: {state.fep}<br />
-            Back-End: {state.bep}<br />
-            Bugs: {state.bugs}
+          <div className="bg-red-linen mx-3 my-3">
+            <div className="font-bold mb-1">{state.username}</div>
+            <div key={state.username} className="mx-4 py-3 flex justify-center">
+              <Avatar user={user} className="mr-6" />
+              <div className="text-left">
+                Funding: {state.funding}<br />
+                Front-End: {state.fep}<br />
+                Back-End: {state.bep}<br />
+                Bugs: {state.bugs}
+              </div>
+            </div>
           </div>
         ))}
       </div>)
@@ -96,73 +104,86 @@ const GameRender = ({ yourTurn, user, gameState, choiceMade, judgementMade, card
   }
 
   const renderCard = () => {
-    return (<div>
-      The card reads: <br />
-      <b>{card.title}</b><br />
-      <p>{card.text}</p>
-    </div>
+    return (
+      <div className="bg-red-linen mb-5 mx-3 px-2">
+        <b>{card.title}</b><br />
+        <p>{card.text}</p>
+      </div>
     )
   }
 
   const renderQuestion = () => {
     return (<>
-      <h3>A {card.category} question has been posed:</h3>
-      <p>{questionInfo.text}</p>
+      <h3>A <span className="font-bold">{card.category}</span> question has been posed:</h3>
+      <p className="bg-red-linen px-2 mx-3">{questionInfo.text}</p>
     </>);
   }
 
   const renderAnswer = () => {
     return (<>
       <h3>The answer is:</h3>
-      <p style={{ backgroundColor: "lightgray" }}>{questionInfo.answer}</p>
+      <p className="bg-red-linen mx-3 px-2 text-left">{questionInfo.answer}</p>
     </>);
   }
 
   const renderJudgementButtons = () => {
-    return (<>
-      Wait for the opponent to respond in chat, then judge their answer:<br />
-      <button className="mr-5" value={true} onClick={handleJudgement}>Correct</button>
-      <button value={false} onClick={handleJudgement}>Incorrect</button>
-    </>);
+    return (
+      <div className="mt-3 space-x-3">
+        Wait for the opponent to respond in chat, then judge their answer:<br />
+        <button className="flex items-center justify-center px-4 py-3 m-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" onClick={handleJudgement}>Correct</button>
+        <button className="flex items-center justify-center px-4 py-3 m-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" value={false} onClick={handleJudgement}>Incorrect</button>
+      </div>);
   }
 
   return (
-    <div class="grid grid-cols-3">
+    <div class="grid grid-cols-3 gap-x-4 h-full">
       {(gameState && !gameState.gameOver) &&
         (<>
-          <div className="col-span-2">
-            <h3>It's now turn {gameState.turn}</h3>
+          <div className="col-span-2 shadow-xl bg-red-desertSand rounded-lg relative">
+            <h3>Turn {gameState.turn}</h3>
             {!yourTurn.current
               ? (<>
                 {card
                   ? (<>
                     <h2>Your opponent has drawn a card!</h2>
-                    {renderCard()}
-                    <div>
-                      {(card && questionInfo.text) && renderQuestion()}
-                      {questionInfo.answer && renderAnswer()}
-                      {(questionInfo.text && !judgementMade) && renderJudgementButtons()}
-                    </div>
-                  </>)
+                    <GamePopup>
+                      <div>
+                        {renderCard()}
+                        <div>
+                          {(card && questionInfo.text) && renderQuestion()}
+                          {questionInfo.answer && renderAnswer()}
+                          {(questionInfo.text && !judgementMade) && renderJudgementButtons()}
+                        </div>
+                      </div>
+                    </GamePopup></>)
                   : <h2>Waiting on opponent</h2>
                 }</>)
               : (<>
                 <h2>It's your turn!</h2>
                 {renderChoiceSelection()}
-                {card && renderCard()}
-                <div>
-                  {(card && questionInfo && questionInfo.text) && renderQuestion()}
-                  {correct !== null && <p>Your answer was judged {correct ? "correct" : "incorrect"}</p>}
-                  {questionInfo && questionInfo.answer && renderAnswer()}
-                  {questionInfo && questionInfo.answer && <button onClick={handleCardAck}>Done Reading</button>}
-                </div>
+
+                {card && (
+                  <GamePopup>
+                    <div>
+                      {card && renderCard()}
+                      {(card && questionInfo && questionInfo.text) && renderQuestion()}
+                      {correct !== null && <p>Your answer was judged {correct ? "correct" : "incorrect"}</p>}
+                      {questionInfo && questionInfo.answer && renderAnswer()}
+
+                      {questionInfo && questionInfo.answer && <button className="flex items-center justify-center px-4 py-3 m-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" onClick={handleCardAck}>Done</button>}
+                    </div>
+                  </GamePopup>
+                )
+                }
               </>)
             }
             {lastTurnResult && <>{renderLastTurnResult()}</>}
           </div>
-          <div>
+          <div className="col-span-1 shadow-xl bg-red-desertSand rounded-lg">
             {renderPlayerStates()}
-            <button onClick={handleReturnToLobby}>Quit Game</button>
+            <div className="mt-32">
+              <button className="flex items-center justify-center px-4 py-3 m-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5" onClick={handleReturnToLobby}>Quit Game</button>
+            </div>
           </div>
         </>)
       }

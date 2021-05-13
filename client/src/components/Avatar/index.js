@@ -3,7 +3,8 @@ import multiavatar from '@multiavatar/multiavatar'
 import './avatar.css'
 
 
-function Avatar({ user }) {
+function Avatar (props) {
+    const user = props.user;
     let seed = ""
     if (user.avatar) {
         seed = user.avatar
@@ -13,7 +14,7 @@ function Avatar({ user }) {
     }
     let svgCode = multiavatar(seed)
     return (
-        <div dangerouslySetInnerHTML={{ __html: svgCode }} />
+        <div className={props.className} dangerouslySetInnerHTML={{ __html: svgCode }} />
     )
 }
 

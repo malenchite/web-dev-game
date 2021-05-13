@@ -221,7 +221,7 @@ function Game({ socket, user, updateGameId, updateOpenGame }) {
 
   return (
     <div className="grid grid-cols-3 gap-4">
-      <div className="col-span-1 shadow-xl bg-red-desertSand rounded-lg h-18">
+      <div className="col-span-1 shadow-xl bg-red-desertSand rounded-lg">
         <Chat socket={socket} />
       </div>
       <div className="col-span-2">{
