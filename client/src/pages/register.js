@@ -14,6 +14,7 @@ function SignupForm() {
     const [redirectTo, setRedirectTo] = useState(null);
     const [registered, setRegistered] = useState(false);
     const [error, setError] = useState(null);
+    const [matching, setMatching] = useState(null)
 
     const handleChange = (event) => {
         setUserObject({
@@ -28,6 +29,12 @@ function SignupForm() {
         setRedirectTo('/login');
     }
 
+    const handleError = (event) => {
+        event.preventDefault()
+        setError(false)
+        setMatching(false)
+    }
+
     const handleSubmit = (event) => {
         event.preventDefault();
         // TODO - validate!
@@ -36,11 +43,15 @@ function SignupForm() {
             email: userObject.email,
             password: userObject.password
         }).then(response => {
-            if (!response.data.error) {
-                setError(false);
-                setRegistered(true);
-            } else {
+            if (userObject.password != userObject.confirmPassword) {
+                setMatching(true)
+            }
+            else if (response.data.error) {
                 setError(response.data.error);
+            } else {
+                setError(false);
+                setMatching(false)
+                setRegistered(true);
             }
         });
     };
@@ -60,7 +71,10 @@ function SignupForm() {
                         registered && <Alert title="Success! " message="Account created!" handleAlert={handleAlert} />
                     }
                     {
-                        error && <Alert title="Error " message={error} />
+                        error && <Alert title="Error " message={error} handleAlert={handleError} />
+                    }
+                    {
+                        matching && <Alert title="Error " message="Your passwords do not match." handleAlert={handleError} />
                     }
                 </div>
                 {!registered && (
