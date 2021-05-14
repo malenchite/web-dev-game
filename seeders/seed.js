@@ -467,6 +467,116 @@ const cardSeed = [
     }
   },
   {
+    category: 'frontend',
+    subcategory: '',
+    title: 'The Front-End Sprint',
+    text: 'It\'s been a long time coming. There\'s a big milestone right on the horizon. You just need a little more to get past it. This is the big one - make it count!',
+    success:
+    {
+      funding: 1,
+      fep: 2,
+      bep: 2,
+      bugs: -2,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: -1,
+      bep: -1,
+      bugs: 1,
+      special: 0
+    }
+  },
+  {
+    category: 'frontend',
+    subcategory: '',
+    title: 'Become the Master',
+    text: 'You\'ve been offered an opportunity to take a junior developer under your wing. Prove you have what it takes to lead this team into the future. Answer the question to score additional funding and get some front-end development done along with your new partner. If you\'re wrong, the code just gets broken.',
+    success:
+    {
+      funding: 1,
+      fep: 2,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 0,
+      bugs: 1,
+      special: 0
+    }
+  },
+  {
+    category: 'frontend',
+    subcategory: '',
+    title: 'Practical Education',
+    text: 'It looks like a side-project you\'ve been working on for a class might be directly applicable to your primary application. Answer the question to integrate it in and score some front-end points. If you\'re wrong, you think the integration went flawlessly but something seems amiss...',
+    success:
+    {
+      funding: 0,
+      fep: 3,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 0,
+      bugs: 2,
+      special: 0
+    }
+  },
+  {
+    category: 'frontend',
+    subcategory: '',
+    title: 'Working Vacation',
+    text: 'You take your laptop and head out to the beach. Hopefully the new environment will get your thoughts moving. Answer correctly to spark your brain and fix some bugs. If you\'re wrong, you get distracted and just create more.',
+    success:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 0,
+      bugs: -2,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 0,
+      bugs: 2,
+      special: 0
+    }
+  },
+  {
+    category: 'frontend',
+    subcategory: '',
+    title: 'UI Enhancement',
+    text: 'The design team has handed down some updates to the UI. If you\'re looking at this right, this might be way easier to implement than the last revision. Score some front-end points by answering the question. If you\'re wrong, you go down a rabbit-hole of reworks that only sets things back.',
+    success:
+    {
+      funding: 0,
+      fep: 2,
+      bep: 0,
+      bugs: -1,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: -2,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    }
+  },
+  {
     category: 'backend',
     subcategory: '',
     title: 'Crunch Time',
@@ -683,6 +793,116 @@ const cardSeed = [
       fep: 0,
       bep: 0,
       bugs: 2,
+      special: 0
+    }
+  },
+  {
+    category: 'backend',
+    subcategory: '',
+    title: 'The Back-End Sprint',
+    text: 'It\'s been a long time coming. There\'s a big milestone right on the horizon. You just need a little more to get past it. This is the big one - make it count!',
+    success:
+    {
+      funding: 1,
+      fep: 2,
+      bep: 2,
+      bugs: -2,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: -1,
+      bep: -1,
+      bugs: 1,
+      special: 0
+    }
+  },
+  {
+    category: 'backend',
+    subcategory: '',
+    title: 'Going Open-Source',
+    text: 'A coworker has suggested that a part of your project be opened up to the community. It will take a bit of refinement, but it seems worthwhile. Answer the question to get some support from the community, enhancing your back end and fixing some bugs. If you\'re wrong, your repo falls by the wayside and you just lose development time.',
+    success:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 2,
+      bugs: -1,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    }
+  },
+  {
+    category: 'backend',
+    subcategory: '',
+    title: 'Intern Wave',
+    text: 'Local graduations are coming to a close and with that comes a fresh new pack of interns. Answer the question to put them on the right track doing useful work. If you\'re wrong... do you know just how many bugs they can make?',
+    success:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 3,
+      bugs: -1,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 0,
+      bugs: 3,
+      special: 0
+    }
+  },
+  {
+    category: 'backend',
+    subcategory: '',
+    title: 'Contractor on Spec',
+    text: 'A recent graduate looking for experience offers a hand with your project. Answer the question to get them integrated quickly - they do some great work, but you need to pay them. If you\re wrong, you just waste time but at least you\'re not out any money.',
+    success:
+    {
+      funding: -1,
+      fep: 0,
+      bep: 4,
+      bugs: 0,
+      special: 0
+    },
+    failure:
+    {
+      funding: 0,
+      fep: 0,
+      bep: 0,
+      bugs: 0,
+      special: 0
+    }
+  },
+  {
+    category: 'backend',
+    subcategory: '',
+    title: 'Crazed Guru',
+    text: 'A man approaches your team. He seems a bit... unhinged. His ideas about database structure and API development certainly are. But maybe he\'s crazy in all the right ways. Answer the question for a startling revelation that somehow improves everything! If you\'re wrong, his insights are just too far beyond your understanding.',
+    success:
+    {
+      funding: 1,
+      fep: 1,
+      bep: 1,
+      bugs: -1,
+      special: 0
+    },
+    failure:
+    {
+      funding: -1,
+      fep: -1,
+      bep: -1,
+      bugs: 1,
       special: 0
     }
   }
