@@ -12,13 +12,13 @@ const questionSeed = [
     category: 'frontend',
     subcategory: 'HTML',
     text: 'What is a "tag" in HTML?',
-    answer: 'Content is placed in between HTML tags in order to properly format it. It makes use of the less than symbol (<) and the greater than symbol (>). A slash symbol is also used as a closing tag.'
+    answer: 'Content is placed in between HTML tags in order to properly format it. It makes use of the less than symbol (<) and the greater than symbol (>). A slash symbol (/) is also used as a closing tag.'
   },
   {
     category: 'frontend',
     subcategory: 'HTML',
     text: 'Name at least two of the common lists that can be used when designing a page in HTML.',
-    answer: 'Options include: ordered list, unordered list, definition list, menu list, and directory list. Each of this list types makes use of a different tag set to compose'
+    answer: 'Options include: ordered list, unordered list, definition list, menu list, and directory list.'
   },
   {
     category: 'frontend',
@@ -30,7 +30,7 @@ const questionSeed = [
     category: 'frontend',
     subcategory: 'HTML',
     text: 'What is the advantage of collapsing white space in HTML?',
-    answer: 'White spaces are a blank sequence of space characters, which is treated as a single space character in HTML. Because the browser collapses multiple spaces into a single space, you can indent lines of text without worrying about multiple spaces. This enables you to organize the HTML code into a much more readable format.'
+    answer: 'White spaces are a blank sequence of space characters. Since the browser collapses multiple spaces into a single space, you can indent lines of text without worrying about multiple spaces. This enables HTML code to be formatted in a more readable fashion.'
   },
   {
     category: 'frontend',
@@ -42,7 +42,7 @@ const questionSeed = [
     category: 'frontend',
     subcategory: 'HTML',
     text: 'In HTML, how do you create a link that will connect to another web page when clicked?',
-    answer: 'To create hyperlinks, or links that connect to another web page, use the href tag. The general format for this is: <a href=”site”>text</a>Replace “site” with the actual page URL that is supposed to be linked to when the text is clicked.'
+    answer: 'To create links that connect to another web page (hyperlinks), use the <a> "anchor" tag. The format for this is: <a href="site">text</a> where "site" is the URL of the target page.'
   },
   {
     category: 'frontend',
@@ -54,13 +54,13 @@ const questionSeed = [
     category: 'frontend',
     subcategory: 'HTML',
     text: 'Does an HTML hyperlink apply to text only?',
-    answer: 'No, hyperlinks can be used in the text as well as images. That means you can convert an image into a link that will allow users to link to another page when clicked. Surround the image within the <a href=” “>…</a> tag combinations.'
+    answer: 'No, hyperlinks can be created from many differen HTML elements when wrapped in an <a> "anchor" tag. For example, you can convert an image into a link that takes the user to another page when clicked.'
   },
   {
     category: 'frontend',
     subcategory: 'HTML',
     text: 'How do you insert a comment in HTML?',
-    answer: 'Comments in HTML begins with “<!–“and ends with “–>”.'
+    answer: 'Comments in HTML begins with "<!–" and ends with "–>".'
   },
   {
     category: 'frontend',
@@ -72,7 +72,7 @@ const questionSeed = [
     category: 'frontend',
     subcategory: 'CSS',
     text: 'Name at least one advantage of using CSS.',
-    answer: 'Bandwidth, Site-wide consistency, Page reformatting, accessibility, content separated from presentation'
+    answer: 'Bandwidth, site-wide consistency, page reformatting, accessibility, separating content from presentation'
   },
   {
     category: 'frontend',
@@ -84,31 +84,31 @@ const questionSeed = [
     category: 'frontend',
     subcategory: 'CSS',
     text: 'What is the float property of CSS?',
-    answer: 'The CSS float property is used to move the image to the right or left along with the texts to be wrapped around it. It doesn\'t change the property of the elements used before it.'
+    answer: 'The float CSS property places an element on the left or right side of its container, allowing text and inline elements to wrap around it.'
   },
   {
     category: 'frontend',
     subcategory: 'CSS',
     text: 'Name the CSS property used to specify the background color of an element.',
-    answer: 'The background-color property is used to specify the background color of the element.'
+    answer: 'background-color'
   },
   {
     category: 'frontend',
     subcategory: 'CSS',
-    text: 'In CSS, what is the difference in formatting between using a class and id(# and .)?',
-    answer: 'id’s use “#” and classes use “.”'
+    text: 'In a CSS style definition, how do you differentiate between a class and an id?',
+    answer: 'Classes are prefixed with "." while id\'s are prefixed with "#".'
   },
   {
     category: 'frontend',
     subcategory: 'CSS',
     text: 'Can you target multiple elements using separators when styling in CSS?',
-    answer: 'Yes, an example would be separating said elements with a comma like  "h2, h3 {   }"'
+    answer: 'Yes, with comma separation. For example: "h2, h3"'
   },
   {
     category: 'frontend',
     subcategory: 'CSS',
     text: 'What is responsive web design?',
-    answer: 'Responsive design is an approach to web page creation that makes use of flexible layouts, flexible images and cascading style sheet media queries. The goal of responsive design is to build web pages that detect the visitor’s screen size and orientation and change the layout accordingly.'
+    answer: 'Responsive design is an approach to web page creation that makes use of flexible layouts, flexible images, and CSS media queries. The goal of responsive design is to build applications that detect the visitor\'s screen size and orientation and change the layout accordingly.'
   },
   {
     category: 'frontend',
@@ -126,7 +126,7 @@ const questionSeed = [
     category: 'backend',
     subcategory: 'Databases',
     text: 'What is the primary difference between SQL and NoSQL databases?',
-    answer: 'SQL databases are relational, NoSQL are non-relational.'
+    answer: 'SQL databases are relational. NoSQL are non-relational.'
   },
   {
     category: 'backend',
@@ -138,7 +138,7 @@ const questionSeed = [
     category: 'backend',
     subcategory: 'Databases',
     text: 'What does DBMS stand for?',
-    answer: 'Database Management System. A Database Management System is a collection of application programs which allow the user to organize, restore and retrieve information about data efficiently and as effectively as possible.'
+    answer: 'Database Management System. A Database Management System is a collection of application programs which allow the user to organize, restore, and retrieve information about data efficiently and effectively.'
   },
   {
     category: 'backend',
@@ -156,19 +156,19 @@ const questionSeed = [
     category: 'backend',
     subcategory: 'Databases',
     text: 'What is a view in SQL?',
-    answer: 'A view in SQL is a virtual table based on the result-set of an SQL statement. A view contains rows and columns, just like a real table. The fields in a view are fields from one or more real tables in the database.'
+    answer: 'A view is a virtual table based on the result-set of an SQL statement. A view contains rows and columns, just like a real table. The fields in a view are fields from one or more real tables in the database.'
   },
   {
     category: 'backend',
     subcategory: 'Databases',
     text: 'What would VARCHAR(255) be expected to do when defining a column in SQL?',
-    answer: 'A varchar or Variable Character Field is a set of character data of indeterminate length. In this case, it would restrict the amount of characters used to 255 for the field.'
+    answer: 'A VARCHAR or Variable Character field is a set of character data of indeterminate length. In this case, the field would be restricted to a maximum length of 255 characters.'
   },
   {
     category: 'backend',
     subcategory: 'Databases',
     text: 'What is a SQL primary key?',
-    answer: 'The PRIMARY KEY constraint uniquely identifies each row in a table. It must contain UNIQUE values and has an implicit NOT NULL constraint. A table in SQL is strictly restricted to have one and only one primary key, which consists of single or multiple fields (columns).'
+    answer: 'The PRIMARY KEY constraint uniquely identifies each row in a table. It must contain UNIQUE values and has an implicit NOT NULL constraint. A table is strictly restricted to have one and only one primary key.'
   },
   {
     category: 'backend',
@@ -180,13 +180,13 @@ const questionSeed = [
     category: 'backend',
     subcategory: 'Databases',
     text: 'What does the SELECT statement do in SQL?',
-    answer: 'SELECT operator in SQL is used to select data from a database. The data returned is stored in a result table, called the result-set.'
+    answer: 'The SELECT operator in SQL is used to extract a subset of data from a database. The data returned is stored in a result table, called the result-set.'
   },
   {
     category: 'backend',
     subcategory: 'Node.js',
     text: 'What is the difference between Node.js and JavaScript?',
-    answer: 'Node is an interpreter and environment for JavaScript while JavaScript is a programming language. Node is used for performing actions in an operating system while JavaScript is used for client side activity in web apps.'
+    answer: ' JavaScript is a programming language. Node is an interpreter and environment for running JavaScript code. Node is used for performing actions in an operating system while JavaScript is used for client-side activity in web apps.'
   },
   {
     category: 'backend',
@@ -198,7 +198,7 @@ const questionSeed = [
     category: 'backend',
     subcategory: 'Node.js',
     text: 'Name two benefits of Node.js.',
-    answer: 'Fast, Asynchronous, Scalable, Open Source, and has No Buffering.'
+    answer: 'Some examples: fast, asynchronous, scalable, open-source, non-buffering.'
   },
   {
     category: 'backend',
@@ -216,31 +216,31 @@ const questionSeed = [
     category: 'backend',
     subcategory: 'Node.js',
     text: 'What is an error-first callback in Node.js?',
-    answer: 'Error-first callbacks in Node.js are used to pass errors and data. This way you can pass an error for handling and checking if anything is wrong.'
+    answer: 'Error-first callbacks in Node.js are used to process both errors and data. The first argument of the callback is reserved for an error that the callback can then process.'
   },
   {
     category: 'backend',
     subcategory: 'Node.js',
     text: 'In Node.js, what is module.exports?',
-    answer: 'A module in Node.js that encapsulates all the related codes into a single unit of code which can be interpreted by shifting related functions into a single file'
+    answer: 'The module.exports object defines what data or object will be passed out of a module to be made available to any code that imports it. It promotes code availability and reuse.'
   },
   {
     category: 'backend',
     subcategory: 'Express',
     text: 'What is middleware in Express?',
-    answer: 'Middleware receives the request and response objects along with next functions which can be used for: Executing types of code, updating or modifying request or response objects, finishing the request-response cycle, and invoking the next middleware in the stack.'
+    answer: 'Middleware receives the Request and Response objects along with a Next function. It can be used for updating/modifying Request or Response objects, finishing the request-response cycle, or invoking the next middleware in the stack.'
   },
   {
     category: 'backend',
     subcategory: 'Node.js',
     text: 'What is ESLint?',
-    answer: 'Provides linting utility for JavaScript through a plug, this is used to search for bugs and formatting problems.'
+    answer: 'ESLint provides automated code analysis (linting) for JavaScript through a plug-in. Linting is used to detect formatting errors as well as potential syntax and logic issues.'
   },
   {
     category: 'backend',
     subcategory: 'Node.js',
     text: 'What is NPM?',
-    answer: 'NPM stands for Node Package Manager, responsible for managing all the packages and modules for Node.js.'
+    answer: 'NPM stands for Node Package Manager, a tool for managing packages and modules in Node.js.'
   }
 ];
 
