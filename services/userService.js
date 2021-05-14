@@ -10,7 +10,7 @@ const CHALLENGE_RSP_EVENT = 'challenge response';
 const USER_INFO_EVENT = 'user info';
 const LOBBY_INFO_EVENT = 'lobby info';
 
-const activeUsers = [];
+const activeUsers = []; // List of users currently in the GameMaster (lobby or game)
 let io;
 
 /* Utility functions */
@@ -204,8 +204,6 @@ function processChallengeRsp (socket, accepted) {
     challenger.clearGame();
     target.clearGame();
   } else {
-    challenger.confirmChallenge();
-    target.confirmChallenge();
     gameService.startGame(challenger, target);
   }
 
@@ -215,8 +213,8 @@ function processChallengeRsp (socket, accepted) {
 
 /* Exported functions */
 
-/* Sets the socket IO that will be used here and sets up connection config */
-function start (newIO) {
+/* Sets the socket IO that will be used here and sets up listeners and disconnect callback */
+function initialize (newIO) {
   io = newIO;
 
   io.on('connection', socket => {
@@ -250,4 +248,6 @@ function start (newIO) {
   });
 }
 
-module.exports = start;
+module.exports = {
+  initialize
+};

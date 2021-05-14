@@ -10,10 +10,9 @@ class User {
     this.id = userID;
     this.socket = socket;
     this.room = null;
-    this.roomCB = roomCB;
+    this.roomCB = roomCB; // Callback to trigger when a user changes rooms
     this.gameInfo = {
-      pending: false, // whether or not the game is a pending challenge
-      room: null, // Room ID
+      room: null, // Room ID of upcoming game
       opponent: null // User ID of opponent
     };
 
@@ -36,6 +35,7 @@ class User {
     }
   }
 
+  /* Sends a chat message to all members of the user's current room */
   broadcastChat (message) {
     if (this.room) {
       this.io.to(this.room).emit(CHAT_MESSAGE_EVENT,
@@ -47,22 +47,19 @@ class User {
     }
   }
 
+  /* Set the challenge information for a new challenge */
   challenge (opponent, room) {
-    this.gameInfo.pending = true;
     this.gameInfo.room = room;
     this.gameInfo.opponent = opponent;
   }
 
-  confirmChallenge () {
-    this.gameInfo.pending = false;
-  }
-
+  /* Clears the challenge/game information */
   clearGame () {
-    this.gameInfo.pending = false;
     this.gameInfo.room = null;
     this.gameInfo.opponent = null;
   }
 
+  /* Disconnects the user's socket */
   disconnect () {
     console.log(`User ${this.username} disconnected on socket ${this.socket.id}`);
     this.socket.disconnect();

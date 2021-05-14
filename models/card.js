@@ -19,6 +19,6 @@ const cardSchema = new Schema({
   failure: effectSchema
 });
 
-// Create reference to User & export
+// Create reference to Card & export
 const Card = mongoose.model('Card', cardSchema);
 module.exports = Card;

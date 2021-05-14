@@ -36,7 +36,7 @@ class Game {
     this.io = io;
     this.id = id;
     this.players = players;
-    this.endCB = endCB;
+    this.endCB = endCB; // Callback function to trigger when game ends
     this.ready = Array.from({ length: players.length }, () => false);
     this.cards = [];
     this.frontEndQs = [];
@@ -75,12 +75,12 @@ class Game {
 
     /* Subscribe to "player joined" event for all players */
     this.players.forEach((player, idx) => {
-      player.socket.once(PLAYER_JOINED_EVENT, () => this.joinPlayer(idx));
+      player.socket.once(PLAYER_JOINED_EVENT, () => this.processPlayerJoined(idx));
     });
 
     /* Subscribe to "leave game" event for all players */
     this.players.forEach((player, idx) => {
-      player.socket.once(LEAVE_GAME_EVENT, () => this.playerLeft(idx));
+      player.socket.once(LEAVE_GAME_EVENT, () => this.processLeaveGame(idx));
     });
 
     /* Store usernames and avatars in game state and let players know they can enter the game */
@@ -95,6 +95,7 @@ class Game {
     this.endCB(this.id);
   }
 
+  /* Game over processing, including final score calculation and announcement */
   gameOver () {
     this.gameState.gameOver = true;
     let topScore = -Infinity;
@@ -133,13 +134,15 @@ class Game {
   }
 
   /* Player management methods */
-  joinPlayer (idx) {
+
+  /* Process when a player's client has joined the game - when everyone's in, start the game */
+  processPlayerJoined (idx) {
     this.ready[idx] = true;
     this.players[idx].changeRoom(this.id);
 
     /* If every player is ready, start the game */
     if (this.ready.every(rdy => rdy)) {
-      /* If any players have left, then announce this to players as they join */
+      /* If any players have left before game start, then announce this to players as they join */
       if (this.players.some(player => player === null)) {
         this.io.to(this.id).emit(OPPONENT_LEFT_EVENT);
       } else {
@@ -148,6 +151,7 @@ class Game {
     }
   }
 
+  /* Remove a player from the players list because they've left for any reason */
   removePlayer (idx) {
     if (this.players[idx]) {
       const player = this.players[idx];
@@ -164,7 +168,8 @@ class Game {
     }
   }
 
-  playerLeft (idx) {
+  /* Processes the Leave Game event, removing that player and announcing if needed */
+  processLeaveGame (idx) {
     this.removePlayer(idx);
 
     /* Alert room if this occurs before game over */
@@ -173,15 +178,18 @@ class Game {
     }
   }
 
+  /* Called externally when a player disconnects to remove them from the game */
   playerDisconnect (player) {
     const idx = this.players.indexOf(player);
 
     if (idx !== -1) {
-      this.playerLeft(idx);
+      this.processLeaveGame(idx);
     }
   }
 
   /* Game flow methods */
+
+  /* All next turn processing, including the first turn of the game */
   startNextTurn () {
     this.gameState.turn++;
 
@@ -211,6 +219,7 @@ class Game {
     });
   }
 
+  /* Processes a player's choice for their action during a turn */
   processPlayerTurn (turnInfo) {
     /* Relay turn choice to other players */
     this.players.forEach((player, idx) => {
@@ -244,6 +253,7 @@ class Game {
     }
   }
 
+  /* Called at the end of every turn option to record and announce the result */
   processTurnResult (result, choice, success) {
     const playerState = this.gameState.playerStates[this.currentPlayer];
 
@@ -275,6 +285,8 @@ class Game {
   }
 
   /* Card handling methods */
+
+  /* Picks a card and a question and announces the IDs to all players */
   processCardOption () {
     this.currentCard = this.drawCard();
     const cardInfo = {
@@ -292,6 +304,7 @@ class Game {
     });
   }
 
+  /* Tell the current player how their answer was judged and wait for their acknowledgement */
   processCardResponse (rsp) {
     /* Forward response to current player's client */
     this.players[this.currentPlayer].socket.emit(CARD_RSP_EVENT, rsp);
@@ -300,6 +313,7 @@ class Game {
     this.players[this.currentPlayer].socket.once(CARD_ACK_EVENT, () => this.processCardAck(rsp));
   }
 
+  /* When current player acknowledges the answer, process the card effect and move on */
   processCardAck (rsp) {
     /* Apply card effect and move to next turn */
     this.getCardEffect(rsp.correct)
@@ -309,11 +323,13 @@ class Game {
       });
   }
 
+  /* Refresh the card list with all cards from the DB. Used on start and if the list ever runs out. */
   refreshCards () {
     cardController.localList()
       .then(list => { this.cards = list; });
   }
 
+  /* Pick a card at random from the remaining list, refreshing if the deck runs out */
   drawCard () {
     const idx = rng(0, this.cards.length);
     const card = this.cards.splice(idx, 1)[0]; // Retrieve card and remove from list
@@ -326,10 +342,12 @@ class Game {
     return card;
   }
 
+  /* Choose a question that matches a card's category */
   cardQuestion (card) {
     return this.pickQuestion(card.category);
   }
 
+  /* Retrieve the card effect information from the DB */
   getCardEffect (success) {
     return cardController.localCard(this.currentCard._id)
       .then(card => {
@@ -340,6 +358,8 @@ class Game {
   }
 
   /* Question handling methods */
+
+  /* Fills the front end or backend list. Used both at start and if either runs out */
   refreshQuestions (category) {
     questionController.localList(category)
       .then(list => {
@@ -351,6 +371,7 @@ class Game {
       });
   }
 
+  /* Choose a question at random in a category. Refill if list is emptied */
   pickQuestion (category) {
     const list = category === 'frontend' ? this.frontEndQs : this.backEndQs;
     const idx = rng(0, list.length);
@@ -365,6 +386,8 @@ class Game {
   }
 
   /* Other turn option handlers */
+
+  /* Processing Seek Funding option that adds funding */
   processFund () {
     const newFunding = rng(0, 3);
 
@@ -373,6 +396,7 @@ class Game {
     }, 'fund');
   }
 
+  /* Process Work on Front-End option that adds front-end and, possibly, bugs */
   processFrontend () {
     const newFEP = rng(1, 3);
     const newBugs = rng(0, newFEP);
@@ -384,6 +408,7 @@ class Game {
     }, 'frontend');
   }
 
+  /* Process Work on Back-End option that adds back-end and, possibly, bugs */
   processBackend () {
     const newBEP = rng(1, 3);
     const newBugs = rng(0, newBEP);
@@ -395,6 +420,7 @@ class Game {
     }, 'backend');
   }
 
+  /* Process Fix Bugs option that removes bugs */
   processBugfix () {
     const newBugs = rng(1, 3);
 

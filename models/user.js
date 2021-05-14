@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 const bcrypt = require('bcryptjs');
 mongoose.promise = Promise;
 
+/* Schema for game history data that is saved in an array for each user */
 const gamedataSchema = new Schema({
   result: { type: String, unique: false, required: true },
   frontEndCorrect: { type: Number, unique: false, required: true },
@@ -12,7 +13,6 @@ const gamedataSchema = new Schema({
   timestamp: { type: Date, unique: false, required: true }
 });
 
-// Define userSchema
 const userSchema = new Schema({
   username: { type: String, unique: false, required: false },
   email: { type: String, unique: false, required: false },
@@ -21,7 +21,7 @@ const userSchema = new Schema({
   avatar: { type: String, unique: false, required: false }
 });
 
-// Define schema methods
+/* Schema methods for checking and hashing the password */
 userSchema.methods = {
   checkPassword: function (inputPassword) {
     return bcrypt.compareSync(inputPassword, this.password);
@@ -31,7 +31,7 @@ userSchema.methods = {
   }
 };
 
-// Define hooks for pre-saving
+/* Hashes the password before saving the user */
 userSchema.pre('save', function (next) {
   if (!this.password) {
     next();
