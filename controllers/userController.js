@@ -3,7 +3,8 @@ const db = require('../models');
 // The different methods that are utilized by user controller
 module.exports = {
   /* Authorization methods */
-  // gets the user data
+
+  /* Gets user data for currently logged-in user */
   getUser: (req, res, next) => {
     if (req.user) {
       return res.json({
@@ -18,10 +19,9 @@ module.exports = {
       return res.json({ user: null });
     }
   },
-  // controller for registering the user
+  /* Register a new user with the provided info */
   register: (req, res) => {
     const { email, username, password } = req.body;
-    // Linter didnt like that the err wasnt prefixed by a "_"
     db.User.findOne({ 'email': email }, (_err, emailMatch) => {
       if (emailMatch) {
         return res.json({
@@ -50,7 +50,7 @@ module.exports = {
       });
     });
   },
-  // logs the user out
+  /* Logs out the current user by deleting their session */
   logout: (req, res) => {
     if (req.user) {
       req.session.destroy();
@@ -63,6 +63,7 @@ module.exports = {
   auth: function (req, res, next) {
     next();
   },
+  /* Sends user data, cleaned of its password info */
   authenticate: (req, res) => {
     const user = JSON.parse(JSON.stringify(req.user));
     const cleanUser = Object.assign({}, user);
@@ -72,7 +73,8 @@ module.exports = {
     res.json({ user: cleanUser });
   },
   /* Game history methods */
-  // gets the game history data array
+
+  /* Retrieve the entire game history array for a given user */
   getGameHistory: (req, res) => {
     db.User.findById(req.params.id, (_err, user) => {
       const gameHistory = user.gamehistory;
@@ -84,7 +86,7 @@ module.exports = {
     })
       .catch(err => console.log(err));
   },
-  // saving the game history
+  /* Saves a new game to a user's game history */
   saveGameHistory: (req, res) => {
     db.User.findById(req.params.id, (_err, user) => {
       if (user) {
@@ -107,8 +109,8 @@ module.exports = {
       }
     });
   },
-  /* Game history methods */
-  // gets the avatar that was saved
+  /* Other methods */
+  /* Saves a new avatar seed string for a user */
   saveAvatar: (req, res) => {
     db.User.findById(req.params.id, (_err, user) => {
       if (user) {

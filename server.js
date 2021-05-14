@@ -52,13 +52,14 @@ if (process.env.NODE_ENV === 'production') {
   app.use(reactRoutes);
 }
 
+/* Server object required for socket.io */
 const server = http.createServer(app);
 
 /* Start up socket.io */
 const io = socket(server);
 
 /* Initialize services */
-userService(io);
+userService.initialize(io);
 gameService.initialize(io);
 
 server.listen(PORT, () => console.log(`Listening on port ${PORT}`));

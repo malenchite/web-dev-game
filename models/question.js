@@ -7,9 +7,8 @@ const questionSchema = new Schema({
   subcategory: { type: String, unique: false, required: false },
   text: { type: String, unique: false, required: true },
   answer: { type: String, unique: false, require: true }
-
 });
 
-// Create reference to User & export
+// Create reference to Question & export
 const Question = mongoose.model('Question', questionSchema);
 module.exports = Question;
