@@ -1,8 +1,7 @@
-import { useEffect, useState, Fragment } from 'react';
+import { useEffect, useState } from 'react';
 
 import GamePopup from "../GamePopup";
 import Avatar from "../Avatar";
-import e from 'cors';
 
 const GameRender = ({ currentPlayer, user, gameState, choiceMade, judgementMade, card, questionInfo, correct, opponentLeft, handleTurnChoice, lastTurnResult, handleReturnToLobby, handleJudgement, handleCardAck }) => {
   const [yourTurn, setYourTurn] = useState(false);

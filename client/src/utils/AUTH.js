@@ -2,6 +2,7 @@ import axios from "axios";
 
 const SERVER = process.env.REACT_APP_DEPLOYED ? "" : "http://localhost:3001";
 
+/* Allow cross-source credentials when developing locally */
 if (!process.env.REACT_APP_DEPLOYED) {
   axios.defaults.withCredentials = true;
 }

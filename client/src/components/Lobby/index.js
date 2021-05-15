@@ -24,6 +24,7 @@ function Lobby ({ socket, user, gameId, updateGameId, updateOpenGame }) {
     const [challenger, setChallenger] = useState(null);
     const [challengeRsp, setChallengeRsp] = useState(null);
 
+    /* Subscribe to server messages and unsubscribe when user leaves */
     useEffect(() => {
         if (socket) {
             socket.on(LOBBY_INFO_EVENT, lobbyInfo => {
@@ -58,6 +59,7 @@ function Lobby ({ socket, user, gameId, updateGameId, updateOpenGame }) {
         }
     }, [socket]);
 
+    /* Handles the user pressing the "Challenge" button  */
     const handleChallenge = (event) => {
         event.preventDefault();
         setChallengeRsp(null);
@@ -67,6 +69,7 @@ function Lobby ({ socket, user, gameId, updateGameId, updateOpenGame }) {
         }
     }
 
+    /* Handles the user pressing the "Withdraw" button */
     const handleChallengeWithdraw = (event) => {
         event.preventDefault();
         clearChallenge();
@@ -75,6 +78,8 @@ function Lobby ({ socket, user, gameId, updateGameId, updateOpenGame }) {
         }
     }
 
+
+    /* Handles the user pressing "Accept" or "Reject" button */
     const handleChallengeResponse = (event) => {
         event.preventDefault();
         setChallenger(null);
@@ -86,14 +91,17 @@ function Lobby ({ socket, user, gameId, updateGameId, updateOpenGame }) {
         }
     }
 
+    /* Process Enter Game event from server */
     const processEnterGame = gameInfo => {
         updateGameId(gameInfo.gameId);
     }
 
+    /* Handle user pressing "Enter Game" button */
     const handleEnterGameButton = () => {
         updateOpenGame(true);
     }
 
+    /* Utility function to clear all challenge and game-related data */
     const clearChallenge = () => {
         setChallenger(null);
         setPendingChallenge(null);

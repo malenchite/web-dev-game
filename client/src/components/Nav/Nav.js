@@ -6,10 +6,6 @@ import "./Nav.css";
 const Nav = ({ user, logout }) => {
   let greeting;
 
-  function classNames (...classes) {
-    return classes.filter(Boolean).join(' ')
-  }
-
   if (user === null) {
     greeting = <p>Hello guest</p>
   } else if (user.username) {
