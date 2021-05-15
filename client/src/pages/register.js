@@ -6,6 +6,17 @@ import Logo from "../components/Logo";
 import { Helmet } from "react-helmet";
 
 function SignupForm() {
+<<<<<<< HEAD
+    const [userObject, setUserObject] = useState({
+        username: "",
+        email: "",
+        password: "",
+        confirmPassword: ""
+    });
+    const [redirectTo, setRedirectTo] = useState(null);
+    const [registered, setRegistered] = useState(false);
+    const [error, setError] = useState(null);
+=======
   const [userObject, setUserObject] = useState({
     username: "",
     email: "",
@@ -15,6 +26,7 @@ function SignupForm() {
   const [redirectTo, setRedirectTo] = useState(null);
   const [registered, setRegistered] = useState(false);
   const [error, setError] = useState(null);
+>>>>>>> a2a11853e17b2c6c217c7974528538b799ba7135
 
   const handleChange = (event) => {
     setUserObject({
@@ -37,6 +49,10 @@ function SignupForm() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
+<<<<<<< HEAD
+        if (userObject.password !== userObject.confirmPassword) {
+            setError("Your passwords do not match!")
+=======
     if (userObject.password != userObject.confirmPassword) {
       setError("Your passwords do not match!");
     } else if (userObject.password === "") {
@@ -56,6 +72,7 @@ function SignupForm() {
         } else {
           setError(false);
           setRegistered(true);
+>>>>>>> a2a11853e17b2c6c217c7974528538b799ba7135
         }
       });
     }

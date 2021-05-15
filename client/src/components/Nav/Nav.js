@@ -1,9 +1,11 @@
 import React, { Fragment } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Logo from "../Logo";
 import "./Nav.css";
+import AUTH from "../../utils/AUTH";
 
-const Nav = ({ user, logout }) => {
+const Nav = ({ user, handleSetUser }) => {
+  const history = useHistory()
   let greeting;
 
   if (user === null) {
@@ -15,6 +17,15 @@ const Nav = ({ user, logout }) => {
       </Fragment>
     )
   }
+
+  const logout = (event) => {
+    return AUTH.logout().then((response) => {
+      if (response.status === 200) {
+        handleSetUser(null);
+        history.push('/')
+      }
+    });
+  };
 
   return (
     <nav className="grid grid-cols-3 bg-red-desertSand text-red-blackBean p-3" role="navigation">
