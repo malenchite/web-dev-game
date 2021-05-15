@@ -4,7 +4,7 @@ import AUTH from "../utils/AUTH";
 import Alert from "../components/Alert";
 import Logo from "../components/Logo";
 
-function SignupForm () {
+function SignupForm() {
     const [userObject, setUserObject] = useState({
         username: "",
         email: "",
@@ -36,7 +36,7 @@ function SignupForm () {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        if (userObject.password != userObject.confirmPassword) {
+        if (userObject.password !== userObject.confirmPassword) {
             setError("Your passwords do not match!")
         }
         else if (userObject.password === "") {

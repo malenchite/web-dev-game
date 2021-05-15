@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 import LoginForm from "./pages/login";
 import SignupForm from "./pages/register";
 import Nav from "./components/Nav";
@@ -9,58 +9,48 @@ import GameMaster from "./pages/GameMaster";
 import Profile from "./pages/profile";
 import Splash from "./pages/splash";
 import NoMatch from "./pages/NoMatch";
+import { set } from "mongoose";
 
-function App () {
-  const [loggedIn, setLoggedIn] = useState(false);
+function App() {
   const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     AUTH.getUser().then((response) => {
-      console.log(response.data.user)
       if (!!response.data.user) {
-        setLoggedIn(true);
-        return setUser(response.data.user);
+        setUser(response.data.user);
       } else {
-        setLoggedIn(false);
-        return setUser(null);
+        setUser(null);
       }
     });
 
     return () => {
-      setLoggedIn(false);
       setUser(null);
     };
   }, []);
 
-  const logout = (event) => {
-    AUTH.logout().then((response) => {
-      if (response.status === 200) {
-        setLoggedIn(false);
-        return setUser(null);
-      }
-    });
-  };
 
-  const login = (username, password) => {
-    AUTH.login(username, password).then((response) => {
-      if (response.status === 200) {
-        // update the state
-        setLoggedIn(true);
-        return setUser(response.data.user);
-      }
-    });
-  };
+
+  const handleSetError = (err) => {
+    setError(err)
+  }
+
+
+  const handleSetUser = (data) => {
+    setUser(data)
+
+  }
 
   return (
     <div className="App">
       <Router>
-        {loggedIn && (
+        {user ? (
           <div>
-            <Nav user={user} logout={logout} />
+            <Nav user={user} handleSetUser={handleSetUser} />
             <div className="main">
               <Switch>
-                <Route exact path="/">
-                  <GameMaster user={user} logout={logout} />
+                <Route exact path="/game">
+                  <GameMaster user={user} handleSetUser={handleSetUser} />
                 </Route>
                 <Route path="/profile">
                   <Profile user={user} setUser={setUser} />
@@ -69,8 +59,7 @@ function App () {
               </Switch>
             </div>
           </div>
-        )}
-        {!loggedIn && (
+        ) : (
           <div className="auth-wrapper">
             <Switch>
               <Route exact path="/" component={() => <Splash />} />
@@ -79,7 +68,7 @@ function App () {
                 <SignupForm />
               </Route>
               <Route path="/login">
-                <LoginForm login={login} />
+                <LoginForm error={error} handleSetError={handleSetError} handleSetUser={handleSetUser} />
               </Route>
               <Route path="/*" component={NoMatch}></Route>
             </Switch>
