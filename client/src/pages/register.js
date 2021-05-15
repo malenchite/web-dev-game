@@ -14,7 +14,6 @@ function SignupForm() {
     const [redirectTo, setRedirectTo] = useState(null);
     const [registered, setRegistered] = useState(false);
     const [error, setError] = useState(null);
-    const [matching, setMatching] = useState(null)
 
     const handleChange = (event) => {
         setUserObject({
@@ -32,7 +31,6 @@ function SignupForm() {
     const handleError = (event) => {
         event.preventDefault()
         setError(false)
-        setMatching(false)
     }
 
     const handleSubmit = (event) => {
@@ -41,6 +39,15 @@ function SignupForm() {
         if (userObject.password != userObject.confirmPassword) {
             setError("Your Passwords do not match!")
         }
+        else if (userObject.password === "") {
+            setError("You must enter a password!")
+        }
+        else if (userObject.username === "") {
+            setError("You must enter a username!")
+        }
+        else if (userObject.email === "") {
+            setError("You must enter an email!")
+        }
         else {
 
             AUTH.signup({
@@ -48,14 +55,10 @@ function SignupForm() {
                 email: userObject.email,
                 password: userObject.password
             }).then(response => {
-                // if (userObject.password != userObject.confirmPassword) {
-                //     setMatching(true)
-                // }
                 if (response.data.error) {
                     setError(response.data.error);
                 } else {
                     setError(false);
-                    // setMatching(false)
                     setRegistered(true);
                 }
             });
@@ -79,9 +82,6 @@ function SignupForm() {
                     {
                         error && <Alert title="Error " message={error} handleAlert={handleError} />
                     }
-                    {/* {
-                        matching && <Alert title="Error " message="Your passwords do not match." handleAlert={handleError} />
-                    } */}
                 </div>
                 {!registered && (
                     <form className="mt-8 space-y-6" action="#" method="POST">
