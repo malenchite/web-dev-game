@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
+import { Helmet } from "react-helmet";
+import validator from "email-validator";
+
 import AUTH from "../utils/AUTH";
 import Alert from "../components/Alert";
 import Logo from "../components/Logo";
-import { Helmet } from "react-helmet";
 
-function SignupForm() {
+function SignupForm () {
   const [userObject, setUserObject] = useState({
     username: "",
     email: "",
@@ -37,14 +39,18 @@ function SignupForm() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (userObject.password !== userObject.confirmPassword) {
-      setError("Your passwords do not match!");
-    } else if (userObject.password === "") {
-      setError("You must enter a password!");
-    } else if (userObject.username === "") {
-      setError("You must enter a username!");
+    if (userObject.username === "") {
+      setError("You must enter a username");
+    } else if (userObject.username.length > 16) {
+      setError("Username may not have more than 16 characters");
     } else if (userObject.email === "") {
-      setError("You must enter an email!");
+      setError("You must enter an email address");
+    } else if (validator.validate(userObject.email) !== true) {
+      setError("Your email address must be valid");
+    } else if (userObject.password === "") {
+      setError("You must enter a password");
+    } else if (userObject.password !== userObject.confirmPassword) {
+      setError("Your passwords do not match");
     } else {
       AUTH.signup({
         username: userObject.username,
@@ -79,7 +85,7 @@ function SignupForm() {
           {registered && (
             <Alert
               title="Success! "
-              message="Account created!"
+              message="Account created"
               handleAlert={handleAlert}
             />
           )}
