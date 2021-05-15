@@ -189,17 +189,17 @@ function Game ({ socket, user, updateGameId, updateOpenGame }) {
               setCorrect(null);
               setQuestionInfo(info => { return { ...info, id: cardInfo.questionId, text: res.data, answer: null } });
             })
-            .catch(err => console.log(err));
+            .catch(err => console.log("Error retrieving question information"));
         } else {
           API.getQuestionComplete(cardInfo.questionId)
             .then(res => {
               setQuestionInfo(info => { return { ...info, id: cardInfo.questionId, text: res.data.text, answer: res.data.answer } });
               setJudgementMade(false);
             })
-            .catch(err => console.log(err));
+            .catch(err => console.log("Error retrieving question information"));
         }
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log("Error retrieving card information"));
   }
 
   /* Process the correct/incorrect judgment response */
@@ -224,7 +224,7 @@ function Game ({ socket, user, updateGameId, updateOpenGame }) {
             return { ...info, answer: res.data.answer };
           });
         })
-        .catch(err => console.log(err));
+        .catch(err => console.log("Error retrieving question information"));
       return oldInfo;
     });
   };

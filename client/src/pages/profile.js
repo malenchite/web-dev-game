@@ -13,7 +13,7 @@ function Profile ({ user, setUser }) {
                 .then(res => {
                     setHistory(res.data);
                 })
-                .catch(err => console.log(err));
+                .catch(_err => console.log("Error retrieving game history"));
         }
     }, [user, history]);
 
