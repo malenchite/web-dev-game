@@ -17,7 +17,7 @@ const Nav = ({ user, logout }) => {
   }
 
   return (
-    <nav className="grid grid-cols-3 bg-red-desertSand text-red-blackBean p-3">
+    <nav className="grid grid-cols-3 bg-red-desertSand text-red-blackBean p-3" role="navigation">
       <div className="w-12">
         <Link to="/"><Logo className="h-auto w-12" /></Link>
       </div>

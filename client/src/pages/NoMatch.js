@@ -1,8 +1,15 @@
-function NoMatch () {
+import { Helmet } from "react-helmet";
+
+function NoMatch() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-red-desertSand py-12 px-4">
+      <Helmet>
+        <title>The Web Dev Game | Page Not Found</title>
+      </Helmet>
       <main>
-        <h1 className="text-red-blackBean mb-10 text-4xl font-bold">Page Not Found</h1>
+        <h1 className="text-red-blackBean mb-10 text-4xl font-bold">
+          Page Not Found
+        </h1>
         <a
           href="/"
           className="flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-70 sm:px-8"
