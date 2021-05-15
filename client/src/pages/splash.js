@@ -1,9 +1,4 @@
-// import { Fragment } from 'react'
-// import { Popover, Transition } from '@headlessui/react'
-// import NewIndex from '../components/Login/newindex'
-// import Nav from '../components/Nav'
-
-export default function Splash() {
+export default function Splash () {
   return (
     <div className="bg-white">
       <main>

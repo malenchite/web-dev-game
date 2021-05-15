@@ -1,5 +1,5 @@
 import { Fragment } from "react"
-import { Dialog, Transition } from "@headlessui/react"
+import { Transition } from "@headlessui/react"
 import { XIcon } from "@heroicons/react/outline"
 
 export default function GameRules ({ open, closeRules }) {

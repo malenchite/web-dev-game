@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { Redirect } from 'react-router-dom';
-import AUTH from '../utils/AUTH';
+import React, { useState } from "react";
+import { Redirect } from "react-router-dom";
+import AUTH from "../utils/AUTH";
 import Alert from "../components/Alert";
 import Logo from "../components/Logo";
 
-function SignupForm() {
+function SignupForm () {
     const [userObject, setUserObject] = useState({
-        username: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
+        username: "",
+        email: "",
+        password: "",
+        confirmPassword: ""
     });
     const [redirectTo, setRedirectTo] = useState(null);
     const [registered, setRegistered] = useState(false);
@@ -25,7 +25,7 @@ function SignupForm() {
     const handleAlert = (event) => {
         event.preventDefault();
 
-        setRedirectTo('/login');
+        setRedirectTo("/login");
     }
 
     const handleError = (event) => {
@@ -35,9 +35,9 @@ function SignupForm() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        // TODO - validate!
+
         if (userObject.password != userObject.confirmPassword) {
-            setError("Your Passwords do not match!")
+            setError("Your passwords do not match!")
         }
         else if (userObject.password === "") {
             setError("You must enter a password!")

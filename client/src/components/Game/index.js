@@ -52,6 +52,7 @@ function Game ({ socket, user, updateGameId, updateOpenGame }) {
     id: null
   });
 
+  /* Subscribe to server events and unsubscribe when user leaves */
   useEffect(() => {
     if (socket) {
       socket.emit(PLAYER_JOINED_EVENT);
@@ -77,6 +78,7 @@ function Game ({ socket, user, updateGameId, updateOpenGame }) {
     }
   }, [socket]);
 
+  /* Update gameover listener if user changes (required as user does not exist on initial load) */
   useEffect(() => {
     if (socket && user) {
       socket.removeAllListeners(GAME_OVER_EVENT);
@@ -85,12 +87,15 @@ function Game ({ socket, user, updateGameId, updateOpenGame }) {
   }, [socket, user]);
 
   /* UI handling */
+
+  /* Handles user clicking "Quit Game" or "Return to Lobby" button */
   const handleReturnToLobby = (event) => {
     event.preventDefault();
     updateGameId(null);
     updateOpenGame(false);
   }
 
+  /* Handles user clicking one of the turn option buttons */
   const handleTurnChoice = (event) => {
     event.preventDefault();
     setChoiceMade(true);
@@ -100,23 +105,28 @@ function Game ({ socket, user, updateGameId, updateOpenGame }) {
     }
   }
 
+  /* Handles user clicking "Correct" or "Incorrect" buttons */
   const handleJudgement = (event) => {
     event.preventDefault();
     setJudgementMade(true);
     socket.emit(CARD_RSP_EVENT, { correct: event.target.value === 'true' });
   }
 
+  /* Handles user clicking the "Done" button after reading the correct answer */
   const handleCardAck = (event) => {
     event.preventDefault();
     socket.emit(CARD_ACK_EVENT);
   }
 
   /* Game flow processing  */
+
+  /* Process the Opponent Left event from the server */
   const processOpponentLeft = () => {
     setOpponentLeft(true);
     setGameState(null);
   }
 
+  /* Processes the Next Turn event with updated game state from the server */
   const processNextTurn = turnInfo => {
     currentPlayer.current = turnInfo.currentPlayer;
     setGameState(turnInfo.gameState);
@@ -126,12 +136,13 @@ function Game ({ socket, user, updateGameId, updateOpenGame }) {
     setCorrect(null);
   }
 
+  /* Processes the Turn Result event with prior turn's effects */
   const processTurnResult = turnResult => {
     setLastTurnResult(turnResult);
   }
 
+  /* Processes the Game Over event by displaying result and saving game data */
   const processGameOver = gameOver => {
-
     const gameData = {
       result: "loss",
       frontEndCorrect: stats.current.frontEndCorrect,
@@ -153,6 +164,7 @@ function Game ({ socket, user, updateGameId, updateOpenGame }) {
       .catch(err => console.log("Error saving game results"));
   }
 
+  /* Processes the Card Info event by retrieving required data from the card and question APIs */
   const processCardInfo = cardInfo => {
     /* Pull card information from database */
     API.getCard(cardInfo.cardId)
@@ -190,6 +202,7 @@ function Game ({ socket, user, updateGameId, updateOpenGame }) {
       .catch(err => console.log(err));
   }
 
+  /* Process the correct/incorrect judgment response */
   const processCardResponse = (cardRsp) => {
     setCorrect(cardRsp.correct);
     if (cardRsp.correct) {

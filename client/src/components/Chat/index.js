@@ -29,10 +29,12 @@ function Chat ({ socket, title }) {
     scrollToBottom();
   }, [chat]);
 
+  /* Keeps message state up to date with user input */
   const handleMessageChange = (event) => {
     setMessage(event.target.value);
   };
 
+  /* Handle user clicking "Send Message" button by sending message to server */
   const handleSendMessage = (event) => {
     event.preventDefault();
     if (message.length > 0 && socket) {
@@ -41,6 +43,7 @@ function Chat ({ socket, title }) {
     setMessage("");
   }
 
+  /* Scrolls chat to bottom */
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }
