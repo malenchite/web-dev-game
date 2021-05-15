@@ -63,11 +63,12 @@ module.exports = {
   auth: function (req, res, next) {
     next();
   },
-  /* Sends user data, cleaned of its password info */
+  /* Sends user data, cleaned of password and game history */
   authenticate: (req, res) => {
     const user = JSON.parse(JSON.stringify(req.user));
     const cleanUser = Object.assign({}, user);
     if (cleanUser) {
+      delete cleanUser.gamehistory;
       delete cleanUser.password;
     }
     res.json({ user: cleanUser });
