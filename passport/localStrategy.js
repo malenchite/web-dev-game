@@ -7,7 +7,8 @@ const strategy = new LocalStrategy({
 function (username, password, done) {
   db.User.findOne({ 'username': username }, (err, userMatch) => {
     if (err) {
-      return done(err);
+      console.log(err);
+      return done(err, false, { message: 'User does not exist' });
     }
     if (!userMatch) {
       return done(null, false, { message: 'Incorrect username' });

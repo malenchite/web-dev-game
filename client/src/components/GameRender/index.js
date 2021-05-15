@@ -64,7 +64,7 @@ const GameRender = ({ currentPlayer, user, gameState, choiceMade, judgementMade,
   const renderChoiceSelection = () => {
     if (yourPlayerState && !choiceMade) {
       return (
-        <form className="bg-red-linen mt-2 mx-3 h-60">
+        <form className="bg-red-linen mt-2 mx-3 h-60" role="form">
           <div className="grid grid-col-2 justify-evenly gap-0" style={{ gridTemplateColumns: "12rem auto" }}>
             <div className="col-span-1 flex justify-center items-center h-60">
               <button value="card" className="w-28 h-40 bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-80 font-bold py-2 px-4 border border-b-4 hover:border-red-cottonCandy border-red-blackBean rounded relative text-xl" onClick={handleTurnChoice}>
