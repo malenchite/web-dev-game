@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import GamePopup from "../GamePopup";
 import Avatar from "../Avatar";
+import Logo from "../Logo";
 
 const GameRender = ({ currentPlayer, user, gameState, choiceMade, judgementMade, card, questionInfo, correct, opponentLeft, handleTurnChoice, lastTurnResult, handleReturnToLobby, handleJudgement, handleCardAck }) => {
   const [yourTurn, setYourTurn] = useState(false);
@@ -66,7 +67,10 @@ const GameRender = ({ currentPlayer, user, gameState, choiceMade, judgementMade,
         <form className="bg-red-linen mt-2 mx-3 h-60">
           <div className="grid grid-col-2 justify-evenly gap-0" style={{ gridTemplateColumns: "12rem auto" }}>
             <div className="col-span-1 flex justify-center items-center h-60">
-              <button value="card" className="w-28 h-40 bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-80 font-bold py-2 px-4 border border-b-4 hover:border-red-cottonCandy border-red-blackBean rounded" onClick={handleTurnChoice}>Draw Card</button><br />
+              <button value="card" className="w-28 h-40 bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-80 font-bold py-2 px-4 border border-b-4 hover:border-red-cottonCandy border-red-blackBean rounded relative" onClick={handleTurnChoice}>
+                <Logo className="opacity-20 absolute w-20 top-9 left-5" />
+                Draw Card
+                </button><br />
             </div>
             <div className="col-span-1 p-3 h-60">
               <button className="flex items-center justify-center px-1 py-1 m-1 border hover:border-red-cottonCandy border-red-blackBean text-base font-medium rounded-md shadow-sm text-white bg-red-mauveTaupe bg-opacity-60 hover:bg-opacity-80 sm:px-8 space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5 w-44" value="fund" onClick={handleTurnChoice}>Seek Funding</button><br />
