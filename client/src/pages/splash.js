@@ -27,6 +27,7 @@ export default function Splash() {
                   <span className="block text-red-mauveTaupe">knowledge</span>
                 </h1>
                 <p className="mt-6 max-w-lg mx-auto text-center text-xl text-red-blackBean sm:max-w-3xl">
+                  The Web Dev Game is a two-player strategy game in which you challenge your knowledge by challenging your friends.
                 </p>
                 <div className="mt-10 max-w-sm mx-auto sm:max-w-none sm:flex sm:justify-center">
                   <div className="space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5">
