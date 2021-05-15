@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 import Logo from "../components/Logo";
+import { Helmet } from "react-helmet";
 
-function LoginForm ({ login }) {
-
-
+function LoginForm({ login }) {
   // Login code
   const [userObject, setUserObject] = useState({
     username: "",
@@ -30,10 +29,15 @@ function LoginForm ({ login }) {
   } else {
     return (
       <div className="min-h-screen flex items-center justify-center bg-red-desertSand py-12 px-4 sm:px-6 lg:px-8">
+        <Helmet>
+          <title>The Web Dev Game | Login</title>
+        </Helmet>
         <div className="max-w-md w-full space-y-8">
           <div>
             <Logo className="mx-auto h-12 w-auto" />
-            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 text-red-blackBean">Sign in to the Web Dev Game</h2>
+            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 text-red-blackBean">
+              Sign in to the Web Dev Game
+            </h2>
           </div>
           <form className="mt-8 space-y-6" action="#" method="POST">
             <input type="hidden" name="remember" defaultValue="true" />
@@ -41,7 +45,7 @@ function LoginForm ({ login }) {
               <div>
                 <label htmlFor="username" className="sr-only">
                   Username:
-              </label>
+                </label>
                 <input
                   id="username"
                   name="username"
@@ -55,7 +59,7 @@ function LoginForm ({ login }) {
               <div>
                 <label htmlFor="password" className="sr-only">
                   Password
-              </label>
+                </label>
                 <input
                   id="password"
                   name="password"
@@ -75,15 +79,14 @@ function LoginForm ({ login }) {
                 onClick={handleSubmit}
               >
                 Log in
-            </button>
+              </button>
               <a href="/signup">
-
                 <button
                   type="button"
                   className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md bg-red-mauveTaupe text-red-eggplant bg-opacity-60 hover:bg-opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                   Register
-            </button>
+                </button>
               </a>
             </div>
           </form>
@@ -91,7 +94,6 @@ function LoginForm ({ login }) {
       </div>
     );
   }
-
 }
 
 export default LoginForm;

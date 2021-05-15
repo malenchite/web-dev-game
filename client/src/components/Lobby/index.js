@@ -121,11 +121,11 @@ function Lobby ({ socket, user, gameId, updateGameId, updateOpenGame }) {
     }
 
     return (
-        <div className="grid grid-cols-3 gap-x-4">
+        <section className="grid grid-cols-3 gap-x-4">
             <div title="Players in Lobby" className="shadow-xl bg-red-desertSand rounded-lg">
                 <h3 className="text-red-blackBean font-bold mt-1">Players in Lobby</h3>
                 <ul className="bg-red-linen mx-5 my-3 px-2 h-96 overflow-y-scroll scrollbar-thin scrollbar-thumb-red-eggplant scrollbar-track-red-linen">
-                    {renderLobbyList()}
+                    <li>{renderLobbyList()}</li>
                 </ul>
                 <Challenge challenger={challenger} pendingChallenge={pendingChallenge} challengeRsp={challengeRsp} gameId={gameId}
                     handleChallengeResponse={handleChallengeResponse} handleChallengeWithdraw={handleChallengeWithdraw} handleEnterGameButton={handleEnterGameButton} handleClose={clearChallenge} />
@@ -133,7 +133,7 @@ function Lobby ({ socket, user, gameId, updateGameId, updateOpenGame }) {
             <div className="col-span-2 col-start-2 row-start-1 row-end-3 shadow-xl bg-red-desertSand rounded-lg">
                 <Chat socket={socket} title="Lobby" />
             </div>
-        </div>
+        </section>
     )
 }
 export default Lobby
