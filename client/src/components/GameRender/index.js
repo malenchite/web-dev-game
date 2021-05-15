@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 import GamePopup from "../GamePopup";
 import Avatar from "../Avatar";
@@ -51,7 +51,7 @@ const GameRender = ({ currentPlayer, user, gameState, choiceMade, judgementMade,
   }
 
   const renderPointChange = (pointChange, label) => {
-    let changeText = '';
+    let changeText = "";
 
     if (pointChange > 0) {
       changeText = <><span>They gained {pointChange} {label}</span>.<br /></>
@@ -98,24 +98,24 @@ const GameRender = ({ currentPlayer, user, gameState, choiceMade, judgementMade,
     const result = lastTurnResult.result;
 
     switch (lastTurnResult.choice) {
-      case 'card': choiceText = 'draw a card'; break;
-      case 'fund': choiceText = 'seek funding'; break;
-      case 'frontend': choiceText = 'develop their front-end'; break;
-      case 'backend': choiceText = 'develop their back-end'; break;
-      case 'bugfix': choiceText = 'fix some bugs'; break;
-      default: choiceText = 'do something unexpected';
+      case "card": choiceText = "draw a card"; break;
+      case "fund": choiceText = "seek funding"; break;
+      case "frontend": choiceText = "develop their front-end"; break;
+      case "backend": choiceText = "develop their back-end"; break;
+      case "bugfix": choiceText = "fix some bugs"; break;
+      default: choiceText = "do something unexpected";
     }
 
     return (
       <div className="h-40 bg-red-linen mx-3 mb-3 p-1">
         <span>Last turn, <span className="font-bold">{lastTurnResult.username}</span> chose to {choiceText}.</span><br />
-        {lastTurnResult.success !== undefined && <><span>They {lastTurnResult.success ? 'succeeded at' : 'failed'} the challenge.</span><br /></>}
+        {lastTurnResult.success !== undefined && <><span>They {lastTurnResult.success ? "succeeded at" : "failed"} the challenge.</span><br /></>}
         {(result.funding || result.fep || result.bep || result.bugs)
           ? (<>
-            {renderPointChange(lastTurnResult.result.funding, 'Funding')}
-            {renderPointChange(lastTurnResult.result.fep, 'Front-End')}
-            {renderPointChange(lastTurnResult.result.bep, 'Back-End')}
-            {renderPointChange(lastTurnResult.result.bugs, 'Bugs')}
+            {renderPointChange(lastTurnResult.result.funding, "Funding")}
+            {renderPointChange(lastTurnResult.result.fep, "Front-End")}
+            {renderPointChange(lastTurnResult.result.bep, "Back-End")}
+            {renderPointChange(lastTurnResult.result.bugs, "Bugs")}
           </>)
           : (<><span>This had no effect.</span></>)
         }
