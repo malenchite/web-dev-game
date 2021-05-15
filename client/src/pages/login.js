@@ -5,16 +5,13 @@ import { useHistory } from "react-router-dom"
 import AUTH from "../utils/AUTH";
 import { Helmet } from "react-helmet";
 
-function LoginForm({ error, handleSetError, handleSetUser }) {
+function LoginForm ({ error, handleSetError, handleSetUser }) {
   const history = useHistory()
 
-  // Login code
   const [userObject, setUserObject] = useState({
     username: "",
     password: "",
   });
-
-
 
   const handleChange = (event) => {
     setUserObject({
@@ -32,16 +29,14 @@ function LoginForm({ error, handleSetError, handleSetUser }) {
     event.preventDefault();
     return AUTH.login(userObject.username, userObject.password).then((response) => {
       if (response.status === 200) {
-        // update the state
         handleSetUser(response.data.user);
-        history.push('/game')
+        history.push("/");
       }
     })
       .catch(error => {
-        handleSetError("Incorrect Username or Password!")
+        handleSetError("Incorrect username or password")
       });
   };
-
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-red-desertSand py-12 px-4 sm:px-6 lg:px-8">

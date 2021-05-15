@@ -8,7 +8,7 @@ import { Helmet } from "react-helmet";
 const DEV_ENDPOINT = "http://localhost:3001";
 const USER_INFO_EVENT = "user info";
 
-function GameMaster({ user, logout }) {
+function GameMaster ({ user, logout }) {
   const [gameId, setGameId] = useState(null);
   const [openGame, setOpenGame] = useState(false);
   const [socket, setSocket] = useState(null);

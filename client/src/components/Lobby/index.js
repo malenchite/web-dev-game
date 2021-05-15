@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 import Chat from "../Chat";
 import Challenge from "../Challenge";
 
-const CHALLENGE_EVENT = 'challenge';
-const WITHDRAW_EVENT = 'withdraw challenge';
-const CHALLENGE_RSP_EVENT = 'challenge response';
-const LOBBY_INFO_EVENT = 'lobby info';
-const ENTER_GAME_EVENT = 'enter game';
+const CHALLENGE_EVENT = "challenge";
+const WITHDRAW_EVENT = "withdraw challenge";
+const CHALLENGE_RSP_EVENT = "challenge response";
+const LOBBY_INFO_EVENT = "lobby info";
+const ENTER_GAME_EVENT = "enter game";
 
 /* Events to unsubscribe from when leaving */
 const UNSUBSCRIBE_EVENTS = [

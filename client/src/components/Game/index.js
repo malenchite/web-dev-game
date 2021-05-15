@@ -1,21 +1,21 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from "react";
 import Chat from "../Chat";
-import GameRender from '../GameRender';
-import API from '../../utils/API';
+import GameRender from "../GameRender";
+import API from "../../utils/API";
 
 /* Events emitted from server */
-const GAME_OVER_EVENT = 'game over';
-const OPPONENT_LEFT_EVENT = 'opponent left';
-const NEXT_TURN_EVENT = 'next turn';
-const CARD_INFO_EVENT = 'card info';
-const TURN_RESULT_EVENT = 'turn result';
+const GAME_OVER_EVENT = "game over";
+const OPPONENT_LEFT_EVENT = "opponent left";
+const NEXT_TURN_EVENT = "next turn";
+const CARD_INFO_EVENT = "card info";
+const TURN_RESULT_EVENT = "turn result";
 
 /* Events sent by players (also possibly relayed by server) */
-const LEAVE_GAME_EVENT = 'leave game';
-const PLAYER_JOINED_EVENT = 'player joined';
-const PLAYER_TURN_EVENT = 'player turn';
-const CARD_RSP_EVENT = 'card response';
-const CARD_ACK_EVENT = 'card acknowledge';
+const LEAVE_GAME_EVENT = "leave game";
+const PLAYER_JOINED_EVENT = "player joined";
+const PLAYER_TURN_EVENT = "player turn";
+const CARD_RSP_EVENT = "card response";
+const CARD_ACK_EVENT = "card acknowledge";
 
 /* Events to unsubscribe from when leaving */
 const UNSUBSCRIBE_EVENTS = [
@@ -109,7 +109,7 @@ function Game ({ socket, user, updateGameId, updateOpenGame }) {
   const handleJudgement = (event) => {
     event.preventDefault();
     setJudgementMade(true);
-    socket.emit(CARD_RSP_EVENT, { correct: event.target.value === 'true' });
+    socket.emit(CARD_RSP_EVENT, { correct: event.target.value === "true" });
   }
 
   /* Handles user clicking the "Done" button after reading the correct answer */
@@ -189,17 +189,17 @@ function Game ({ socket, user, updateGameId, updateOpenGame }) {
               setCorrect(null);
               setQuestionInfo(info => { return { ...info, id: cardInfo.questionId, text: res.data, answer: null } });
             })
-            .catch(err => console.log(err));
+            .catch(err => console.log("Error retrieving question information"));
         } else {
           API.getQuestionComplete(cardInfo.questionId)
             .then(res => {
               setQuestionInfo(info => { return { ...info, id: cardInfo.questionId, text: res.data.text, answer: res.data.answer } });
               setJudgementMade(false);
             })
-            .catch(err => console.log(err));
+            .catch(err => console.log("Error retrieving question information"));
         }
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log("Error retrieving card information"));
   }
 
   /* Process the correct/incorrect judgment response */
@@ -224,7 +224,7 @@ function Game ({ socket, user, updateGameId, updateOpenGame }) {
             return { ...info, answer: res.data.answer };
           });
         })
-        .catch(err => console.log(err));
+        .catch(err => console.log("Error retrieving question information"));
       return oldInfo;
     });
   };
