@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { Helmet } from "react-helmet";
+
 import Avatar from "../components/Avatar";
 import API from "../utils/API";
 
-function Profile ({ user, setUser }) {
+function Profile ({ user, handleSetUser }) {
     const [history, setHistory] = useState([]);
 
     useEffect(() => {
@@ -31,7 +32,7 @@ function Profile ({ user, setUser }) {
     function saveAvatar () {
         let randomPicture = randomGenerator();
         API.saveAvatar(user._id, randomPicture).then(() =>
-            setUser({ ...user, avatar: randomPicture })
+            handleSetUser({ ...user, avatar: randomPicture })
         );
     }
 

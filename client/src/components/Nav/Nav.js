@@ -1,11 +1,12 @@
-import React, { Fragment } from "react";
-import { Link, useHistory } from "react-router-dom";
-import Logo from "../Logo";
-import "./Nav.css";
-import AUTH from "../../utils/AUTH";
+import React, { Fragment, useEffect } from "react";
+import { Link } from "react-router-dom";
 
-const Nav = ({ user, handleSetUser }) => {
-  const history = useHistory()
+import Logo from "../Logo";
+
+import "./Nav.css";
+
+const Nav = ({ user, logout }) => {
+
   let greeting;
 
   if (user === null) {
@@ -17,15 +18,6 @@ const Nav = ({ user, handleSetUser }) => {
       </Fragment>
     )
   }
-
-  const logout = (event) => {
-    return AUTH.logout().then((response) => {
-      if (response.status === 200) {
-        handleSetUser(null);
-        history.push('/')
-      }
-    });
-  };
 
   return (
     <nav className="grid grid-cols-3 bg-red-desertSand text-red-blackBean p-3" role="navigation">
