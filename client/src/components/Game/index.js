@@ -230,7 +230,7 @@ function Game ({ socket, user, updateGameId, updateOpenGame }) {
   };
 
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <section className="grid grid-cols-3 gap-4">
       <div className="col-span-1 shadow-xl bg-red-desertSand rounded-lg pb-4">
         <Chat socket={socket} title="Game Chat" />
       </div>
@@ -240,7 +240,7 @@ function Game ({ socket, user, updateGameId, updateOpenGame }) {
           handleCardAck={handleCardAck}
         />
       </div>
-    </div>
+    </section>
   );
 }
 
