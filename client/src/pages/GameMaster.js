@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
-import Lobby from "../components/Lobby"
+import Lobby from "../components/Lobby";
 import Game from "../components/Game";
 import GameRules from "../components/GameRules";
+import { Helmet } from "react-helmet";
 
 const DEV_ENDPOINT = "http://localhost:3001";
 const USER_INFO_EVENT = "user info";
@@ -15,7 +16,7 @@ function GameMaster ({ user, logout }) {
 
   useEffect(() => {
     connectUser();
-  }, [user])
+  }, [user]);
 
   useEffect(() => {
     return () => disconnectUser();
@@ -58,43 +59,60 @@ function GameMaster ({ user, logout }) {
 
   const updateGameId = (id) => {
     setGameId(id);
-  }
+  };
 
   const updateOpenGame = (open) => {
     setOpenGame(open);
-  }
+  };
 
   const openRules = () => {
     setRulesOpen(true);
-  }
+  };
 
   const closeRules = () => {
     setRulesOpen(false);
-  }
+  };
 
   return (
-    <div className="grid grid-cols-3 mt-3" style={{ gridTemplateColumns: "2rem auto 2rem" }}>
+    <div
+      className="grid grid-cols-3 mt-3"
+      style={{ gridTemplateColumns: "2rem auto 2rem" }}
+    >
+      <Helmet>
+        <title>The Web Dev Game</title>
+      </Helmet>
       <div>
         <div className="transform -rotate-90 translate-y-36">
           <div>
-            <div
-              aria-hidden="true"
+            <button
+              aria-hidden="false"
               onClick={openRules}
               className="font-medium cursor-pointer select-none px-1 py-1 rounded-b-md w-40 bg-red-linen"
             >
               Game Rules
-            </div>
+            </button>
           </div>
         </div>
       </div>
       <GameRules open={rulesOpen} closeRules={closeRules} />
-      {
-        (openGame && socket && user && gameId)
-          ? <Game socket={socket} user={user} updateGameId={updateGameId} updateOpenGame={updateOpenGame} />
-          : <Lobby socket={socket} user={user} gameId={gameId} updateGameId={updateGameId} updateOpenGame={updateOpenGame} />
-      }
-    </div >
-  )
+      {openGame && socket && user && gameId ? (
+        <Game
+          socket={socket}
+          user={user}
+          updateGameId={updateGameId}
+          updateOpenGame={updateOpenGame}
+        />
+      ) : (
+        <Lobby
+          socket={socket}
+          user={user}
+          gameId={gameId}
+          updateGameId={updateGameId}
+          updateOpenGame={updateOpenGame}
+        />
+      )}
+    </div>
+  );
 }
 
 export default GameMaster;
