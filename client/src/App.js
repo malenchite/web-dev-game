@@ -1,6 +1,5 @@
 import "./App.css";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import SocketTest from "./pages/SocketTest";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import LoginForm from "./pages/login";
 import SignupForm from "./pages/register";
 import Nav from "./components/Nav";
@@ -9,13 +8,15 @@ import { useState, useEffect } from "react";
 import GameMaster from "./pages/GameMaster";
 import Profile from "./pages/profile";
 import Splash from "./pages/splash";
+import NoMatch from "./pages/NoMatch";
 
-function App() {
+function App () {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    AUTH.getUser().then((response) => {console.log(response.data.user)
+    AUTH.getUser().then((response) => {
+      console.log(response.data.user)
       if (!!response.data.user) {
         setLoggedIn(true);
         return setUser(response.data.user);
@@ -33,7 +34,6 @@ function App() {
 
   const logout = (event) => {
     AUTH.logout().then((response) => {
-      // console.log(response.data);
       if (response.status === 200) {
         setLoggedIn(false);
         return setUser(null);
@@ -43,7 +43,6 @@ function App() {
 
   const login = (username, password) => {
     AUTH.login(username, password).then((response) => {
-      //console.log(response.data);
       if (response.status === 200) {
         // update the state
         setLoggedIn(true);
@@ -59,70 +58,33 @@ function App() {
           <div>
             <Nav user={user} logout={logout} />
             <div className="main">
-              <Route exact path="/">
-                <GameMaster user={user} logout={logout} />
-              </Route>
-              <Route path="/profile">
-                <Profile user={user} setUser={setUser} />
-              </Route>
-
-              {process.env.REACT_APP_DEPLOYED ? (
-                ""
-              ) : (
-                <Route path="/socket" component={SocketTest} />
-              )}
+              <Switch>
+                <Route exact path="/">
+                  <GameMaster user={user} logout={logout} />
+                </Route>
+                <Route path="/profile">
+                  <Profile user={user} setUser={setUser} />
+                </Route>
+                <Route path="/*" component={NoMatch}></Route>
+              </Switch>
             </div>
           </div>
         )}
         {!loggedIn && (
           <div className="auth-wrapper">
-            <Route exact path="/" component={() => <Splash />} />
-            <Route exact path="/profile" component={() => <Splash />} />
-            <Route path="/signup">
-              <SignupForm />
-            </Route>
-            <Route path="/login">
-              <LoginForm login={login} />
-            </Route>
-            {process.env.REACT_APP_DEPLOYED ? (
-              ""
-            ) : (
-              <Route path="/socket" component={SocketTest} />
-            )}
-          </div>
-        )}
-        {/* {!loggedIn && (
-          <div className="auth-wrapper">
-            <Router>
-              <Route exact path="/" component={() => <LoginForm login={login} />} />
-              <Route
-                exact
-                path="/game"
-                component={() => <LoginForm login={login} />}
-              />
-              <Route
-                exact
-                path="/profile"
-                component={() => <LoginForm login={login} />}
-              />
+            <Switch>
+              <Route exact path="/" component={() => <Splash />} />
+              <Route exact path="/profile" component={() => <Splash />} />
               <Route path="/signup">
                 <SignupForm />
               </Route>
-              {process.env.REACT_APP_DEPLOYED ? (
-                ""
-              ) : (
-                <Route path="/socket" component={SocketTest} />
-              )}
-            </Router>
+              <Route path="/login">
+                <LoginForm login={login} />
+              </Route>
+              <Route path="/*" component={NoMatch}></Route>
+            </Switch>
           </div>
-        )} */}
-        {/* <Router>
-          <Switch>
-            <Route path="/login">
-              <LoginForm login={login} />
-            </Route>
-          </Switch>
-        </Router> */}
+        )}
       </Router>
     </div>
   );
