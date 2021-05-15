@@ -9,14 +9,12 @@ function Profile ({ user, handleSetUser }) {
     const [history, setHistory] = useState([]);
 
     useEffect(() => {
-        if (user && history.length === 0) {
-            API.getGameData(user._id)
-                .then(res => {
-                    setHistory(res.data);
-                })
-                .catch(_err => console.log("Error retrieving game history"));
-        }
-    }, [user, history]);
+        API.getGameData(user._id)
+            .then(res => {
+                setHistory(res.data);
+            })
+            .catch(_err => console.log("Error retrieving game history"));
+    }, []);
 
     const randomGenerator = () => {
         var result = [];
