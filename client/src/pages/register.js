@@ -38,22 +38,28 @@ function SignupForm() {
     const handleSubmit = (event) => {
         event.preventDefault();
         // TODO - validate!
-        AUTH.signup({
-            username: userObject.username,
-            email: userObject.email,
-            password: userObject.password
-        }).then(response => {
-            if (userObject.password != userObject.confirmPassword) {
-                setMatching(true)
-            }
-            else if (response.data.error) {
-                setError(response.data.error);
-            } else {
-                setError(false);
-                setMatching(false)
-                setRegistered(true);
-            }
-        });
+        if (userObject.password != userObject.confirmPassword) {
+            setError("Your Passwords do not match!")
+        }
+        else {
+
+            AUTH.signup({
+                username: userObject.username,
+                email: userObject.email,
+                password: userObject.password
+            }).then(response => {
+                // if (userObject.password != userObject.confirmPassword) {
+                //     setMatching(true)
+                // }
+                if (response.data.error) {
+                    setError(response.data.error);
+                } else {
+                    setError(false);
+                    // setMatching(false)
+                    setRegistered(true);
+                }
+            });
+        }
     };
 
     if (redirectTo) {
@@ -73,9 +79,9 @@ function SignupForm() {
                     {
                         error && <Alert title="Error " message={error} handleAlert={handleError} />
                     }
-                    {
+                    {/* {
                         matching && <Alert title="Error " message="Your passwords do not match." handleAlert={handleError} />
-                    }
+                    } */}
                 </div>
                 {!registered && (
                     <form className="mt-8 space-y-6" action="#" method="POST">
