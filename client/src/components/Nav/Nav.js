@@ -13,7 +13,7 @@ const Nav = ({ user, logout }) => {
   } else if (user.username) {
     greeting = (
       <Fragment>
-        Welcome back, <strong>{user.username} </strong>
+        <strong>{user.username} </strong>
       </Fragment>
     )
   }
@@ -25,7 +25,7 @@ const Nav = ({ user, logout }) => {
       </div>
       <div className="navbar-brand text-center p-1">The Web Dev Game!</div>
       <div className="bg-red-desertSand text-red-blackBean text-right p-1">
-        <Link to="/profile">{greeting} </Link>| <Link to="#" className="logout" onClick={logout}>Log Out</Link>
+        <Link to="/profile">{greeting} </Link>|<Link to="/profile"> Profile </Link> |<Link to="/"> Lobby </Link> | <Link to="#" className="logout" onClick={logout}>Log Out</Link>
       </div>
     </nav >
   )
