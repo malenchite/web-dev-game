@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import Logo from "../Logo";
 
@@ -7,15 +7,26 @@ import "./Nav.css";
 
 const Nav = ({ user, logout }) => {
   let greeting;
+  const location = useLocation()
+
+  console.log(location.pathname)
 
   if (user === null) {
     greeting = <p>Hello guest</p>
   } else if (user.username) {
     greeting = (
       <Fragment>
-        Welcome back, <strong>{user.username} </strong>
+        <strong>{user.username} </strong>
       </Fragment>
     )
+  }
+  function navRender() {
+    if (location.pathname === "/") {
+      return <Link to="/profile"> Profile </Link>
+    }
+    else if (location.pathname === "/profile") {
+      return <Link to="/"> Home </Link>
+    }
   }
 
   return (
@@ -25,7 +36,7 @@ const Nav = ({ user, logout }) => {
       </div>
       <div className="navbar-brand text-center p-1">The Web Dev Game!</div>
       <div className="bg-red-desertSand text-red-blackBean text-right p-1">
-        <Link to="/profile">{greeting} </Link>| <Link to="#" className="logout" onClick={logout}>Log Out</Link>
+        <Link to="/profile">{greeting} </Link>| {navRender()} | <Link to="#" className="logout" onClick={logout}>Log Out</Link>
       </div>
     </nav >
   )
