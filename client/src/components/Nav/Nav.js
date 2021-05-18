@@ -7,9 +7,7 @@ import "./Nav.css";
 
 const Nav = ({ user, logout }) => {
   let greeting;
-  const location = useLocation()
-
-  console.log(location.pathname)
+  const location = useLocation();
 
   if (user === null) {
     greeting = <p>Hello guest</p>
@@ -20,7 +18,7 @@ const Nav = ({ user, logout }) => {
       </Fragment>
     )
   }
-  function navRender() {
+  function navRender () {
     if (location.pathname === "/") {
       return <Link to="/profile"> Profile </Link>
     }
