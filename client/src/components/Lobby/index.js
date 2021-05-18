@@ -125,7 +125,7 @@ function Lobby ({ socket, user, gameId, updateGameId, updateOpenGame }) {
             <div title="Players in Lobby" className="shadow-xl bg-red-desertSand rounded-lg">
                 <h3 className="text-red-blackBean font-bold mt-1">Players in Lobby</h3>
                 <ul className="bg-red-linen mx-5 my-3 px-2 h-96 overflow-y-scroll scrollbar-thin scrollbar-thumb-red-eggplant scrollbar-track-red-linen">
-                    <li>{renderLobbyList()}</li>
+                    {renderLobbyList()}
                 </ul>
                 <Challenge challenger={challenger} pendingChallenge={pendingChallenge} challengeRsp={challengeRsp} gameId={gameId}
                     handleChallengeResponse={handleChallengeResponse} handleChallengeWithdraw={handleChallengeWithdraw} handleEnterGameButton={handleEnterGameButton} handleClose={clearChallenge} />
